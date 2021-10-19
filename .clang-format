@@ -1,0 +1,9 @@
+ 
+BasedOnStyle:  Chromium
+BinPackArguments: false
+BinPackParameters: false
+ColumnLimit:     90
+IndentWidth:     2
+BreakConstructorInitializers: BeforeComma
+
+IncludeBlocks: Preserve
