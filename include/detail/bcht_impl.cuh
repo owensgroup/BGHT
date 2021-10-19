@@ -152,9 +152,6 @@ bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::cooperative_insert(
     value_type const& pair,
     tile_type const& tile) {
   detail::mars_rng_32 rng;
-  // if (2514071929 == pair.first) {
-  //  printf("Error\n");
-  //}
   auto bucket_id = hf0_(pair.first) % num_buckets_;
   uint32_t cuckoo_counter = 0;
   auto lane_id = tile.thread_rank();
@@ -209,7 +206,6 @@ bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::cooperative_insert(
       cuckoo_counter++;
     }
   } while (cuckoo_counter < max_cuckoo_chains_);
-  printf("failed to insert %i\n", pair.first);
   return false;
 }
 
