@@ -1,17 +1,30 @@
 project (test)
 
+add_executable(test_1cht test_1cht.cu)
+set_target_properties(test_1cht PROPERTIES
+								FOLDER "tests")
+target_link_libraries(test_1cht PRIVATE bght
+								  PRIVATE bght)
+
+
 add_executable(test_bcht test_bcht.cu)
 set_target_properties(test_bcht PROPERTIES
 								FOLDER "tests")
-target_compile_definitions(test_bcht PRIVATE TEMPLATE_DEFINE="${template_define}")
-target_link_libraries(test_bcht PRIVATE bght_compiler_flags
-								  PRIVATE bght_lib)
+target_link_libraries(test_bcht PRIVATE bght
+								  PRIVATE bght)
 
 
-add_executable(test_bcht_types test_bcht_types.cu)
-set_target_properties(test_bcht_types PROPERTIES
+
+add_executable(test_types test_types.cu)
+set_target_properties(test_types PROPERTIES
 								FOLDER "tests")
-target_compile_definitions(test_bcht_types PRIVATE TEMPLATE_DEFINE="${template_define}")
-target_link_libraries(test_bcht_types PRIVATE bght_compiler_flags
-								  PRIVATE bght_lib)
+target_link_libraries(test_types PRIVATE bght
+								  PRIVATE bght)
+
+
+add_executable(test_allocator test_allocator.cu)
+set_target_properties(test_allocator PROPERTIES
+								FOLDER "tests")
+target_link_libraries(test_allocator PRIVATE bght
+								  PRIVATE bght)
 

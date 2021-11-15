@@ -13,12 +13,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 
 # options
-option(build_benchmarks "Build benchmarks" OFF)
+option(build_benchmarks "Build benchmarks" ON)
 option(build_tests "Build tests" ON)
 
-
-# Fetch contents
-# include(FetchContent)
 
 # Auto-detect GPU architecture, sets ${CUDA_ARCHS}
 include("cmake/AutoDetectCudaArch.cmake")
@@ -30,7 +27,7 @@ set(template_define "${CMAKE_CURRENT_SOURCE_DIR}/outputs")
 
 
 # bght flags
-add_library(bght_compiler_flags INTERFACE)
+add_library(bght INTERFACE)
 
 # CUDA and C++ compiler flags
 set(CXX_FLAGS
@@ -51,6 +48,9 @@ set(CUDA_FLAGS
     ${CUDA_ARCHS}
 	--expt-extended-lambda
     -Wno-deprecated-gpu-targets #silence deprecated architectures
+    --forward-unknown-to-host-linker
+    --forward-unknown-to-host-compiler
+    --expt-relaxed-constexpr
     $<$<CONFIG:Release>:-Xptxas -warn-spills -res-usage>
     )
 
@@ -65,27 +65,31 @@ target_compile_options(developer_flags INTERFACE
     $<$<COMPILE_LANGUAGE:CXX>:${CXX_FLAGS}>
     $<$<COMPILE_LANGUAGE:CUDA>:${CUDA_FLAGS}>)
 
-target_link_libraries(bght_compiler_flags
+target_link_libraries(bght
     INTERFACE $<BUILD_INTERFACE:developer_flags>
-    INTERFACE $<IF:$<CXX_COMPILER_ID:MSVC>,,-lstdc++fs>) #this doesnt look like it's working
+    INTERFACE $<IF:$<CXX_COMPILER_ID:MSVC>,,-lstdc++fs>)
 
 
 
 # Visual studio setup
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-## Fix includes in visual studio for intellisense
-set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT test_bcht)
+if(build_tests)
+    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+    set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT test_types)
+    # set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT test_bcht)
+    # set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT exp2_BCHT)
+    # set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT probes_per_technique)
 
+    file(TO_NATIVE_PATH ${external_includes} external_includes_native)
+    file(TO_NATIVE_PATH ${bght_includes} bght_includes_native)
 
-file(TO_NATIVE_PATH ${external_includes} external_includes_native)
-file(TO_NATIVE_PATH ${bght_includes} bght_includes_native)
+    set(CMAKE_VS_SDK_INCLUDE_DIRECTORIES
+        $(VC_IncludePath)
+        $(WindowsSDK_IncludePath)
+        ${external_includes_native}
+        ${bght_includes_native}
+        )
+endif()
 
-set(CMAKE_VS_SDK_INCLUDE_DIRECTORIES
-    $(VC_IncludePath)
-    $(WindowsSDK_IncludePath)
-    ${external_includes_native}
-    ${bght_includes_native}
-    )
 
 
 add_subdirectory(include)

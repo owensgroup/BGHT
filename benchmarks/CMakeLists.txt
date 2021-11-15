@@ -1,12 +1,21 @@
 project (benchmarks)
 
-
-#template_project bench
-add_executable(benchmark_template_project benchmark_template_project.cu)
-set_target_properties(benchmark_template_project PROPERTIES
+add_executable(probes_per_technique probes_per_technique.cu)
+set_target_properties(probes_per_technique PROPERTIES
 								FOLDER "benchmarks")
-# Defines
-target_compile_definitions(benchmark_template_project PRIVATE TEMPLATE_DEFINE="${template_define}")
-target_link_libraries(benchmark_template_project PRIVATE template_project_compiler_flags
-								  PRIVATE template_project_lib)
+target_compile_definitions(probes_per_technique PRIVATE COUNT_PROBES)
+target_link_libraries(probes_per_technique PRIVATE bght
+								  PRIVATE bght)
 
+
+add_executable(rates_per_technique rates_per_technique.cu)
+set_target_properties(rates_per_technique PROPERTIES
+								FOLDER "benchmarks")
+target_link_libraries(rates_per_technique PRIVATE bght
+								  PRIVATE bght)
+
+add_executable(rates_per_technique_fixed_lf rates_per_technique_fixed_lf.cu)
+set_target_properties(rates_per_technique_fixed_lf PROPERTIES
+								FOLDER "benchmarks")
+target_link_libraries(rates_per_technique_fixed_lf PRIVATE bght
+								  PRIVATE bght)

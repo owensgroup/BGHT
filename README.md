@@ -1,3 +1,162 @@
-# BGHT
+# BGHT: Better GPU Hash Tables
+
+<table><tr>
+<th><b><a href="https://github.com/maawad/BGHT/tree/main/test">Examples/Tests</a></b></th>
+</tr></table>
+
+BGHT is a collection of high-performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-of-two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-of-art static hash table.
+For more information, please check our paper:
+
+[**Better GPU Hash Tables**](https://arxiv.org/abs/2108.07232)<br>
+*[Muhammad A. Awad](https://maawad.github.io/), [Saman Ashkiani](https://scholar.google.com/citations?user=Z4_ZfiEAAAAJ&hl=en), [Serban D. Porumbescu](https://web.cs.ucdavis.edu/~porumbes/), [Martín Farach-Colton](https://people.cs.rutgers.edu/~farach/), and [John D. Owens](https://www.ece.ucdavis.edu/~jowens/)*
+
+## Key features
+* State-of-the-art static GPU hash tables
+* Device and host side APIs
+* Support for different types of keys and values
+* Standard-like APIs
+
+## How to use
+BGHT is a header-only library. To use the library, you can add it as a submodule or use [CMake Package Manager (CPM)](https://github.com/cpm-cmake/CPM.cmake) to fetch the library into your CMake-based project ([complete example](/test/CPM)).
+```
+cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
+CPMAddPackage(
+  NAME bght
+  GITHUB_REPOSITORY owensgroup/BGHT
+  GIT_TAG main
+  OPTIONS
+     "build_tests OFF"
+     "build_benchmarks OFF"
+)
+target_link_libraries(my_library PRIVATE bght)
+```
+
+### APIs
+All the data structures follow the C++ standard hash map (`std::unordered_map`) APIs closely. An example APIs for BCHT is shown below:
+```c++
+template <class Key,
+          class T,
+          class Hash = bght::universal_hash<Key>,
+          class KeyEqual = bght::equal_to<Key>,
+          cuda::thread_scope Scope = cuda::thread_scope_device,
+          class Allocator = bght::cuda_allocator<char>,
+          int B = 16> class bcht;
+```
+#### Member functions
+```c++
+// Constructor
+bcht(std::size_t capacity,
+     Key sentinel_key,
+     T sentinel_value,
+     Allocator const& allocator = Allocator{});
+// Host-side APIs
+template <typename InputIt>
+  bool insert(InputIt first, InputIt last, cudaStream_t stream = 0);
+template <typename InputIt, typename OutputIt>
+  void find(InputIt first, InputIt last, OutputIt output_begin, cudaStream_t stream = 0);
+// Device-side APIs
+template <typename tile_type>
+__device__ bool insert(value_type const& pair, tile_type const& tile);
+template <typename tile_type>
+__device__ mapped_type find(key_type const& key, tile_type const& tile);
+```
+### Member types
+```
+Member type                     Definition
+key_type                        Key
+mapped_type                     T
+value_type                      bght::pair<Key, T>
+allocator_type                  Allocator
+bucket_size                     Bucket size for device-side APIs cooperative groups tile construction
+```
 
 
+#### Example
+```c++
+// Example using host-side APIs
+#include <bcht.hpp>
+int main(){
+  using key_type = uint32_t;
+  using value_type = uint32_t;
+  using pair_type = bght::pair<key_type, value_type>;
+  std::size_t capacity = 128; std::size_t num_keys = 64;
+  key_type invalid_key = 0; value_type invalid_value = 0; // sentinel key and value
+
+  bght::bcht<key_type, value_type> table(capacity, invalid_key, invalid_value); //ctor
+
+  pair_type* pairs; // input pairs
+  // ... allocate pairs
+
+  bool success = table.insert(pairs, pairs + num_keys);
+  assert(success);
+
+  key_type* queries;  // query keys
+  value_type* results; // query result
+  // ... allocate queries and results
+  table.find(queries, queries + num_keys, results);
+}
+
+```
+```c++
+// Example using device-side APIs
+template<class HashMap>
+__global__ void kernel(HashMap table){
+  // construct tile
+  auto block = cooperative_groups::this_thread_block();
+  auto tile = cooperative_groups::tiled_partition<HashMap::bucket_size>(block);
+  pair_type pair{...};
+  table.insert(pair, tile);
+  pair_type query{..};
+  query.second = talbe.find(query.first, tile);
+}
+```
+
+## Requirements and limitations
+Please create an issue if you face challenges with any of the following limitations and requirements.
+### Requirements
+* C++17/CUDA C++17
+* NVIDIA Volta GPU or later microarchitectures
+* CMake 3.8 or later
+* CUDA 11.5 or later
+
+### limitations
+* Currently hash tables based on cuckoo hashing do not support concurrent insertion and queries. IHT and P2BHT support concurrent insertions and queries.
+* Keys must be unique
+* Construction of the data structure offered *may* fail. In these scenarios, reconstructing the table using a larger capacity, or a lower load factor should be considered. We offer recommended hash table load factors in our paper (for a uniformly distributed unsigned keys) to achieve at least 99% success rate ([See Fig. 2](https://arxiv.org/abs/2108.07232)). For example, BCHT will offer 100% success rate for up to 0.991 load factor. Please create an issue if you encounter any problems with different key distributions.
+
+## Reproducing the arXiv paper results
+To reproduce the results follow the following [steps](reproduce.md). You can also view our results [here](./results.md). If you find any mismatch (either faster or slower) between the results offered in the repository or the ones in the paper, please create an issue and we will investigate the performance changes.
+
+## Benchmarks
+Please check our [paper](https://arxiv.org/abs/2108.07232) for comprehensive analysis and benchmarks. Also, see the following steps to [reproduce](reproduce.md) the results.
+
+An additional comparison of our BCHT to `cucCollection`'s `cuco::static_map` is shown below between BCHT with B = 16 (default configuration) vs. `cuco::static_map`. Input keys (50 millions pairs) are uniformly distributed unsigned keys and the benchmarking was performed on an NVIDIA Titan V GPU (higher is better):
+
+![](/figs/arxiv/NVIDIA-TITAN-V/bcht_vs_cuco.svg)
+
+## Questions and bug report
+Please create an issue. We will welcome any contributions that improve the usability and quality our repository.
+
+## Bibtex
+```
+@article{Awad:2021:BGH,
+  title = {Better {GPU} Hash Tables},
+  author = {Muhammad A. Awad and Saman Ashkiani and Serban D.
+                  Porumbescu and Mart{\'{i}}n Farach-Colton and John
+                  D. Owens},
+  year = 2021,
+  month = aug,
+  primaryclass = {cs.DS},
+  journal = {CoRR},
+  volume = {abs/2108.07232},
+  archiveprefix = {arXiv},
+  number = {2108.07232},
+  eprint = {2108.07232},
+  nonrefereed = {true},
+  code = {https://github.com/owensgroup/BGHT}
+}
+```
+
+## Acknowledgments
+
+The structure and organization of the repository were inspired by [NVIDIA's cuCollection](https://github.com/nviDIA/cuCollections/) and [RXMesh](https://github.com/owensgroup/RXMesh).

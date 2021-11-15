@@ -1,18 +1,34 @@
+﻿/*
+ *   Copyright 2021 The Regents of the University of California, Davis
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 #include <thrust/sequence.h>
-#include < type_traits>
-#include <bcht.hpp>
+#include <benchmark_helpers.cuh>
+#include <cht.hpp>
 #include <cmd.hpp>
 #include <gpu_timer.hpp>
 #include <limits>
 #include <perf_report.hpp>
-#include <rkg.hpp>
+#include <type_traits>
 
-template <class Key, class V, class Func>
-void build_hash_table(int argc, char** argv, Func to_pair) {
-  using key_type = Key;
-  using value_type = V;
+int main(int argc, char** argv) {
+  using key_type = uint32_t;
+  using value_type = uint32_t;
+
   auto arguments = std::vector<std::string>(argv, argv + argc);
   std::size_t num_keys =
       get_arg_value<std::size_t>(arguments, "num-keys").value_or(16ull);
@@ -23,16 +39,15 @@ void build_hash_table(int argc, char** argv, Func to_pair) {
   std::cout << "load-factor: " << load_factor << '\n';
   bght::set_device(device);
 
-  std::size_t capacity = double(num_keys) / load_factor;
+  std::size_t capacity = static_cast<std::size_t>(double(num_keys) / load_factor);
 
   auto invalid_key = std::numeric_limits<key_type>::max();
   auto invalid_value = std::numeric_limits<value_type>::max();
 
-  // using pair_type = bght::bcht<key_type, value_type>::value_type;
   using pair_type = bght::pair<key_type, value_type>;
 
   std::vector<key_type> h_keys;
-  rkg::generate_uniform_unique_keys(h_keys, num_keys);
+  benchmark::generate_uniform_unique_keys(h_keys, num_keys);
 
   thrust::device_vector<key_type> d_keys(num_keys);
   thrust::device_vector<pair_type> d_pairs(num_keys);
@@ -41,13 +56,15 @@ void build_hash_table(int argc, char** argv, Func to_pair) {
 
   d_keys = h_keys;
 
+  // assign values
+  auto to_pair = [] __host__ __device__(key_type x) { return pair_type{x, x * 10}; };
   thrust::transform(
       thrust::device, d_keys.begin(), d_keys.end(), d_pairs.begin(), to_pair);
 
   // prepare queries
   d_queries = d_keys;
 
-  bght::bcht<key_type, value_type> test(capacity, invalid_key, invalid_value);
+  bght::cht<key_type, value_type> test(capacity, invalid_key, invalid_value);
 
   auto input_start = d_pairs.data().get();
   auto input_last = input_start + num_keys;
@@ -96,66 +113,4 @@ void build_hash_table(int argc, char** argv, Func to_pair) {
     }
   }
   std::cout << "Success\n";
-}
-
-int main(int argc, char** argv) {
-  //{
-  //  std::cout << "Testing <int, int>\n";
-
-  //  using Key = int;
-  //  using V = int;
-  //  using pair_type = bght::bcht<Key, V>::value_type;
-  //  auto to_pair = [] __host__ __device__(Key x) { return pair_type{x, x * 10}; };
-
-  //  build_hash_table<Key, V>(argc, argv, to_pair);
-  //}
-
-  //{
-  //  std::cout << "Testing <int, float>\n";
-  //  using Key = int;
-  //  using V = float;
-  // using pair_type = bght::bcht<Key, V>::value_type;
-  //  auto to_pair = [] __host__ __device__(Key x) { return pair_type{x, x * 11.0f}; };
-
-  //  build_hash_table<Key, V>(argc, argv, to_pair);
-  //}
-
-  //{
-  //  std::cout << "Testing <uint64_t, float>\n";
-  //  using Key = uint64_t;
-  //  using V = float;
-  //  // using pair_type = bght::bcht<Key, V>::value_type;
-  //  using pair_type = bght::pair<Key, V>;
-  //  auto to_pair = [] __host__ __device__(Key x) { return pair_type{x, x * 11.0f}; };
-
-  //  build_hash_table<Key, V>(argc, argv, to_pair);
-  //}
-
-  //{
-  //  std::cout << "Testing <int, char>\n";
-  //  using Key = int;
-  //  using V = char;
-  //  // using pair_type = bght::bcht<Key, V>::value_type;
-  //  using pair_type = bght::pair<Key, V>;
-  //  auto to_pair = [] __host__ __device__(Key x) {
-  //    return pair_type{x, static_cast<V>(x % 128)};
-  //  };
-
-  //  build_hash_table<Key, V>(argc, argv, to_pair);
-  //}
-
-  {
-    std::cout << "Testing <uint32_t, float>\n";
-    using Key = uint32_t;
-    using V = float;
-    // using pair_type = bght::bcht<Key, V>::value_type;
-    using pair_type = bght::pair<Key, V>;
-    auto to_pair = [] __host__ __device__(Key x) {
-      return pair_type{x, static_cast<V>(x % 128)};
-    };
-
-    build_hash_table<Key, V>(argc, argv, to_pair);
-  }
-
-  return 0;
 }

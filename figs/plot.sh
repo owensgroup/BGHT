@@ -1,0 +1,1 @@
+ python -W ignore ./plot.py -d  ../build/results/NVIDIA-TITAN-V/

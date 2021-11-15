@@ -1,3 +1,19 @@
+/*
+ *   Copyright 2021 The Regents of the University of California, Davis
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
 #pragma once
 #include <filesystem>
 #include <fstream>
@@ -6,25 +22,8 @@
 #include <unordered_set>
 namespace rkg {
 template <typename key_type, typename value_type>
-value_type obvious_bit_reversal(key_type in) {
-  // https://graphics.stanford.edu/~seander/bithacks.html#BitReverseObvious
-  unsigned int v = (unsigned int)in;  // input bits to be reversed
-  unsigned int r = v;                 // r will be reversed bits of v; first get LSB of v
-  int s = sizeof(v) * CHAR_BIT - 1;   // extra shift needed at end
-
-  for (v >>= 1; v; v >>= 1) {
-    r <<= 1;
-    r |= v & 1;
-    s--;
-  }
-  r <<= s;  // shift when v's highest bits are zero
-  return value_type(r);
-}
-
-template <typename key_type, typename value_type>
 value_type generate_value(key_type in) {
   return in + 1;
-  // return obvious_bit_reversal<key_type, value_type>(in);
 }
 
 template <typename key_type, typename value_type, typename size_type>
@@ -65,8 +64,6 @@ void generate_uniform_unique_pairs(std::vector<key_type>& keys,
   }
   std::copy(unique_keys.cbegin(), unique_keys.cend(), keys.begin());
   std::shuffle(keys.begin(), keys.end(), rng);
-  // std::transform(
-  //    keys.cbegin(), keys.cend(), values.begin(), generate_value<key_type, value_type>);
 
 #ifdef _WIN32
   // OpenMP + windows don't allow unsigned loops
@@ -74,7 +71,7 @@ void generate_uniform_unique_pairs(std::vector<key_type>& keys,
     values[i] = generate_value<key_type, value_type>(keys[i]);
   }
 #else
-#pragma omp parallel for
+
   for (uint32_t i = 0; i < unique_keys.size(); i++) {
     values[i] = generate_value<key_type, value_type>(keys[i]);
   }
@@ -104,5 +101,4 @@ void generate_uniform_unique_keys(std::vector<key_type>& keys, size_type num_key
   std::copy(unique_keys.cbegin(), unique_keys.cend(), keys.begin());
   std::shuffle(keys.begin(), keys.end(), rng);
 }
-
 }  // namespace rkg

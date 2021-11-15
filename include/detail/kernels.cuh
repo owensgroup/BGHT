@@ -1,3 +1,19 @@
+/*
+ *   Copyright 2021 The Regents of the University of California, Davis
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
 #pragma once
 #include <cooperative_groups.h>
 #include <detail/cuda_helpers.cuh>
@@ -5,13 +21,12 @@
 namespace bght {
 namespace detail {
 namespace kernels {
-
 template <typename InputIt, typename HashMap>
-__global__ void insert_kernel(InputIt first, InputIt last, HashMap map) {
+__global__ void tiled_insert_kernel(InputIt first, InputIt last, HashMap map) {
   // construct the tile
   auto thread_id = threadIdx.x + blockIdx.x * blockDim.x;
   auto block = cooperative_groups::this_thread_block();
-  auto tile = cooperative_groups::tiled_partition<HashMap::bucket_size_>(block);
+  auto tile = cooperative_groups::tiled_partition<HashMap::bucket_size>(block);
 
   auto count = last - first;
   if ((thread_id - tile.thread_rank()) >= count) {
@@ -33,7 +48,7 @@ __global__ void insert_kernel(InputIt first, InputIt last, HashMap map) {
   while (work_queue) {
     auto cur_rank = __ffs(work_queue) - 1;
     auto cur_pair = tile.shfl(insertion_pair, cur_rank);
-    bool insertion_success = map.cooperative_insert(cur_pair, tile);
+    bool insertion_success = map.insert(cur_pair, tile);
 
     if (tile.thread_rank() == cur_rank) {
       do_op = false;
@@ -48,14 +63,14 @@ __global__ void insert_kernel(InputIt first, InputIt last, HashMap map) {
 }
 
 template <typename InputIt, typename OutputIt, typename HashMap>
-__global__ void find_kernel(InputIt first,
-                            InputIt last,
-                            OutputIt output_begin,
-                            HashMap map) {
+__global__ void tiled_find_kernel(InputIt first,
+                                  InputIt last,
+                                  OutputIt output_begin,
+                                  HashMap map) {
   // construct the tile
   auto thread_id = threadIdx.x + blockIdx.x * blockDim.x;
   auto block = cooperative_groups::this_thread_block();
-  auto tile = cooperative_groups::tiled_partition<HashMap::bucket_size_>(block);
+  auto tile = cooperative_groups::tiled_partition<HashMap::bucket_size>(block);
 
   auto count = last - first;
   if ((thread_id - tile.thread_rank()) >= count) {
@@ -78,7 +93,7 @@ __global__ void find_kernel(InputIt first,
     auto cur_rank = __ffs(work_queue) - 1;
     auto cur_key = tile.shfl(find_key, cur_rank);
 
-    typename HashMap::mapped_type find_result = map.cooperative_find(cur_key, tile);
+    typename HashMap::mapped_type find_result = map.find(cur_key, tile);
 
     if (tile.thread_rank() == cur_rank) {
       result = find_result;
@@ -91,6 +106,36 @@ __global__ void find_kernel(InputIt first,
     output_begin[thread_id] = result;
   }
 }
+
+template <typename InputIt, typename HashMap>
+__global__ void insert_kernel(InputIt first, InputIt last, HashMap map) {
+  auto thread_id = threadIdx.x + blockIdx.x * blockDim.x;
+  auto count = last - first;
+
+  if (thread_id < count) {
+    auto insertion_pair = first[thread_id];
+    bool success = map.insert(insertion_pair);
+    if (!success) {
+      map.set_build_success(false);
+    }
+  }
+}
+
+template <typename InputIt, typename OutputIt, typename HashMap>
+__global__ void find_kernel(InputIt first,
+                            InputIt last,
+                            OutputIt output_begin,
+                            HashMap map) {
+  auto thread_id = threadIdx.x + blockIdx.x * blockDim.x;
+  auto count = last - first;
+
+  if (thread_id < count) {
+    auto find_key = first[thread_id];
+    auto result = map.find(find_key);
+    output_begin[thread_id] = result;
+  }
+}
+
 }  // namespace kernels
 }  // namespace detail
 }  // namespace bght
