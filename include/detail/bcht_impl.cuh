@@ -49,7 +49,6 @@ bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::bcht(std::size_t capacity,
     capacity_ += (bucket_size - remainder);
   }
   num_buckets_ = capacity_ / bucket_size;
-  // std::cout << num_buckets_ << " " << capacity_ << "\n";
   d_table_ = std::allocator_traits<atomic_pair_allocator_type>::allocate(
       atomic_pairs_allocator_, capacity_);
   table_ =
@@ -135,14 +134,12 @@ template <typename InputIt>
 bool bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert(InputIt first,
                                                                InputIt last,
                                                                cudaStream_t stream) {
-  // const auto num_keys = last - first;
   const auto num_keys = std::distance(first, last);
 
   const uint32_t block_size = 128;
   const uint32_t num_blocks = (num_keys + block_size - 1) / block_size;
   detail::kernels::tiled_insert_kernel<<<num_blocks, block_size, 0, stream>>>(
       first, last, *this);
-  // cuda_try(cudaPeekAtLastError());
   bool success;
   cuda_try(cudaMemcpyAsync(
       &success, d_build_success_, sizeof(bool), cudaMemcpyDeviceToHost, stream));
@@ -167,7 +164,6 @@ void bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::find(InputIt first,
 
   detail::kernels::tiled_find_kernel<<<num_blocks, block_size, 0, stream>>>(
       first, last, output_begin, *this);
-  // cuda_try(cudaPeekAtLastError());
 }
 
 template <class Key,
@@ -184,10 +180,6 @@ __device__ bool bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert(
   detail::mars_rng_32 rng;
 
   auto bucket_id = hf0_(pair.first) % num_buckets_;
-
-  // if (tile.thread_rank() == 0) {
-  //  printf("bucket(%u) = %llu of %u\n", pair.first, bucket_id, num_buckets_);
-  //}
 
   uint32_t cuckoo_counter = 0;
   auto lane_id = tile.thread_rank();
@@ -242,7 +234,6 @@ __device__ bool bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert(
       cuckoo_counter++;
     }
   } while (cuckoo_counter < max_cuckoo_chains_);
-  // printf("failed to insert %i\n", pair.first);
   return false;
 }
 

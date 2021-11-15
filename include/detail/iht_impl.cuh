@@ -142,7 +142,6 @@ bool iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::insert(
   const uint32_t num_blocks = (num_keys + block_size - 1) / block_size;
   detail::kernels::tiled_insert_kernel<<<num_blocks, block_size, 0, stream>>>(
       first, last, *this);
-  // cuda_try(cudaPeekAtLastError());
   bool success;
   cuda_try(cudaMemcpyAsync(
       &success, d_build_success_, sizeof(bool), cudaMemcpyDeviceToHost, stream));
@@ -169,7 +168,6 @@ void iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::find(
 
   detail::kernels::tiled_find_kernel<<<num_blocks, block_size, 0, stream>>>(
       first, last, output_begin, *this);
-  // cuda_try(cudaPeekAtLastError());
 }
 
 template <class Key,
