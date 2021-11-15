@@ -7,7 +7,7 @@ include(${CMAKE_SOURCE_DIR}/../../cmake/CPM.cmake)
 
 CPMAddPackage(
   NAME bght
-  GITHUB_REPOSITORY maawad/BGHT
+  GITHUB_REPOSITORY owensgroup/BGHT
   GIT_TAG main
   OPTIONS
      "build_tests OFF"
