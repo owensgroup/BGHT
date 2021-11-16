@@ -17,7 +17,7 @@ For more information, please check our paper:
 * Standard-like APIs
 
 ## How to use
-BGHT is a header-only library. To use the library, you can add it as a submodule or use [CMake Package Manager (CPM)](https://github.com/cpm-cmake/CPM.cmake) to fetch the library into your CMake-based project ([complete example](/test/CPM)).
+BGHT is a header-only library. To use the library, you can add it as a submodule or use [CMake Package Manager (CPM)](https://github.com/cpm-cmake/CPM.cmake) to fetch the library into your CMake-based project ([complete example](https://github.com/owensgroup/BGHT/tree/main/test/cpm)).
 ```
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 CPMAddPackage(
