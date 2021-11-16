@@ -128,20 +128,20 @@ Please create an issue if you face challenges with any of the following limitati
 ### limitations
 * Currently hash tables based on cuckoo hashing do not support concurrent insertion and queries. IHT and P2BHT support concurrent insertions and queries.
 * Keys must be unique
-* Construction of the data structure offered *may* fail. In these scenarios, reconstructing the table using a larger capacity, or a lower load factor should be considered. We offer recommended hash table load factors in our paper (for a uniformly distributed unsigned keys) to achieve at least 99% success rate ([See Fig. 2](https://arxiv.org/abs/2108.07232)). For example, BCHT will offer 100% success rate for up to 0.991 load factor. Please create an issue if you encounter any problems with different key distributions.
+* Construction of the data structures offered *may* fail. In these scenarios, reconstructing the table using a larger capacity or a lower load factor should be considered. Our paper offers recommended hash table load factors (for uniformly distributed unsigned keys) to achieve at least a 99% success rate ([See Fig. 2](https://arxiv.org/abs/2108.07232)). For example, BCHT will offer a 100% success rate for up to 0.991 load factor. Please create an issue if you encounter any problems with different key distributions.
 
 ## Reproducing the arXiv paper results
-To reproduce the results follow the following [steps](reproduce.md). You can also view our results [here](./results.md). If you find any mismatch (either faster or slower) between the results offered in the repository or the ones in the paper, please create an issue and we will investigate the performance changes.
+To reproduce the results, follow the following [steps](reproduce.md). You can also view our results [here](./results.md). If you find any mismatch (either faster or slower) between the results offered in the repository or the paper, please create an issue, and we will investigate the performance changes.
 
 ## Benchmarks
 Please check our [paper](https://arxiv.org/abs/2108.07232) for comprehensive analysis and benchmarks. Also, see the following steps to [reproduce](reproduce.md) the results.
 
-An additional comparison of our BCHT to `cucCollection`'s `cuco::static_map` is shown below between BCHT with B = 16 (default configuration) vs. `cuco::static_map`. Input keys (50 millions pairs) are uniformly distributed unsigned keys and the benchmarking was performed on an NVIDIA Titan V GPU (higher is better):
+An additional comparison of our BCHT to `cucCollection`'s `cuco::static_map` is shown below. The comparison is between our BCHT with B = 16 (default configuration) and `cuco::static_map`. Input keys (50 million pairs) are uniformly distributed unsigned keys. The benchmarking was performed on an NVIDIA Titan V GPU (higher is better):
 
 ![](/figs/arxiv/NVIDIA-TITAN-V/bcht_vs_cuco.svg)
 
 ## Questions and bug report
-Please create an issue. We will welcome any contributions that improve the usability and quality our repository.
+Please create an issue. We will welcome any contributions that improve the usability and quality of our repository.
 
 ## Bibtex
 ```
