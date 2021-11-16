@@ -109,6 +109,12 @@ __global__ void kernel(HashMap table){
   pair_type query{..};
   query.second = talbe.find(query.first, tile);
 }
+int main(){
+  // Call the hash table constructor on the CPU
+  bght::bcht<key_type, value_type> table(...);
+  // Pass the hash table to a GPU kernel
+  kernel<<<...>>>(table);
+}
 ```
 
 ## Requirements and limitations
