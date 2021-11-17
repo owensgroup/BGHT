@@ -9,3 +9,7 @@ The repository contains archived benchmarking results on an NVIDIA TITAN-V and a
 ## Quadro GV100
 - [Results in CSV format](https://github.com/owensgroup/BGHT/tree/main/results/arxiv/Quadro-GV100)
 - [Plots](https://github.com/owensgroup/BGHT/tree/main/figs/arxiv/Quadro-GV100)
+
+## TITAN-Xp
+- [Results in CSV format](https://github.com/owensgroup/BGHT/tree/main/results/arxiv/TITAN-Xp)
+- [Plots](https://github.com/owensgroup/BGHT/tree/main/figs/arxiv/TITAN-Xp)

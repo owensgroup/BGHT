@@ -32,7 +32,7 @@ dataset/
 workspace.code-workspace
 
 ref_serial_code/build/*
-build/*
+build*/
 release/*
 debug/*
 bench_memory/*
