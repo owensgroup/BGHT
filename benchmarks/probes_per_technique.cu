@@ -118,7 +118,7 @@ bench_insert_find_result bench_insert_find(
   uint32_t max_failed_count = 50;
   while (exp < num_experiments) {
     map.clear();
-
+    map.randomize_hash_functions(rng);
     // Insert experiment
     //
     gpu_timer insertion_timer;
