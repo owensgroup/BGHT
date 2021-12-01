@@ -45,7 +45,7 @@ constexpr std::size_t pair_alignment() {
   return next_alignment(pair_size<T1, T2>());
 }
 
-template <typename T1, typename T2, std::size_t f = pair_size<T1, T2>()>
+template <typename T1, typename T2>
 constexpr std::size_t padding_size() {
   constexpr auto psz = pair_size<T1, T2>();
   constexpr auto apsz = next_alignment(pair_size<T1, T2>());
