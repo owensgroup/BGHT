@@ -47,7 +47,13 @@ constexpr std::size_t pair_alignment() {
 
 template <typename T1, typename T2>
 constexpr std::size_t padding_size() {
-  return next_alignment(pair_size<T1, T2>()) - pair_size<T1, T2>();
+  constexpr auto psz = pair_size<T1, T2>();
+  constexpr auto apsz = next_alignment(pair_size<T1, T2>());
+  if (psz > apsz) {
+    constexpr auto nsz = (1ull + (psz / apsz)) * apsz;
+    return nsz - psz;
+  }
+  return apsz - psz;
 }
 }  // namespace detail
 }  // namespace bght

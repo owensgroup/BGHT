@@ -11,5 +11,9 @@ The repository contains archived benchmarking results on an NVIDIA TITAN-V and a
 - [Plots](https://github.com/owensgroup/BGHT/tree/main/figs/arxiv/Quadro-GV100)
 
 ## TITAN-Xp
-- [Results in CSV format](https://github.com/owensgroup/BGHT/tree/main/results/arxiv/TITAN-Xp)
-- [Plots](https://github.com/owensgroup/BGHT/tree/main/figs/arxiv/TITAN-Xp)
+- [Results in CSV format](https://github.com/owensgroup/BGHT/tree/main/results/arxiv/NVIDIA-TITAN-Xp)
+- [Plots](https://github.com/owensgroup/BGHT/tree/main/figs/arxiv/NVIDIA-TITAN-Xp)
+
+## Tesla V100 DGX 32GB
+- [Results in CSV format](https://github.com/owensgroup/BGHT/tree/main/results/arxiv/Tesla-V100-DGXS-32GB)
+- [Plots](https://github.com/owensgroup/BGHT/tree/main/figs/arxiv/Tesla-V100-DGXS-32GB)
