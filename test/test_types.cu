@@ -30,6 +30,12 @@
 #include <iht.hpp>
 #include <p2bht.hpp>
 
+template <class K, class V>
+using iht16_80 = iht16<K, V, 12>;
+
+template <class K, class V>
+using iht32_80 = iht32<K, V, 25>;
+
 template <typename T1, typename T2>
 void CHECK(T1 t1, T2 t2) {
   assert(t1 == t2);
@@ -166,6 +172,7 @@ __device__ inline unsigned get_sm_id() {
   return ret;
 }
 
+// Testing passing a hashmap to the device
 template <typename HashMap>
 __global__ void test_kernel(HashMap map) {
   using pair_type = typename HashMap::value_type;
@@ -202,6 +209,7 @@ void pass_to_kernel_test() {
   test_kernel<<<1, 32>>>(table);
 }
 
+// Testing different built-in types
 template <template <class...> class HashMap>
 void test_scheme() {
   unit_test<uint32_t, char, HashMap>::test();
@@ -219,12 +227,7 @@ void test_scheme() {
   pass_to_kernel_test<uint32_t, unsigned, HashMap>();
 }
 
-template <class K, class V>
-using iht16_80 = iht16<K, V, 12>;
-
-template <class K, class V>
-using iht32_80 = iht32<K, V, 25>;
-
+// Testing custom keys
 struct custom_key {
   std::size_t x;
   uint32_t y;
