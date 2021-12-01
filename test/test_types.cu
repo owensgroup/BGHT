@@ -428,9 +428,6 @@ void test_vec3_like() {
              d_results.data().get());
   thrust::host_vector<color_type> h_results(d_results);
 
-  std::cout << sizeof(color_type) << '\n';
-  std::cout << sizeof(cell_type) << '\n';
-  std::cout << sizeof(pair_type) << '\n';
   for (std::size_t i = 0; i < d_queries.size(); i++) {
     CHECK(h_results[i], to_value(h_cells[i]));
   }
