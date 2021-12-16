@@ -299,12 +299,12 @@ bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::find(
       if (key_location != -1) {
         auto found_value = cur_bucket.get_value_from_lane(key_location);
         return found_value;
-      } else if (bucket_id != primary_bucket_id &&
-                 cur_bucket.compute_load(sentinel_pair) < bucket_size) {
+      } else if ((bucket_id != primary_bucket_id) &&
+                 (cur_bucket.compute_load(sentinel_pair) < bucket_size)) {
         return sentinel_value_;
       } else {
         bucket_id = (bucket_id + 1) % num_buckets_;
-        if (bucket_id == bucket_id) {
+        if (bucket_id == primary_bucket_id) {
           return sentinel_value_;
         }
       }
