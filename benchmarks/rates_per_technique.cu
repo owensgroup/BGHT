@@ -665,6 +665,9 @@ int main(int argc, char** argv) {
   bool validate = get_arg_value<bool>(arguments, "validate").value_or(true);
   std::size_t num_keys = get_arg_value<uint64_t>(arguments, "num-keys")
                              .value_or(512000);  // 16384;//8192;//4096;
+  bool run_bcht = get_arg_value<bool>(arguments, "bcht").value_or(true);
+  bool run_bp2ht = get_arg_value<bool>(arguments, "bp2ht").value_or(true);
+  bool run_iht = get_arg_value<bool>(arguments, "iht").value_or(true);
 
   std::cout << "Device id = " << device_id << '\n';
   std::cout << "validate = " << std::boolalpha << validate << '\n';
@@ -739,21 +742,38 @@ int main(int argc, char** argv) {
                                      0.99f};
 
   for (auto& load_factor : load_factors) {
-    bench_bcht(keys,
-               d_keys,
-               d_pairs,
-               d_find_keys,
-               d_find_results,
-               find_keys,
-               find_results,
-               cpu_ref_set,
-               validate,
-               num_keys,
-               load_factor,
-               to_value,
-               dir);
-
-    bench_p2bht(keys,
+    if (run_bcht) {
+      bench_bcht(keys,
+                 d_keys,
+                 d_pairs,
+                 d_find_keys,
+                 d_find_results,
+                 find_keys,
+                 find_results,
+                 cpu_ref_set,
+                 validate,
+                 num_keys,
+                 load_factor,
+                 to_value,
+                 dir);
+    }
+    if (run_bp2ht) {
+      bench_p2bht(keys,
+                  d_keys,
+                  d_pairs,
+                  d_find_keys,
+                  d_find_results,
+                  find_keys,
+                  find_results,
+                  cpu_ref_set,
+                  validate,
+                  num_keys,
+                  load_factor,
+                  to_value,
+                  dir);
+    }
+    if (run_iht) {
+      bench_iht(keys,
                 d_keys,
                 d_pairs,
                 d_find_keys,
@@ -766,20 +786,7 @@ int main(int argc, char** argv) {
                 load_factor,
                 to_value,
                 dir);
-
-    bench_iht(keys,
-              d_keys,
-              d_pairs,
-              d_find_keys,
-              d_find_results,
-              find_keys,
-              find_results,
-              cpu_ref_set,
-              validate,
-              num_keys,
-              load_factor,
-              to_value,
-              dir);
+    }
   }
 
   return 0;

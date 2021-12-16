@@ -186,7 +186,7 @@ __device__ bool bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold
   auto lane_id = tile.thread_rank();
   const int elected_lane = 0;
   value_type sentinel_pair{sentinel_key_, sentinel_value_};
-
+  const bool use_power_of_two = false;
   using bucket_type = detail::bucket<atomic_pair_type, value_type, tile_type>;
   do {
     bucket_type bucket(&d_table_[primary_bucket * bucket_size], tile);
@@ -194,26 +194,46 @@ __device__ bool bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold
     INCREMENT_PROBES_IN_TILE
     int load = bucket.compute_load(sentinel_pair);
     if (load > threshold_) {
-      // Secondary hashing scheme
-      // Using power of two
-      auto choice0_bucket = hf0_(pair.first) % num_buckets_;
-      auto choice1_bucket = hf1_(pair.first) % num_buckets_;
-      bucket_type bucket0(&d_table_[choice0_bucket * bucket_size], tile);
-      bucket_type bucket1(&d_table_[choice1_bucket * bucket_size], tile);
-      bucket0.load(cuda::memory_order_relaxed);
-      bucket1.load(cuda::memory_order_relaxed);
-      INCREMENT_PROBES_IN_TILE
-      INCREMENT_PROBES_IN_TILE
-      auto bucket0_load = bucket0.compute_load(sentinel_pair);
-      auto bucket1_load = bucket1.compute_load(sentinel_pair);
+      if (use_power_of_two) {
+        // Secondary hashing scheme
+        // Using power of two
+        auto choice0_bucket = hf0_(pair.first) % num_buckets_;
+        auto choice1_bucket = hf1_(pair.first) % num_buckets_;
+        bucket_type bucket0(&d_table_[choice0_bucket * bucket_size], tile);
+        bucket_type bucket1(&d_table_[choice1_bucket * bucket_size], tile);
+        bucket0.load(cuda::memory_order_relaxed);
+        bucket1.load(cuda::memory_order_relaxed);
+        INCREMENT_PROBES_IN_TILE
+        INCREMENT_PROBES_IN_TILE
+        auto bucket0_load = bucket0.compute_load(sentinel_pair);
+        auto bucket1_load = bucket1.compute_load(sentinel_pair);
 
-      if (bucket0_load != bucket_size && bucket1_load != bucket_size) {
-        if (bucket0_load < bucket1_load) {
-          load = bucket0_load;
-          bucket = bucket0;
-        } else {
-          load = bucket1_load;
-          bucket = bucket1;
+        if (bucket0_load != bucket_size && bucket1_load != bucket_size) {
+          if (bucket0_load < bucket1_load) {
+            load = bucket0_load;
+            bucket = bucket0;
+          } else {
+            load = bucket1_load;
+            bucket = bucket1;
+          }
+        }
+      } else {
+        auto next_bucket_index = (primary_bucket + 1) % num_buckets_;
+        while (true) {
+          if (next_bucket_index == primary_bucket) {
+            return false;
+          }
+          bucket_type next_bucket(&d_table_[next_bucket_index * bucket_size], tile);
+          next_bucket.load(cuda::memory_order_relaxed);
+          INCREMENT_PROBES_IN_TILE
+          auto next_bucket_load = next_bucket.compute_load(sentinel_pair);
+          if (next_bucket_load != bucket_size) {
+            load = next_bucket_load;
+            bucket = next_bucket;
+            break;
+          } else {
+            next_bucket_index = (next_bucket_index + 1) % num_buckets_;
+          }
         }
       }
     }
@@ -249,19 +269,45 @@ __device__ bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::ma
 bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::find(
     key_type const& key,
     tile_type const& tile) {
-  const int num_hfs = 3;
-  auto bucket_id = hfp_(key) % num_buckets_;
+  const bool use_power_of_two = false;
+
   using bucket_type = detail::bucket<atomic_pair_type, value_type, tile_type>;
-  for (int hf = 0; hf < num_hfs; hf++) {
-    bucket_type cur_bucket(&d_table_[bucket_id * bucket_size], tile);
-    cur_bucket.load(cuda::memory_order_relaxed);
-    INCREMENT_PROBES_IN_TILE
-    int key_location = cur_bucket.find_key_location(key, key_equal{});
-    if (key_location != -1) {
-      auto found_value = cur_bucket.get_value_from_lane(key_location);
-      return found_value;
-    } else {
-      bucket_id = hf == 0 ? hf0_(key) % num_buckets_ : hf1_(key) % num_buckets_;
+  if (use_power_of_two) {
+    auto bucket_id = hfp_(key) % num_buckets_;
+    const int num_hfs = 3;
+    for (int hf = 0; hf < num_hfs; hf++) {
+      bucket_type cur_bucket(&d_table_[bucket_id * bucket_size], tile);
+      cur_bucket.load(cuda::memory_order_relaxed);
+      INCREMENT_PROBES_IN_TILE
+      int key_location = cur_bucket.find_key_location(key, key_equal{});
+      if (key_location != -1) {
+        auto found_value = cur_bucket.get_value_from_lane(key_location);
+        return found_value;
+      } else {
+        bucket_id = hf == 0 ? hf0_(key) % num_buckets_ : hf1_(key) % num_buckets_;
+      }
+    }
+  } else {
+    auto primary_bucket_id = hfp_(key) % num_buckets_;
+    auto bucket_id = primary_bucket_id;
+    value_type sentinel_pair{sentinel_key_, sentinel_value_};
+    while (true) {
+      bucket_type cur_bucket(&d_table_[bucket_id * bucket_size], tile);
+      cur_bucket.load(cuda::memory_order_relaxed);
+      INCREMENT_PROBES_IN_TILE
+      int key_location = cur_bucket.find_key_location(key, key_equal{});
+      if (key_location != -1) {
+        auto found_value = cur_bucket.get_value_from_lane(key_location);
+        return found_value;
+      } else if (bucket_id != primary_bucket_id &&
+                 cur_bucket.compute_load(sentinel_pair) < bucket_size) {
+        return sentinel_value_;
+      } else {
+        bucket_id = (bucket_id + 1) % num_buckets_;
+        if (bucket_id == bucket_id) {
+          return sentinel_value_;
+        }
+      }
     }
   }
 
