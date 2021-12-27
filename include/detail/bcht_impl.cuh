@@ -284,4 +284,23 @@ void bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::randomize_hash_fun
   hf1_ = initialize_hf<hasher>(rng);
   hf2_ = initialize_hf<hasher>(rng);
 }
+
+template <class Key,
+          class T,
+          class Hash,
+          class KeyEqual,
+          cuda::thread_scope Scope,
+          class Allocator,
+          int B>
+template <typename RNG>
+size_type bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size() {
+  value_type sentinel_pair{sentinel_key_, sentinel_value_};
+  auto num_valid_keys =
+      thrust::count_if(d_table_,
+                       d_table_ + capacity_,
+                       [sentinel_key_, equal_to](const atomic_pair_type& p) {
+                         return equal_to(p.first, sentinel_key_);
+                       });
+  return num_valid_keys;
+}
 }  // namespace bght

@@ -55,6 +55,8 @@ struct bcht {
   using atomic_pair_type = cuda::atomic<value_type, Scope>;
   using allocator_type = Allocator;
   using hasher = Hash;
+  using size_type = std::size_t;
+
   using atomic_pair_allocator_type =
       typename std::allocator_traits<Allocator>::rebind_alloc<atomic_pair_type>;
   using pool_allocator_type =
@@ -102,7 +104,7 @@ struct bcht {
    */
   void clear();
 
-/**
+  /**
    * @brief Host-side API for inserting all pairs defined by the input argument iterators.
    * All keys in the range must be unique and must not exist in the hash table.
    * @tparam InputIt Device-side iterator that can be converted to `value_type`.
@@ -168,6 +170,12 @@ struct bcht {
    */
   template <typename RNG>
   void randomize_hash_functions(RNG& rng);
+
+  /**
+   * @brief Compute the number of elements in the map
+   * @return The number of elements in the map
+   */
+  size_type size() const noexcept;
 
  private:
   template <typename InputIt, typename HashMap>
