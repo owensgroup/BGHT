@@ -149,7 +149,9 @@ TYPED_TEST(HashMapTest, InsertSucess) {
   using value_type = typename TestFixture::map_data::hash_map::mapped_type;
   using pair_type = typename TestFixture::map_data::hash_map::value_type;
   testing_input<key_type, value_type, pair_type> input(num_keys);
-  this->hashmap_->insert(input.pairs.data(), input.pairs.data() + num_keys);
+  bool insert_result =
+      this->hashmap_->insert(input.pairs.data(), input.pairs.data() + num_keys);
+  EXPECT_EQ(insert_result, true);
   input.free();
 }
 
@@ -232,6 +234,11 @@ TYPED_TEST(HashMapTest, FindNotExist) {
   find_results.free();
   input.free();
 }
+
+// other tests to add:
+// custom types
+// custom allocator
+// large number of keys and high load factor
 
 }  // namespace
 
