@@ -61,6 +61,9 @@ struct bcht {
       typename std::allocator_traits<Allocator>::rebind_alloc<atomic_pair_type>;
   using pool_allocator_type =
       typename std::allocator_traits<Allocator>::rebind_alloc<bool>;
+  using size_type_allocator_type =
+      typename std::allocator_traits<Allocator>::rebind_alloc<size_type>;
+
   static constexpr auto bucket_size = B;
   using key_equal = KeyEqual;
 
@@ -175,7 +178,7 @@ struct bcht {
    * @brief Compute the number of elements in the map
    * @return The number of elements in the map
    */
-  size_type size(cudaStream_t stream = 0) const;
+  size_type size(cudaStream_t stream = 0);
 
  private:
   template <typename InputIt, typename HashMap>
@@ -198,6 +201,7 @@ struct bcht {
   allocator_type allocator_;
   atomic_pair_allocator_type atomic_pairs_allocator_;
   pool_allocator_type pool_allocator_;
+  size_type_allocator_type size_type_allocator_;
 
   atomic_pair_type* d_table_{};
   std::shared_ptr<atomic_pair_type> table_;

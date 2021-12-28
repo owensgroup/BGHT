@@ -43,7 +43,8 @@ p2bht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::p2bht(std::size_t capacity,
     , sentinel_value_{empty_value_sentinel}
     , allocator_{allocator}
     , atomic_pairs_allocator_{allocator}
-    , pool_allocator_{allocator} {
+    , pool_allocator_{allocator}
+    , size_type_allocator_{allocator} {
   // capacity_ must be multiple of bucket size
   auto remainder = capacity_ % bucket_size;
   if (remainder) {
@@ -262,15 +263,12 @@ template <class Key,
           cuda::thread_scope Scope,
           typename Allocator,
           int B>
-p2bht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size_type
-p2bht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size(cudaStream_t stream) const {
+typename p2bht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size_type
+p2bht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size(cudaStream_t stream) {
   const auto sentinel_key{sentinel_key_};
 
-  using size_t_allocator_type =
-      typename std::allocator_traits<Allocator>::rebind_alloc<std::size_t>;
-  size_t_allocator_type size_t_allocator{allocator_};
-  auto d_count =
-      std::allocator_traits<size_t_allocator_type>::allocate(size_t_allocator, 1);
+  auto d_count = std::allocator_traits<size_type_allocator_type>::allocate(
+      size_type_allocator_, static_cast<size_type>(1));
   cuda_try(cudaMemsetAsync(d_count, 0, sizeof(std::size_t), stream));
   const uint32_t block_size = 128;
   const uint32_t num_blocks = (capacity_ + block_size - 1) / block_size;
@@ -280,6 +278,8 @@ p2bht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size(cudaStream_t stream) co
   std::size_t num_invalid_keys;
   cuda_try(cudaMemcpyAsync(
       &num_invalid_keys, d_count, sizeof(std::size_t), cudaMemcpyDeviceToHost));
+
+  cudaFree(d_count);
   return capacity_ - num_invalid_keys;
 }
 
