@@ -16,6 +16,7 @@
 
 #pragma once
 #include <cooperative_groups.h>
+#include <thrust/count.h>
 #include <thrust/execution_policy.h>
 #include <thrust/fill.h>
 #include <detail/benchmark_metrics.cuh>
@@ -292,15 +293,24 @@ template <class Key,
           cuda::thread_scope Scope,
           class Allocator,
           int B>
-template <typename RNG>
-size_type bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size() {
-  value_type sentinel_pair{sentinel_key_, sentinel_value_};
-  auto num_valid_keys =
-      thrust::count_if(d_table_,
-                       d_table_ + capacity_,
-                       [sentinel_key_, equal_to](const atomic_pair_type& p) {
-                         return equal_to(p.first, sentinel_key_);
-                       });
-  return num_valid_keys;
+bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size_type
+bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size(cudaStream_t stream) const {
+  const auto sentinel_key{sentinel_key_};
+
+  using size_t_allocator_type =
+      typename std::allocator_traits<Allocator>::rebind_alloc<std::size_t>;
+  size_t_allocator_type size_t_allocator{allocator_};
+  auto d_count =
+      std::allocator_traits<size_t_allocator_type>::allocate(size_t_allocator, 1);
+  cuda_try(cudaMemsetAsync(d_count, 0, sizeof(std::size_t), stream));
+  const uint32_t block_size = 128;
+  const uint32_t num_blocks = (capacity_ + block_size - 1) / block_size;
+
+  detail::kernels::count_kernel<block_size>
+      <<<num_blocks, block_size, 0, stream>>>(sentinel_key, d_count, *this);
+  std::size_t num_invalid_keys;
+  cuda_try(cudaMemcpyAsync(
+      &num_invalid_keys, d_count, sizeof(std::size_t), cudaMemcpyDeviceToHost));
+  return capacity_ - num_invalid_keys;
 }
 }  // namespace bght

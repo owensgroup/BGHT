@@ -16,6 +16,7 @@
 
 #pragma once
 #include <cooperative_groups.h>
+#include <cub/cub.cuh>
 #include <detail/cuda_helpers.cuh>
 
 namespace bght {
@@ -133,6 +134,24 @@ __global__ void find_kernel(InputIt first,
     auto find_key = first[thread_id];
     auto result = map.find(find_key);
     output_begin[thread_id] = result;
+  }
+}
+
+template <int BlockSize, typename InputT, typename HashMap>
+__global__ void count_kernel(const InputT count_key, std::size_t* count, HashMap map) {
+  auto thread_id = threadIdx.x + blockIdx.x * blockDim.x;
+  typedef cub::BlockReduce<std::size_t, BlockSize> BlockReduce;
+  __shared__ typename BlockReduce::TempStorage temp_storage;
+
+  std::size_t match = 0;
+  if (thread_id < map.capacity_) {
+    const auto key = map.d_table_[thread_id].load(cuda::memory_order_relaxed).first;
+    match = (key == count_key);
+  }
+  std::size_t block_num_matches = BlockReduce(temp_storage).Sum(match);
+  if (threadIdx.x == 0) {
+    auto sum = atomicAdd((unsigned long long int*)count,
+                         (unsigned long long int)block_num_matches);
   }
 }
 

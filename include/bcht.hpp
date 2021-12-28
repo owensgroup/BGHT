@@ -175,7 +175,7 @@ struct bcht {
    * @brief Compute the number of elements in the map
    * @return The number of elements in the map
    */
-  size_type size() const noexcept;
+  size_type size(cudaStream_t stream = 0) const;
 
  private:
   template <typename InputIt, typename HashMap>
@@ -186,6 +186,11 @@ struct bcht {
                                                             InputIt,
                                                             OutputIt,
                                                             HashMap);
+
+  template <int BlockSize, typename InputT, typename HashMap>
+  friend __global__ void detail::kernels::count_kernel(const InputT,
+                                                       std::size_t*,
+                                                       HashMap);
 
   std::size_t capacity_;
   key_type sentinel_key_{};

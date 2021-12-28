@@ -28,3 +28,18 @@ set_target_properties(test_allocator PROPERTIES
 target_link_libraries(test_allocator PRIVATE bght
 								  PRIVATE bght)
 
+
+include(${CMAKE_SOURCE_DIR}/cmake/CPM.cmake)
+
+
+CPMAddPackage(
+  NAME googletest
+  GITHUB_REPOSITORY google/googletest
+  GIT_TAG main
+)
+
+
+add_executable(gtest_map gtest_map.cu)
+target_link_libraries(gtest_map PRIVATE bght
+								  PRIVATE bght
+								  PUBLIC gtest)

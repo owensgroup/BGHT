@@ -64,6 +64,7 @@ struct iht {
       typename std::allocator_traits<Allocator>::rebind_alloc<bool>;
   static constexpr auto bucket_size = B;
   using key_equal = KeyEqual;
+  using size_type = std::size_t;
 
   /**
    * @brief Constructs the hash table with the specified capacity and uses the specified
@@ -171,6 +172,12 @@ struct iht {
   template <typename RNG>
   void randomize_hash_functions(RNG& rng);
 
+  /**
+   * @brief Compute the number of elements in the map
+   * @return The number of elements in the map
+   */
+  size_type size(cudaStream_t stream = 0) const;
+
  private:
   template <typename InputIt, typename HashMap>
   friend __global__ void detail::kernels::tiled_insert_kernel(InputIt, InputIt, HashMap);
@@ -180,6 +187,11 @@ struct iht {
                                                             InputIt,
                                                             OutputIt,
                                                             HashMap);
+
+  template <int BlockSize, typename InputT, typename HashMap>
+  friend __global__ void detail::kernels::count_kernel(const InputT,
+                                                       std::size_t*,
+                                                       HashMap);
 
   static constexpr auto threshold_ = Threshold;
 
