@@ -45,7 +45,8 @@ iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::iht(
     , sentinel_value_{empty_value_sentinel}
     , allocator_{allocator}
     , atomic_pairs_allocator_{allocator}
-    , pool_allocator_{allocator} {
+    , pool_allocator_{allocator}
+    , size_type_allocator_{allocator} {
   // capacity_ must be multiple of bucket size
   auto remainder = capacity_ % bucket_size;
   if (remainder) {
@@ -282,5 +283,33 @@ void iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::
   hfp_ = initialize_hf<hasher>(rng);
   hf0_ = initialize_hf<hasher>(rng);
   hf1_ = initialize_hf<hasher>(rng);
+}
+
+template <class Key,
+          class T,
+          class Hash,
+          class KeyEqual,
+          cuda::thread_scope Scope,
+          typename Allocator,
+          int B,
+          int Threshold>
+typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::size_type
+iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::size(cudaStream_t stream) {
+  const auto sentinel_key{sentinel_key_};
+
+  auto d_count = std::allocator_traits<size_type_allocator_type>::allocate(
+      size_type_allocator_, static_cast<size_type>(1));
+  cuda_try(cudaMemsetAsync(d_count, 0, sizeof(std::size_t), stream));
+  const uint32_t block_size = 128;
+  const uint32_t num_blocks = (capacity_ + block_size - 1) / block_size;
+
+  detail::kernels::count_kernel<block_size>
+      <<<num_blocks, block_size, 0, stream>>>(sentinel_key, d_count, *this);
+  std::size_t num_invalid_keys;
+  cuda_try(cudaMemcpyAsync(
+      &num_invalid_keys, d_count, sizeof(std::size_t), cudaMemcpyDeviceToHost));
+
+  cudaFree(d_count);
+  return capacity_ - num_invalid_keys;
 }
 }  // namespace bght

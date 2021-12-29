@@ -47,6 +47,7 @@ set(CUDA_FLAGS
         -lineinfo>
     ${CUDA_ARCHS}
 	--expt-extended-lambda
+    -extended-lambda
     -Wno-deprecated-gpu-targets #silence deprecated architectures
     --forward-unknown-to-host-linker
     --forward-unknown-to-host-compiler

@@ -55,10 +55,15 @@ struct p2bht {
   using atomic_pair_type = cuda::atomic<value_type, Scope>;
   using allocator_type = Allocator;
   using hasher = Hash;
+  using size_type = std::size_t;
+
   using atomic_pair_allocator_type =
       typename std::allocator_traits<Allocator>::rebind_alloc<atomic_pair_type>;
   using pool_allocator_type =
       typename std::allocator_traits<Allocator>::rebind_alloc<bool>;
+  using size_type_allocator_type =
+      typename std::allocator_traits<Allocator>::rebind_alloc<size_type>;
+
   static constexpr auto bucket_size = B;
   using key_equal = KeyEqual;
 
@@ -168,6 +173,12 @@ struct p2bht {
   template <typename RNG>
   void randomize_hash_functions(RNG& rng);
 
+  /**
+   * @brief Compute the number of elements in the map
+   * @return The number of elements in the map
+   */
+  size_type size(cudaStream_t stream = 0);
+
  private:
   template <typename InputIt, typename HashMap>
   friend __global__ void detail::kernels::tiled_insert_kernel(InputIt, InputIt, HashMap);
@@ -178,12 +189,18 @@ struct p2bht {
                                                             OutputIt,
                                                             HashMap);
 
+  template <int BlockSize, typename InputT, typename HashMap>
+  friend __global__ void detail::kernels::count_kernel(const InputT,
+                                                       std::size_t*,
+                                                       HashMap);
+
   std::size_t capacity_;
   key_type sentinel_key_{};
   mapped_type sentinel_value_{};
   allocator_type allocator_;
   atomic_pair_allocator_type atomic_pairs_allocator_;
   pool_allocator_type pool_allocator_;
+  size_type_allocator_type size_type_allocator_;
 
   atomic_pair_type* d_table_{};
   std::shared_ptr<atomic_pair_type> table_;
