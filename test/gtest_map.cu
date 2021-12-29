@@ -50,7 +50,7 @@ struct mapped_vector {
   mapped_vector(std::size_t capacity) : capacity_(capacity) { allocate(capacity); }
   T& operator[](std::size_t index) { return dh_buffer_[index]; }
   ~mapped_vector() {}
-  void free() { cudaFree(dh_buffer_); }
+  void free() { cuda_try(cudaFreeHost(dh_buffer_)); }
   T* data() const { return dh_buffer_; }
 
  private:
