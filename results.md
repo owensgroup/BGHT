@@ -1,6 +1,4 @@
-## Archived results
-
-The repository contains archived benchmarking results on an NVIDIA TITAN-V and a Quadro-GV100 GPUs.
+# Archived benchmarking results
 
 ## NVIDIA TITAN-V
 - [Results in CSV format](https://github.com/owensgroup/BGHT/tree/main/results/arxiv/NVIDIA-TITAN-V)
