@@ -143,7 +143,7 @@ TYPED_TEST(HashMapTest, Construction) {
   EXPECT_TRUE(last_error == cudaSuccess);
 }
 
-TYPED_TEST(HashMapTest, InsertSucess) {
+TYPED_TEST(HashMapTest, InsertSuccess) {
   std::size_t num_keys = 4;
   using key_type = typename TestFixture::map_data::hash_map::key_type;
   using value_type = typename TestFixture::map_data::hash_map::mapped_type;
