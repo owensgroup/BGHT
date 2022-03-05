@@ -28,6 +28,12 @@ set_target_properties(test_allocator PROPERTIES
 target_link_libraries(test_allocator PRIVATE bght
 								  PRIVATE bght)
 
+add_executable(test_bcht_set test_bcht_set.cu)
+set_target_properties(test_bcht_set PROPERTIES
+								FOLDER "tests")
+target_link_libraries(test_bcht_set PRIVATE bght
+								  PRIVATE bght)
+
 
 include(${CMAKE_SOURCE_DIR}/cmake/CPM.cmake)
 
