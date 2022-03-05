@@ -1,0 +1,269 @@
+::: {#top}
+::: {#titlearea}
++-----------------------------------------------------------------------+
+| ::: {#projectname}                                                    |
+| BGHT                                                                  |
+| :::                                                                   |
+|                                                                       |
+| ::: {#projectbrief}                                                   |
+| High-performance static GPU hash tables.                              |
+| :::                                                                   |
++-----------------------------------------------------------------------+
+:::
+
+::: {#main-nav}
+:::
+
+::: {#MSearchSelectWindow onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()" onkeydown="return searchBox.OnSearchSelectKey(event)"}
+:::
+
+::: {#MSearchResultsWindow}
+:::
+
+::: {#nav-path .navpath}
+-   [include](../../dir_d44c64559bbebec7f509842c48db8b23.html){.el}
+:::
+:::
+
+::: header
+::: headertitle
+::: title
+gpu_timer.hpp
+:::
+:::
+:::
+
+::: contents
+::: fragment
+::: line
+[]{#l00001}[ 1]{.lineno}[/\*]{.comment}
+:::
+
+::: line
+[]{#l00002}[ 2]{.lineno}[ \* Copyright 2021 The Regents of the
+University of California, Davis]{.comment}
+:::
+
+::: line
+[]{#l00003}[ 3]{.lineno}[ \*]{.comment}
+:::
+
+::: line
+[]{#l00004}[ 4]{.lineno}[ \* Licensed under the Apache License, Version
+2.0 (the \"License\");]{.comment}
+:::
+
+::: line
+[]{#l00005}[ 5]{.lineno}[ \* you may not use this file except in
+compliance with the License.]{.comment}
+:::
+
+::: line
+[]{#l00006}[ 6]{.lineno}[ \* You may obtain a copy of the License
+at]{.comment}
+:::
+
+::: line
+[]{#l00007}[ 7]{.lineno}[ \*]{.comment}
+:::
+
+::: line
+[]{#l00008}[ 8]{.lineno}[ \*
+http://www.apache.org/licenses/LICENSE-2.0]{.comment}
+:::
+
+::: line
+[]{#l00009}[ 9]{.lineno}[ \*]{.comment}
+:::
+
+::: line
+[]{#l00010}[ 10]{.lineno}[ \* Unless required by applicable law or
+agreed to in writing, software]{.comment}
+:::
+
+::: line
+[]{#l00011}[ 11]{.lineno}[ \* distributed under the License is
+distributed on an \"AS IS\" BASIS,]{.comment}
+:::
+
+::: line
+[]{#l00012}[ 12]{.lineno}[ \* WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.]{.comment}
+:::
+
+::: line
+[]{#l00013}[ 13]{.lineno}[ \* See the License for the specific language
+governing permissions and]{.comment}
+:::
+
+::: line
+[]{#l00014}[ 14]{.lineno}[ \* limitations under the License.]{.comment}
+:::
+
+::: line
+[]{#l00015}[ 15]{.lineno}[ \*/]{.comment}
+:::
+
+::: line
+[]{#l00016}[ 16]{.lineno}
+:::
+
+::: line
+[]{#l00017}[ 17]{.lineno}[#pragma once]{.preprocessor}
+:::
+
+::: line
+[]{#l00018}[ 18]{.lineno}[#include \<cuda_runtime.h\>]{.preprocessor}
+:::
+
+::: line
+[]{#l00019}[ 19]{.lineno}
+:::
+
+::: line
+[]{#l00020}[
+[20](../../de/dc0/structgpu__timer.html){.line}]{.lineno}[struct
+]{.keyword}[gpu_timer](../../de/dc0/structgpu__timer.html){.code
+.hl_struct} {
+:::
+
+::: line
+[]{#l00021}[ 21]{.lineno}
+[gpu_timer](../../de/dc0/structgpu__timer.html){.code
+.hl_struct}(cudaStream_t stream = 0) : start\_{}, stop\_{},
+stream\_(stream) {
+:::
+
+::: line
+[]{#l00022}[ 22]{.lineno} cudaEventCreate(&start\_);
+:::
+
+::: line
+[]{#l00023}[ 23]{.lineno} cudaEventCreate(&stop\_);
+:::
+
+::: line
+[]{#l00024}[ 24]{.lineno} }
+:::
+
+::: line
+[]{#l00025}[ 25]{.lineno} [void]{.keywordtype} start_timer() {
+cudaEventRecord(start\_, stream\_); }
+:::
+
+::: line
+[]{#l00026}[ 26]{.lineno} [void]{.keywordtype} stop_timer() {
+cudaEventRecord(stop\_, stream\_); }
+:::
+
+::: line
+[]{#l00027}[ 27]{.lineno} [float]{.keywordtype} get_elapsed_ms() {
+:::
+
+::: line
+[]{#l00028}[ 28]{.lineno} compute_ms();
+:::
+
+::: line
+[]{#l00029}[ 29]{.lineno} [return]{.keywordflow} elapsed_time\_;
+:::
+
+::: line
+[]{#l00030}[ 30]{.lineno} }
+:::
+
+::: line
+[]{#l00031}[ 31]{.lineno}
+:::
+
+::: line
+[]{#l00032}[ 32]{.lineno} [float]{.keywordtype} get_elapsed_s() {
+:::
+
+::: line
+[]{#l00033}[ 33]{.lineno} compute_ms();
+:::
+
+::: line
+[]{#l00034}[ 34]{.lineno} [return]{.keywordflow} elapsed_time\_ \*
+0.001f;
+:::
+
+::: line
+[]{#l00035}[ 35]{.lineno} }
+:::
+
+::: line
+[]{#l00036}[ 36]{.lineno}
+[\~gpu_timer](../../de/dc0/structgpu__timer.html){.code .hl_struct}() {
+:::
+
+::: line
+[]{#l00037}[ 37]{.lineno} cudaEventDestroy(start\_);
+:::
+
+::: line
+[]{#l00038}[ 38]{.lineno} cudaEventDestroy(stop\_);
+:::
+
+::: line
+[]{#l00039}[ 39]{.lineno} };
+:::
+
+::: line
+[]{#l00040}[ 40]{.lineno}
+:::
+
+::: line
+[]{#l00041}[ 41]{.lineno} [private]{.keyword}:
+:::
+
+::: line
+[]{#l00042}[ 42]{.lineno} [void]{.keywordtype} compute_ms() {
+:::
+
+::: line
+[]{#l00043}[ 43]{.lineno} cudaEventSynchronize(stop\_);
+:::
+
+::: line
+[]{#l00044}[ 44]{.lineno} cudaEventElapsedTime(&elapsed_time\_, start\_,
+stop\_);
+:::
+
+::: line
+[]{#l00045}[ 45]{.lineno} }
+:::
+
+::: line
+[]{#l00046}[ 46]{.lineno} cudaEvent_t start\_, stop\_;
+:::
+
+::: line
+[]{#l00047}[ 47]{.lineno} cudaStream_t stream\_;
+:::
+
+::: line
+[]{#l00048}[ 48]{.lineno} [float]{.keywordtype} elapsed_time\_ = 0.0f;
+:::
+
+::: line
+[]{#l00049}[ 49]{.lineno}};
+:::
+
+::: {#astructgpu__timer_html .ttc}
+::: ttname
+[gpu_timer](../../de/dc0/structgpu__timer.html)
+:::
+
+::: ttdef
+**Definition:** gpu_timer.hpp:20
+:::
+:::
+:::
+:::
+
+------------------------------------------------------------------------
+
+[Generated by [![doxygen](../../doxygen.svg){.footer width="104"
+height="31"}](https://www.doxygen.org/index.html) 1.9.2]{.small}
