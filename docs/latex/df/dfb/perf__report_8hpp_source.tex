@@ -1,0 +1,37 @@
+\hypertarget{perf__report_8hpp_source}{}\doxysection{perf\+\_\+report.\+hpp}
+\label{perf__report_8hpp_source}\index{include/perf\_report.hpp@{include/perf\_report.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ *   Copyright 2021 The Regents of the University of California, Davis}}
+\DoxyCodeLine{3 \textcolor{comment}{ *}}
+\DoxyCodeLine{4 \textcolor{comment}{ *   Licensed under the Apache License, Version 2.0 (the "{}License"{});}}
+\DoxyCodeLine{5 \textcolor{comment}{ *   you may not use this file except in compliance with the License.}}
+\DoxyCodeLine{6 \textcolor{comment}{ *   You may obtain a copy of the License at}}
+\DoxyCodeLine{7 \textcolor{comment}{ *}}
+\DoxyCodeLine{8 \textcolor{comment}{ *       http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{9 \textcolor{comment}{ *}}
+\DoxyCodeLine{10 \textcolor{comment}{ *   Unless required by applicable law or agreed to in writing, software}}
+\DoxyCodeLine{11 \textcolor{comment}{ *   distributed under the License is distributed on an "{}AS IS"{} BASIS,}}
+\DoxyCodeLine{12 \textcolor{comment}{ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *   See the License for the specific language governing permissions and}}
+\DoxyCodeLine{14 \textcolor{comment}{ *   limitations under the License.}}
+\DoxyCodeLine{15 \textcolor{comment}{ */}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keywordtype}{void} std\_cout\_perf\_report(\textcolor{keywordtype}{float} insertion\_s,}
+\DoxyCodeLine{20                           \textcolor{keywordtype}{float} find\_s,}
+\DoxyCodeLine{21                           std::size\_t num\_insertions,}
+\DoxyCodeLine{22                           std::size\_t num\_finds) \{}
+\DoxyCodeLine{23   std::cout << \textcolor{stringliteral}{"{}inserted: "{}} << num\_insertions << \textcolor{stringliteral}{"{} keys"{}} << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{24   std::cout << \textcolor{stringliteral}{"{}finds: "{}} << num\_finds << \textcolor{stringliteral}{"{} keys"{}} << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26   \textcolor{keywordtype}{double} insertion\_rate = double(num\_insertions) * 1e-\/6 / insertion\_s;}
+\DoxyCodeLine{27   \textcolor{keywordtype}{double} find\_rate = double(num\_finds) * 1e-\/6 / find\_s;}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29   std::cout << \textcolor{stringliteral}{"{}insert\_rate: "{}} << insertion\_rate << \textcolor{stringliteral}{"{} Mkey/s"{}} << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{30   std::cout << \textcolor{stringliteral}{"{}find\_rate: "{}} << find\_rate << \textcolor{stringliteral}{"{} Mkey/s"{}} << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{31 \}}
+
+\end{DoxyCode}

@@ -1,0 +1,95 @@
+\hypertarget{cmd_8hpp_source}{}\doxysection{cmd.\+hpp}
+\label{cmd_8hpp_source}\index{include/cmd.hpp@{include/cmd.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ *   Copyright 2021 The Regents of the University of California, Davis}}
+\DoxyCodeLine{3 \textcolor{comment}{ *}}
+\DoxyCodeLine{4 \textcolor{comment}{ *   Licensed under the Apache License, Version 2.0 (the "{}License"{});}}
+\DoxyCodeLine{5 \textcolor{comment}{ *   you may not use this file except in compliance with the License.}}
+\DoxyCodeLine{6 \textcolor{comment}{ *   You may obtain a copy of the License at}}
+\DoxyCodeLine{7 \textcolor{comment}{ *}}
+\DoxyCodeLine{8 \textcolor{comment}{ *       http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{9 \textcolor{comment}{ *}}
+\DoxyCodeLine{10 \textcolor{comment}{ *   Unless required by applicable law or agreed to in writing, software}}
+\DoxyCodeLine{11 \textcolor{comment}{ *   distributed under the License is distributed on an "{}AS IS"{} BASIS,}}
+\DoxyCodeLine{12 \textcolor{comment}{ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *   See the License for the specific language governing permissions and}}
+\DoxyCodeLine{14 \textcolor{comment}{ *   limitations under the License.}}
+\DoxyCodeLine{15 \textcolor{comment}{ */}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <algorithm>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include <optional>}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#include <string\_view>}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include <typeinfo>}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 std::string str\_tolower(\textcolor{keyword}{const} std::string\_view s) \{}
+\DoxyCodeLine{26   std::string output(s.length(), \textcolor{charliteral}{' '});}
+\DoxyCodeLine{27   std::transform(s.begin(), s.end(), output.begin(), [](\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} c) \{}
+\DoxyCodeLine{28     return std::tolower(c);}
+\DoxyCodeLine{29   \});}
+\DoxyCodeLine{30   \textcolor{keywordflow}{return} output;}
+\DoxyCodeLine{31 \}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{comment}{// Finds an argument value}}
+\DoxyCodeLine{34 \textcolor{comment}{// auto arguments = std::vector<std::string>(argv, argv + argc);}}
+\DoxyCodeLine{35 \textcolor{comment}{// Example:}}
+\DoxyCodeLine{36 \textcolor{comment}{// auto k = get\_arg\_value<T>(arguments, "{}-\/flag"{})}}
+\DoxyCodeLine{37 \textcolor{comment}{// auto arguments = std::vector<std::string>(argv, argv + argc);}}
+\DoxyCodeLine{38 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{39 std::optional<T> get\_arg\_value(\textcolor{keyword}{const} std::vector<std::string>\& arguments,}
+\DoxyCodeLine{40                                \textcolor{keyword}{const} \textcolor{keywordtype}{char}* flag) \{}
+\DoxyCodeLine{41   uint32\_t first\_argument = 1;}
+\DoxyCodeLine{42   \textcolor{keywordflow}{for} (uint32\_t i = first\_argument; i < arguments.size(); i++) \{}
+\DoxyCodeLine{43     std::string\_view argument = std::string\_view(arguments[i]);}
+\DoxyCodeLine{44     \textcolor{keyword}{auto} key\_start = argument.find\_first\_not\_of(\textcolor{stringliteral}{"{}-\/"{}});}
+\DoxyCodeLine{45     \textcolor{keyword}{auto} value\_start = argument.find(\textcolor{stringliteral}{"{}="{}});}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \textcolor{keywordtype}{bool} failed = argument.length() == 0;              \textcolor{comment}{// there is an argument}}
+\DoxyCodeLine{48     failed |= key\_start == std::string::npos;          \textcolor{comment}{// it has a -\/}}
+\DoxyCodeLine{49     failed |= value\_start == std::string::npos;        \textcolor{comment}{// it has an =}}
+\DoxyCodeLine{50     failed |= key\_start > 2;                           \textcolor{comment}{// -\/ or -\/-\/ at beginning}}
+\DoxyCodeLine{51     failed |= (value\_start -\/ key\_start) == 0;          \textcolor{comment}{// there is a key}}
+\DoxyCodeLine{52     failed |= (argument.length() -\/ value\_start) == 1;  \textcolor{comment}{// = is not last}}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54     \textcolor{keywordflow}{if} (failed) \{}
+\DoxyCodeLine{55       std::cout << \textcolor{stringliteral}{"{}Invalid argument: "{}} << argument << \textcolor{stringliteral}{"{} ignored.\(\backslash\)n"{}};}
+\DoxyCodeLine{56       std::cout << \textcolor{stringliteral}{"{}Use: -\/flag=value "{}} << std::endl;}
+\DoxyCodeLine{57       std::terminate();}
+\DoxyCodeLine{58     \}}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60     std::string\_view argument\_name = argument.substr(key\_start, value\_start -\/ key\_start);}
+\DoxyCodeLine{61     value\_start++;  \textcolor{comment}{// ignore the =}}
+\DoxyCodeLine{62     std::string\_view argument\_value =}
+\DoxyCodeLine{63         argument.substr(value\_start, argument.length() -\/ key\_start);}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65     \textcolor{keywordflow}{if} (argument\_name == std::string\_view(flag)) \{}
+\DoxyCodeLine{66       \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same<T, float>::value) \{}
+\DoxyCodeLine{67         \textcolor{keywordflow}{return} \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(std::strtof(argument\_value.data(), \textcolor{keyword}{nullptr}));}
+\DoxyCodeLine{68       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same<T, double>::value) \{}
+\DoxyCodeLine{69         \textcolor{keywordflow}{return} \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(std::strtod(argument\_value.data(), \textcolor{keyword}{nullptr}));}
+\DoxyCodeLine{70       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same<T, int>::value) \{}
+\DoxyCodeLine{71         \textcolor{keywordflow}{return} \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(std::strtol(argument\_value.data(), \textcolor{keyword}{nullptr}, 10));}
+\DoxyCodeLine{72       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same<T, long long>::value) \{}
+\DoxyCodeLine{73         \textcolor{keywordflow}{return} \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(std::strtoll(argument\_value.data(), \textcolor{keyword}{nullptr}, 10));}
+\DoxyCodeLine{74       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same<T, uint32\_t>::value) \{}
+\DoxyCodeLine{75         \textcolor{keywordflow}{return} \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(std::strtoul(argument\_value.data(), \textcolor{keyword}{nullptr}, 10));}
+\DoxyCodeLine{76       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same<T, uint64\_t>::value) \{}
+\DoxyCodeLine{77         \textcolor{keywordflow}{return} \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(std::strtoull(argument\_value.data(), \textcolor{keyword}{nullptr}, 10));}
+\DoxyCodeLine{78       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same<T, std::string>::value) \{}
+\DoxyCodeLine{79         \textcolor{keywordflow}{return} std::string(argument\_value);}
+\DoxyCodeLine{80       \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} \textcolor{keyword}{constexpr} (std::is\_same<T, bool>::value) \{}
+\DoxyCodeLine{81         \textcolor{keywordflow}{return} str\_tolower(argument\_value) == \textcolor{stringliteral}{"{}true"{}};}
+\DoxyCodeLine{82       \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{83         std::cout << \textcolor{stringliteral}{"{}Unknown type"{}} << std::endl;}
+\DoxyCodeLine{84         std::terminate();}
+\DoxyCodeLine{85       \}}
+\DoxyCodeLine{86     \}}
+\DoxyCodeLine{87   \}}
+\DoxyCodeLine{88   \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{89 \}}
+
+\end{DoxyCode}

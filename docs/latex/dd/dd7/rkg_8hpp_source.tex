@@ -1,0 +1,110 @@
+\hypertarget{rkg_8hpp_source}{}\doxysection{rkg.\+hpp}
+\label{rkg_8hpp_source}\index{include/rkg.hpp@{include/rkg.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ *   Copyright 2021 The Regents of the University of California, Davis}}
+\DoxyCodeLine{3 \textcolor{comment}{ *}}
+\DoxyCodeLine{4 \textcolor{comment}{ *   Licensed under the Apache License, Version 2.0 (the "{}License"{});}}
+\DoxyCodeLine{5 \textcolor{comment}{ *   you may not use this file except in compliance with the License.}}
+\DoxyCodeLine{6 \textcolor{comment}{ *   You may obtain a copy of the License at}}
+\DoxyCodeLine{7 \textcolor{comment}{ *}}
+\DoxyCodeLine{8 \textcolor{comment}{ *       http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{9 \textcolor{comment}{ *}}
+\DoxyCodeLine{10 \textcolor{comment}{ *   Unless required by applicable law or agreed to in writing, software}}
+\DoxyCodeLine{11 \textcolor{comment}{ *   distributed under the License is distributed on an "{}AS IS"{} BASIS,}}
+\DoxyCodeLine{12 \textcolor{comment}{ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *   See the License for the specific language governing permissions and}}
+\DoxyCodeLine{14 \textcolor{comment}{ *   limitations under the License.}}
+\DoxyCodeLine{15 \textcolor{comment}{ */}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <filesystem>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <fstream>}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include <random>}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include <unordered\_set>}}
+\DoxyCodeLine{23 \textcolor{keyword}{namespace }rkg \{}
+\DoxyCodeLine{24 \textcolor{keyword}{template} <\textcolor{keyword}{typename} key\_type, \textcolor{keyword}{typename} value\_type>}
+\DoxyCodeLine{25 value\_type generate\_value(key\_type in) \{}
+\DoxyCodeLine{26   \textcolor{keywordflow}{return} in + 1;}
+\DoxyCodeLine{27 \}}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 \textcolor{keyword}{template} <\textcolor{keyword}{typename} key\_type, \textcolor{keyword}{typename} value\_type, \textcolor{keyword}{typename} \textcolor{keywordtype}{size\_t}ype>}
+\DoxyCodeLine{30 \textcolor{keywordtype}{void} generate\_uniform\_unique\_pairs(std::vector<key\_type>\& keys,}
+\DoxyCodeLine{31                                    std::vector<value\_type>\& values,}
+\DoxyCodeLine{32                                    size\_type num\_keys,}
+\DoxyCodeLine{33                                    \textcolor{keywordtype}{bool} cache = \textcolor{keyword}{false},}
+\DoxyCodeLine{34                                    key\_type min\_key = 0) \{}
+\DoxyCodeLine{35   keys.resize(num\_keys);}
+\DoxyCodeLine{36   values.resize(num\_keys);}
+\DoxyCodeLine{37   \textcolor{keywordtype}{unsigned} seed = 1;}
+\DoxyCodeLine{38   \textcolor{comment}{// bool cache = true;}}
+\DoxyCodeLine{39   std::string dataset\_dir = \textcolor{stringliteral}{"{}dataset"{}};}
+\DoxyCodeLine{40   std::string dataset\_name = std::to\_string(num\_keys) + \textcolor{stringliteral}{"{}\_"{}} + std::to\_string(seed);}
+\DoxyCodeLine{41   std::string dataset\_path = dataset\_dir + \textcolor{stringliteral}{"{}/"{}} + dataset\_name;}
+\DoxyCodeLine{42   \textcolor{keywordflow}{if} (cache) \{}
+\DoxyCodeLine{43     \textcolor{keywordflow}{if} (std::filesystem::exists(dataset\_dir)) \{}
+\DoxyCodeLine{44       \textcolor{keywordflow}{if} (std::filesystem::exists(dataset\_path)) \{}
+\DoxyCodeLine{45         std::cout << \textcolor{stringliteral}{"{}Reading cached keys.."{}} << std::endl;}
+\DoxyCodeLine{46         std::ifstream dataset(dataset\_path, std::ios::binary);}
+\DoxyCodeLine{47         dataset.read((\textcolor{keywordtype}{char}*)keys.data(), \textcolor{keyword}{sizeof}(key\_type) * num\_keys);}
+\DoxyCodeLine{48         dataset.read((\textcolor{keywordtype}{char}*)values.data(), \textcolor{keyword}{sizeof}(value\_type) * num\_keys);}
+\DoxyCodeLine{49         dataset.close();}
+\DoxyCodeLine{50         \textcolor{keywordflow}{return};}
+\DoxyCodeLine{51       \}}
+\DoxyCodeLine{52     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{53       std::filesystem::create\_directory(dataset\_dir);}
+\DoxyCodeLine{54     \}}
+\DoxyCodeLine{55   \}}
+\DoxyCodeLine{56   std::random\_device rd;}
+\DoxyCodeLine{57   std::mt19937 rng(seed);}
+\DoxyCodeLine{58   \textcolor{keyword}{auto} max\_key = std::numeric\_limits<key\_type>::max() -\/ 1;}
+\DoxyCodeLine{59   std::uniform\_int\_distribution<key\_type> uni(min\_key, max\_key);}
+\DoxyCodeLine{60   std::unordered\_set<key\_type> unique\_keys;}
+\DoxyCodeLine{61   \textcolor{keywordflow}{while} (unique\_keys.size() < num\_keys) \{}
+\DoxyCodeLine{62     unique\_keys.insert(uni(rng));}
+\DoxyCodeLine{63     \textcolor{comment}{// unique\_keys.insert(unique\_keys.size() + 1);}}
+\DoxyCodeLine{64   \}}
+\DoxyCodeLine{65   std::copy(unique\_keys.cbegin(), unique\_keys.cend(), keys.begin());}
+\DoxyCodeLine{66   std::shuffle(keys.begin(), keys.end(), rng);}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68 \textcolor{preprocessor}{\#ifdef \_WIN32}}
+\DoxyCodeLine{69   \textcolor{comment}{// OpenMP + windows don't allow unsigned loops}}
+\DoxyCodeLine{70   \textcolor{keywordflow}{for} (uint32\_t i = 0; i < unique\_keys.size(); i++) \{}
+\DoxyCodeLine{71     values[i] = generate\_value<key\_type, value\_type>(keys[i]);}
+\DoxyCodeLine{72   \}}
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75   \textcolor{keywordflow}{for} (uint32\_t i = 0; i < unique\_keys.size(); i++) \{}
+\DoxyCodeLine{76     values[i] = generate\_value<key\_type, value\_type>(keys[i]);}
+\DoxyCodeLine{77   \}}
+\DoxyCodeLine{78 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80   \textcolor{keywordflow}{if} (cache) \{}
+\DoxyCodeLine{81     std::cout << \textcolor{stringliteral}{"{}Caching.."{}} << std::endl;}
+\DoxyCodeLine{82     std::ofstream dataset(dataset\_path, std::ios::binary);}
+\DoxyCodeLine{83     dataset.write((\textcolor{keywordtype}{char}*)keys.data(), \textcolor{keyword}{sizeof}(key\_type) * num\_keys);}
+\DoxyCodeLine{84     dataset.write((\textcolor{keywordtype}{char}*)values.data(), \textcolor{keyword}{sizeof}(value\_type) * num\_keys);}
+\DoxyCodeLine{85     dataset.close();}
+\DoxyCodeLine{86   \}}
+\DoxyCodeLine{87 \}}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89 \textcolor{keyword}{template} <\textcolor{keyword}{typename} key\_type, \textcolor{keyword}{typename} \textcolor{keywordtype}{size\_t}ype>}
+\DoxyCodeLine{90 \textcolor{keywordtype}{void} generate\_uniform\_unique\_keys(std::vector<key\_type>\& keys, size\_type num\_keys) \{}
+\DoxyCodeLine{91   keys.resize(num\_keys);}
+\DoxyCodeLine{92   \textcolor{keywordtype}{unsigned} seed = 1;}
+\DoxyCodeLine{93   std::random\_device rd;}
+\DoxyCodeLine{94   std::mt19937 rng(seed);}
+\DoxyCodeLine{95   \textcolor{keyword}{auto} max\_key = std::numeric\_limits<key\_type>::max() -\/ 1;}
+\DoxyCodeLine{96   std::uniform\_int\_distribution<key\_type> uni(0, max\_key);}
+\DoxyCodeLine{97   std::unordered\_set<key\_type> unique\_keys;}
+\DoxyCodeLine{98   \textcolor{keywordflow}{while} (unique\_keys.size() < num\_keys) \{}
+\DoxyCodeLine{99     unique\_keys.insert(uni(rng));}
+\DoxyCodeLine{100   \}}
+\DoxyCodeLine{101   std::copy(unique\_keys.cbegin(), unique\_keys.cend(), keys.begin());}
+\DoxyCodeLine{102   std::shuffle(keys.begin(), keys.end(), rng);}
+\DoxyCodeLine{103 \}}
+\DoxyCodeLine{104 \}  \textcolor{comment}{// namespace rkg}}
+
+\end{DoxyCode}

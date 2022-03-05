@@ -1,0 +1,36 @@
+\hypertarget{rng_8hpp_source}{}\doxysection{rng.\+hpp}
+\label{rng_8hpp_source}\index{include/detail/rng.hpp@{include/detail/rng.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ *   Copyright 2021 The Regents of the University of California, Davis}}
+\DoxyCodeLine{3 \textcolor{comment}{ *}}
+\DoxyCodeLine{4 \textcolor{comment}{ *   Licensed under the Apache License, Version 2.0 (the "{}License"{});}}
+\DoxyCodeLine{5 \textcolor{comment}{ *   you may not use this file except in compliance with the License.}}
+\DoxyCodeLine{6 \textcolor{comment}{ *   You may obtain a copy of the License at}}
+\DoxyCodeLine{7 \textcolor{comment}{ *}}
+\DoxyCodeLine{8 \textcolor{comment}{ *       http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{9 \textcolor{comment}{ *}}
+\DoxyCodeLine{10 \textcolor{comment}{ *   Unless required by applicable law or agreed to in writing, software}}
+\DoxyCodeLine{11 \textcolor{comment}{ *   distributed under the License is distributed on an "{}AS IS"{} BASIS,}}
+\DoxyCodeLine{12 \textcolor{comment}{ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *   See the License for the specific language governing permissions and}}
+\DoxyCodeLine{14 \textcolor{comment}{ *   limitations under the License.}}
+\DoxyCodeLine{15 \textcolor{comment}{ */}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{18 \textcolor{keyword}{namespace }bght \{}
+\DoxyCodeLine{19 \textcolor{keyword}{namespace }detail \{}
+\DoxyCodeLine{20 \textcolor{keyword}{struct }mars\_rng\_32 \{}
+\DoxyCodeLine{21   uint32\_t y;}
+\DoxyCodeLine{22   \_\_host\_\_ \_\_device\_\_ \textcolor{keyword}{constexpr} mars\_rng\_32() : y(2463534242) \{\}}
+\DoxyCodeLine{23   \textcolor{keyword}{constexpr} uint32\_t \_\_host\_\_ \_\_device\_\_ operator()() \{}
+\DoxyCodeLine{24     y \string^= (y << 13);}
+\DoxyCodeLine{25     y = (y >> 17);}
+\DoxyCodeLine{26     \textcolor{keywordflow}{return} (y \string^= (y << 5));}
+\DoxyCodeLine{27   \}}
+\DoxyCodeLine{28 \};}
+\DoxyCodeLine{29 \}  \textcolor{comment}{// namespace detail}}
+\DoxyCodeLine{30 \}  \textcolor{comment}{// namespace bght}}
+
+\end{DoxyCode}

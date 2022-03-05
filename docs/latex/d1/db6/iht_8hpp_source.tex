@@ -1,0 +1,159 @@
+\hypertarget{iht_8hpp_source}{}\doxysection{iht.\+hpp}
+\label{iht_8hpp_source}\index{include/iht.hpp@{include/iht.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ *   Copyright 2021 The Regents of the University of California, Davis}}
+\DoxyCodeLine{3 \textcolor{comment}{ *}}
+\DoxyCodeLine{4 \textcolor{comment}{ *   Licensed under the Apache License, Version 2.0 (the "{}License"{});}}
+\DoxyCodeLine{5 \textcolor{comment}{ *   you may not use this file except in compliance with the License.}}
+\DoxyCodeLine{6 \textcolor{comment}{ *   You may obtain a copy of the License at}}
+\DoxyCodeLine{7 \textcolor{comment}{ *}}
+\DoxyCodeLine{8 \textcolor{comment}{ *       http://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{9 \textcolor{comment}{ *}}
+\DoxyCodeLine{10 \textcolor{comment}{ *   Unless required by applicable law or agreed to in writing, software}}
+\DoxyCodeLine{11 \textcolor{comment}{ *   distributed under the License is distributed on an "{}AS IS"{} BASIS,}}
+\DoxyCodeLine{12 \textcolor{comment}{ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.}}
+\DoxyCodeLine{13 \textcolor{comment}{ *   See the License for the specific language governing permissions and}}
+\DoxyCodeLine{14 \textcolor{comment}{ *   limitations under the License.}}
+\DoxyCodeLine{15 \textcolor{comment}{ */}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <cuda/atomic>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <detail/allocator.hpp>}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include <detail/cuda\_helpers.cuh>}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#include <detail/hash\_functions.cuh>}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include <detail/kernels.cuh>}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#include <detail/pair.cuh>}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#include <memory>}}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26 \textcolor{keyword}{namespace }bght \{}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{44 \textcolor{keyword}{template} <\textcolor{keyword}{class }Key,}
+\DoxyCodeLine{45           \textcolor{keyword}{class }T,}
+\DoxyCodeLine{46           \textcolor{keyword}{class }Hash = bght::universal\_hash<Key>,}
+\DoxyCodeLine{47           \textcolor{keyword}{class }KeyEqual = bght::equal\_to<Key>,}
+\DoxyCodeLine{48           cuda::thread\_scope Scope = cuda::thread\_scope\_device,}
+\DoxyCodeLine{49           \textcolor{keyword}{class }Allocator = bght::cuda\_allocator<char>,}
+\DoxyCodeLine{50           \textcolor{keywordtype}{int} B = 16,}
+\DoxyCodeLine{51           \textcolor{keywordtype}{int} Threshold = 14>}
+\DoxyCodeLine{52 \textcolor{keyword}{struct }\mbox{\hyperlink{structbght_1_1iht}{iht}} \{}
+\DoxyCodeLine{53   \textcolor{keyword}{static\_assert}(Threshold < B, \textcolor{stringliteral}{"{}Threshold must be less than the bucket size"{}});}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55   \textcolor{keyword}{using} value\_type = pair<Key, T>;}
+\DoxyCodeLine{56   \textcolor{keyword}{using} key\_type = Key;}
+\DoxyCodeLine{57   \textcolor{keyword}{using} mapped\_type = T;}
+\DoxyCodeLine{58   \textcolor{keyword}{using} atomic\_pair\_type = cuda::atomic<value\_type, Scope>;}
+\DoxyCodeLine{59   \textcolor{keyword}{using} allocator\_type = Allocator;}
+\DoxyCodeLine{60   \textcolor{keyword}{using} hasher = Hash;}
+\DoxyCodeLine{61   \textcolor{keyword}{using} size\_type = std::size\_t;}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63   \textcolor{keyword}{using} atomic\_pair\_allocator\_type =}
+\DoxyCodeLine{64       \textcolor{keyword}{typename} std::allocator\_traits<Allocator>::rebind\_alloc<atomic\_pair\_type>;}
+\DoxyCodeLine{65   \textcolor{keyword}{using} pool\_allocator\_type =}
+\DoxyCodeLine{66       \textcolor{keyword}{typename} std::allocator\_traits<Allocator>::rebind\_alloc<\textcolor{keywordtype}{bool}>;}
+\DoxyCodeLine{67   \textcolor{keyword}{using} size\_type\_allocator\_type =}
+\DoxyCodeLine{68       \textcolor{keyword}{typename} std::allocator\_traits<Allocator>::rebind\_alloc<size\_type>;}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70   \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} bucket\_size = B;}
+\DoxyCodeLine{71   \textcolor{keyword}{using} key\_equal = KeyEqual;}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{83   \mbox{\hyperlink{structbght_1_1iht_a02e2c454d005b7cf91363feb1477c7b9}{iht}}(std::size\_t capacity,}
+\DoxyCodeLine{84       Key sentinel\_key,}
+\DoxyCodeLine{85       T sentinel\_value,}
+\DoxyCodeLine{86       Allocator \textcolor{keyword}{const}\& allocator = Allocator\{\});}
+\DoxyCodeLine{90   \mbox{\hyperlink{structbght_1_1iht_a725ba654f985af3bdbb95830f8e26776}{iht}}(\textcolor{keyword}{const} \mbox{\hyperlink{structbght_1_1iht}{iht}}\& other);}
+\DoxyCodeLine{94   \mbox{\hyperlink{structbght_1_1iht_a46dd032710006cc6cffcdc62a8da6564}{iht}}(\mbox{\hyperlink{structbght_1_1iht}{iht}}\&\&) = \textcolor{keyword}{delete};}
+\DoxyCodeLine{98   \mbox{\hyperlink{structbght_1_1iht}{iht}}\& \mbox{\hyperlink{structbght_1_1iht_a9299d3e97a061b2319ccbfcc4d36fe71}{operator=}}(\textcolor{keyword}{const} \mbox{\hyperlink{structbght_1_1iht}{iht}}\&) = \textcolor{keyword}{delete};}
+\DoxyCodeLine{102   \mbox{\hyperlink{structbght_1_1iht}{iht}}\& \mbox{\hyperlink{structbght_1_1iht_a93b6e68ec5e324e1aae55cbbb900e24e}{operator=}}(\mbox{\hyperlink{structbght_1_1iht}{iht}}\&\&) = \textcolor{keyword}{delete};}
+\DoxyCodeLine{106   \mbox{\hyperlink{structbght_1_1iht_a1eb1c14a9683be082405b20cd4ac0fb5}{\string~iht}}();}
+\DoxyCodeLine{110   \textcolor{keywordtype}{void} \mbox{\hyperlink{structbght_1_1iht_a076471ca81f32b45a0d91ac5a004946e}{clear}}();}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{122   \textcolor{keyword}{template} <\textcolor{keyword}{typename} InputIt>}
+\DoxyCodeLine{123   \textcolor{keywordtype}{bool} \mbox{\hyperlink{structbght_1_1iht_afcb16a7c2cc72a322d90e0bd8805cb50}{insert}}(InputIt first, InputIt last, cudaStream\_t stream = 0);}
+\DoxyCodeLine{124 }
+\DoxyCodeLine{136   \textcolor{keyword}{template} <\textcolor{keyword}{typename} InputIt, \textcolor{keyword}{typename} OutputIt>}
+\DoxyCodeLine{137   \textcolor{keywordtype}{void} \mbox{\hyperlink{structbght_1_1iht_ac6aa71eb51d1f76879cd0ec3c398fadc}{find}}(InputIt first, InputIt last, OutputIt output\_begin, cudaStream\_t stream = 0);}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{151   \textcolor{keyword}{template} <\textcolor{keyword}{typename} tile\_type>}
+\DoxyCodeLine{152   \_\_device\_\_ \textcolor{keywordtype}{bool} \mbox{\hyperlink{structbght_1_1iht_abade7d2b541a2718bbae41be40a0ae40}{insert}}(value\_type \textcolor{keyword}{const}\& pair, tile\_type \textcolor{keyword}{const}\& tile);}
+\DoxyCodeLine{153 }
+\DoxyCodeLine{166   \textcolor{keyword}{template} <\textcolor{keyword}{typename} tile\_type>}
+\DoxyCodeLine{167   \_\_device\_\_ mapped\_type \mbox{\hyperlink{structbght_1_1iht_a5f0c222a207ee2050f6910a33a312b5d}{find}}(key\_type \textcolor{keyword}{const}\& key, tile\_type \textcolor{keyword}{const}\& tile);}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{176   \textcolor{keyword}{template} <\textcolor{keyword}{typename} RNG>}
+\DoxyCodeLine{177   \textcolor{keywordtype}{void} \mbox{\hyperlink{structbght_1_1iht_acf9f5c49d7306e3567482b5a26b3b88b}{randomize\_hash\_functions}}(RNG\& rng);}
+\DoxyCodeLine{178 }
+\DoxyCodeLine{183   size\_type \mbox{\hyperlink{structbght_1_1iht_a0efa940784530baf1893c7cfbf901651}{size}}(cudaStream\_t stream = 0);}
+\DoxyCodeLine{184 }
+\DoxyCodeLine{185  \textcolor{keyword}{private}:}
+\DoxyCodeLine{186   \textcolor{keyword}{template} <\textcolor{keyword}{typename} InputIt, \textcolor{keyword}{typename} HashMap>}
+\DoxyCodeLine{187   \textcolor{keyword}{friend} \_\_global\_\_ \textcolor{keywordtype}{void} detail::kernels::tiled\_insert\_kernel(InputIt, InputIt, HashMap);}
+\DoxyCodeLine{188 }
+\DoxyCodeLine{189   \textcolor{keyword}{template} <\textcolor{keyword}{typename} InputIt, \textcolor{keyword}{typename} OutputIt, \textcolor{keyword}{typename} HashMap>}
+\DoxyCodeLine{190   \textcolor{keyword}{friend} \_\_global\_\_ \textcolor{keywordtype}{void} detail::kernels::tiled\_find\_kernel(InputIt,}
+\DoxyCodeLine{191                                                             InputIt,}
+\DoxyCodeLine{192                                                             OutputIt,}
+\DoxyCodeLine{193                                                             HashMap);}
+\DoxyCodeLine{194 }
+\DoxyCodeLine{195   \textcolor{keyword}{template} <\textcolor{keywordtype}{int} BlockSize, \textcolor{keyword}{typename} InputT, \textcolor{keyword}{typename} HashMap>}
+\DoxyCodeLine{196   \textcolor{keyword}{friend} \_\_global\_\_ \textcolor{keywordtype}{void} detail::kernels::count\_kernel(\textcolor{keyword}{const} InputT,}
+\DoxyCodeLine{197                                                        std::size\_t*,}
+\DoxyCodeLine{198                                                        HashMap);}
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200   \textcolor{keyword}{static} \textcolor{keyword}{constexpr} \textcolor{keyword}{auto} threshold\_ = Threshold;}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202   std::size\_t capacity\_;}
+\DoxyCodeLine{203   key\_type sentinel\_key\_\{\};}
+\DoxyCodeLine{204   mapped\_type sentinel\_value\_\{\};}
+\DoxyCodeLine{205   allocator\_type allocator\_;}
+\DoxyCodeLine{206   atomic\_pair\_allocator\_type atomic\_pairs\_allocator\_;}
+\DoxyCodeLine{207   pool\_allocator\_type pool\_allocator\_;}
+\DoxyCodeLine{208   size\_type\_allocator\_type size\_type\_allocator\_;}
+\DoxyCodeLine{209 }
+\DoxyCodeLine{210   atomic\_pair\_type* d\_table\_\{\};}
+\DoxyCodeLine{211   std::shared\_ptr<atomic\_pair\_type> table\_;}
+\DoxyCodeLine{212 }
+\DoxyCodeLine{213   \textcolor{keywordtype}{bool}* d\_build\_success\_;}
+\DoxyCodeLine{214   std::shared\_ptr<bool> build\_success\_;}
+\DoxyCodeLine{215 }
+\DoxyCodeLine{216   Hash hfp\_;}
+\DoxyCodeLine{217   Hash hf0\_;}
+\DoxyCodeLine{218   Hash hf1\_;}
+\DoxyCodeLine{219 }
+\DoxyCodeLine{220   std::size\_t num\_buckets\_;}
+\DoxyCodeLine{221 \};}
+\DoxyCodeLine{222 \}  \textcolor{comment}{// namespace bght}}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224 \textcolor{keyword}{template} <\textcolor{keyword}{typename} Key, \textcolor{keyword}{typename} T, \textcolor{keywordtype}{int} Threshold>}
+\DoxyCodeLine{225 \textcolor{keyword}{using} iht8 = \textcolor{keyword}{typename} \mbox{\hyperlink{structbght_1_1iht}{bght::iht}}<Key,}
+\DoxyCodeLine{226                                 T,}
+\DoxyCodeLine{227                                 bght::universal\_hash<Key>,}
+\DoxyCodeLine{228                                 bght::equal\_to<Key>,}
+\DoxyCodeLine{229                                 cuda::thread\_scope\_device,}
+\DoxyCodeLine{230                                 bght::cuda\_allocator<char>,}
+\DoxyCodeLine{231                                 8,}
+\DoxyCodeLine{232                                 Threshold>;}
+\DoxyCodeLine{233 }
+\DoxyCodeLine{234 \textcolor{keyword}{template} <\textcolor{keyword}{typename} Key, \textcolor{keyword}{typename} T, \textcolor{keywordtype}{int} Threshold = 12>}
+\DoxyCodeLine{235 \textcolor{keyword}{using} iht16 = \textcolor{keyword}{typename} \mbox{\hyperlink{structbght_1_1iht}{bght::iht}}<Key,}
+\DoxyCodeLine{236                                  T,}
+\DoxyCodeLine{237                                  bght::universal\_hash<Key>,}
+\DoxyCodeLine{238                                  bght::equal\_to<Key>,}
+\DoxyCodeLine{239                                  cuda::thread\_scope\_device,}
+\DoxyCodeLine{240                                  bght::cuda\_allocator<char>,}
+\DoxyCodeLine{241                                  16,}
+\DoxyCodeLine{242                                  Threshold>;}
+\DoxyCodeLine{243 \textcolor{keyword}{template} <\textcolor{keyword}{typename} Key, \textcolor{keyword}{typename} T, \textcolor{keywordtype}{int} Threshold = 25>}
+\DoxyCodeLine{244 \textcolor{keyword}{using} iht32 = \textcolor{keyword}{typename} \mbox{\hyperlink{structbght_1_1iht}{bght::iht}}<Key,}
+\DoxyCodeLine{245                                  T,}
+\DoxyCodeLine{246                                  bght::universal\_hash<Key>,}
+\DoxyCodeLine{247                                  bght::equal\_to<Key>,}
+\DoxyCodeLine{248                                  cuda::thread\_scope\_device,}
+\DoxyCodeLine{249                                  bght::cuda\_allocator<char>,}
+\DoxyCodeLine{250                                  32,}
+\DoxyCodeLine{251                                  Threshold>;}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253 \textcolor{preprocessor}{\#include <detail/iht\_impl.cuh>}}
+
+\end{DoxyCode}
