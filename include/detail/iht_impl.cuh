@@ -208,7 +208,7 @@ __device__ bool bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold
       auto bucket0_load = bucket0.compute_load(sentinel_pair);
       auto bucket1_load = bucket1.compute_load(sentinel_pair);
 
-      if (bucket0_load != bucket_size && bucket1_load != bucket_size) {
+      if (bucket0_load != bucket_size || bucket1_load != bucket_size) {
         if (bucket0_load < bucket1_load) {
           load = bucket0_load;
           bucket = bucket0;
