@@ -109,7 +109,7 @@ __global__ void kernel(HashMap table){
   pair_type pair{...};
   table.insert(pair, tile);
   pair_type query{..};
-  query.second = talbe.find(query.first, tile);
+  query.second = table.find(query.first, tile);
 }
 int main(){
   // Call the hash table constructor on the CPU
