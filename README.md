@@ -146,7 +146,7 @@ An additional comparison of our BCHT to `cucCollection`'s `cuco::static_map` is 
 Please create an issue. We will welcome any contributions that improve the usability and quality of our repository.
 
 ## Bibtex
-```
+```bibtex
 @article{Awad:2021:BGH,
   title = {Better {GPU} Hash Tables},
   author = {Muhammad A. Awad and Saman Ashkiani and Serban D.
