@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # probing counts per scheme
 ./bin/probes_per_technique --validate=false --num-keys=20000000
 # rates for fixed number of keys
