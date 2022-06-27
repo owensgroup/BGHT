@@ -1,5 +1,9 @@
 # Archived benchmarking results
 
+## NVIDIA A100 PCIE 40GB
+- [Results in CSV format](https://github.com/owensgroup/BGHT/tree/main/results/arxiv/NVIDIA-A100-PCIE-40GB)
+- [Plots](https://github.com/owensgroup/BGHT/tree/main/figs/arxiv/NVIDIA-A100-PCIE-40GB)
+
 ## NVIDIA TITAN-V
 - [Results in CSV format](https://github.com/owensgroup/BGHT/tree/main/results/arxiv/NVIDIA-TITAN-V)
 - [Plots](https://github.com/owensgroup/BGHT/tree/main/figs/arxiv/NVIDIA-TITAN-V)
