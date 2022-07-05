@@ -21,6 +21,7 @@
 #include <detail/hash_functions.cuh>
 #include <detail/kernels.cuh>
 #include <detail/pair.cuh>
+#include <detail/prime.hpp>
 #include <memory>
 
 namespace bght {
@@ -70,12 +71,15 @@ struct iht {
   static constexpr auto bucket_size = B;
   using key_equal = KeyEqual;
 
+  using iterator = atomic_pair_type&;
+  using const_iterator = iterator;
+
   /**
    * @brief Constructs the hash table with the specified capacity and uses the specified
    * sentinel key and value to define a sentinel pair.
    *
-   * @param capacity The number of slots to use in the hash table. If the capacity is not
-   * multiple of the bucket size, it will be rounded
+   * @param capacity The number of slots to use in the hash table. If the capacity is
+   * not multiple of the bucket size, it will be rounded
    * @param sentinel_key A reserved sentinel key that defines an empty key
    * @param sentinel_value A reserved sentinel value that defines an empty value
    * @param allocator The allocator to use for allocating GPU device memory
@@ -101,7 +105,8 @@ struct iht {
    */
   iht& operator=(iht&&) = delete;
   /**
-   * @brief Destructor that destroys the hash map and deallocate memory if no copies exist
+   * @brief Destructor that destroys the hash map and deallocate memory if no copies
+   * exist
    */
   ~iht();
   /**
@@ -110,8 +115,9 @@ struct iht {
   void clear();
 
   /**
-   * @brief Host-side API for inserting all pairs defined by the input argument iterators.
-   * All keys in the range must be unique and must not exist in the hash table.
+   * @brief Host-side API for inserting all pairs defined by the input argument
+   * iterators. All keys in the range must be unique and must not exist in the hash
+   * table.
    * @tparam InputIt Device-side iterator that can be converted to `value_type`.
    * @param first An iterator defining the beginning of the input pairs to insert
    * @param last  An iterator defining the end of the input pairs to insert
@@ -128,20 +134,20 @@ struct iht {
    * @tparam OutputIt Device-side iterator that can be converted to `mapped_type`
    * @param first An iterator defining the beginning of the input keys to find
    * @param last An iterator defining the end of the input keys to find
-   * @param output_begin An iterator defining the beginning of the output buffer to store
-   * the results into. The size of the buffer must match the number of queries defined by
-   * the input iterators.
+   * @param output_begin An iterator defining the beginning of the output buffer to
+   * store the results into. The size of the buffer must match the number of queries
+   * defined by the input iterators.
    * @param stream  A CUDA stream where the insertion operation will take place
    */
   template <typename InputIt, typename OutputIt>
   void find(InputIt first, InputIt last, OutputIt output_begin, cudaStream_t stream = 0);
 
   /**
-   * @brief Device-side cooperative insertion API that inserts a single pair into the hash
-   * map.
+   * @brief Device-side cooperative insertion API that inserts a single pair into the
+   * hash map.
    * @tparam tile_type A cooperative group tile with a size that must match the bucket
-   * size of the hash map (i.e., `bucket_size`). It must support the tile-wide intrinsics
-   * `ballot`, `shfl`
+   * size of the hash map (i.e., `bucket_size`). It must support the tile-wide
+   * intrinsics `ballot`, `shfl`
    * @param pair A key-value pair to insert into the hash map. The pair must be the same
    * for all threads in the  cooperative group tile
    * @param tile  The cooperative group tile
@@ -155,8 +161,8 @@ struct iht {
    * @brief Device-side cooperative find API that finds a single pair into the hash
    * map.
    * @tparam tile_type A cooperative group tile with a size that must match the bucket
-   * size of the hash map (i.e., `bucket_size`). It must support the tile-wide intrinsics
-   * `ballot`, `shfl`
+   * size of the hash map (i.e., `bucket_size`). It must support the tile-wide
+   * intrinsics `ballot`, `shfl`
    * @param key A key to find in the hash map. The key must be the same
    * for all threads in the  cooperative group tile
    * @param tile The cooperative group tile
@@ -181,6 +187,28 @@ struct iht {
    * @return The number of elements in the map
    */
   size_type size(cudaStream_t stream = 0);
+
+  /**
+   * @brief Returns an iterator to the first element of the tables including all invalid
+   * entries.
+   *
+   * @return const_iterator constant iterator to the first element of the table
+   */
+  const_iterator begin() const;
+  /**
+   * @brief Returns an iterator to the last element of the tables including all invalid
+   * entries.
+   *
+   * @return const_iterator constant iterator to the last element of the table
+   */
+  const_iterator end() const;
+
+  /**
+   * @brief Returns the maximum number of elements the container is able to hold
+   *
+   * @return size_type maximum number of elements including all invalid entries.
+   */
+  size_type max_size() const;
 
  private:
   template <typename InputIt, typename HashMap>

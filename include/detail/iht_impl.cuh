@@ -312,4 +312,43 @@ iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::size(cudaStream_t s
   cudaFree(d_count);
   return capacity_ - num_invalid_keys;
 }
+
+template <class Key,
+          class T,
+          class Hash,
+          class KeyEqual,
+          cuda::thread_scope Scope,
+          typename Allocator,
+          int B,
+          int Threshold>
+typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::const_iterator
+iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::begin() const {
+  return d_table_;
+}
+
+template <class Key,
+          class T,
+          class Hash,
+          class KeyEqual,
+          cuda::thread_scope Scope,
+          typename Allocator,
+          int B,
+          int Threshold>
+typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::const_iterator
+iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::end() const {
+  return d_table_ + capacity_;
+}
+
+template <class Key,
+          class T,
+          class Hash,
+          class KeyEqual,
+          cuda::thread_scope Scope,
+          typename Allocator,
+          int B,
+          int Threshold>
+typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::size_type
+iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::max_size() const {
+  return capacity_;
+}
 }  // namespace bght
