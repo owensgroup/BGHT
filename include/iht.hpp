@@ -44,7 +44,7 @@ namespace bght {
  */
 template <class Key,
           class T,
-          class Hash = bght::universal_hash<Key>,
+          class Hash = bght::MurmurHash3_32<Key>,
           class KeyEqual = bght::equal_to<Key>,
           cuda::thread_scope Scope = cuda::thread_scope_device,
           class Allocator = bght::cuda_allocator<char>,
@@ -249,10 +249,10 @@ struct iht {
 };
 }  // namespace bght
 
-template <typename Key, typename T, int Threshold>
+template <typename Key, typename T, int Threshold = 6>
 using iht8 = typename bght::iht<Key,
                                 T,
-                                bght::universal_hash<Key>,
+                                bght::MurmurHash3_32<Key>,
                                 bght::equal_to<Key>,
                                 cuda::thread_scope_device,
                                 bght::cuda_allocator<char>,
@@ -262,7 +262,7 @@ using iht8 = typename bght::iht<Key,
 template <typename Key, typename T, int Threshold = 12>
 using iht16 = typename bght::iht<Key,
                                  T,
-                                 bght::universal_hash<Key>,
+                                 bght::MurmurHash3_32<Key>,
                                  bght::equal_to<Key>,
                                  cuda::thread_scope_device,
                                  bght::cuda_allocator<char>,
@@ -271,7 +271,7 @@ using iht16 = typename bght::iht<Key,
 template <typename Key, typename T, int Threshold = 25>
 using iht32 = typename bght::iht<Key,
                                  T,
-                                 bght::universal_hash<Key>,
+                                 bght::MurmurHash3_32<Key>,
                                  bght::equal_to<Key>,
                                  cuda::thread_scope_device,
                                  bght::cuda_allocator<char>,

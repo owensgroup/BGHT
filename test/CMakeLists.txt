@@ -14,6 +14,11 @@ target_link_libraries(test_bcht PRIVATE bght
 								  PRIVATE bght)
 
 
+add_executable(test_iht test_iht.cu)
+set_target_properties(test_iht PROPERTIES
+								  FOLDER "tests")
+target_link_libraries(test_iht PRIVATE bght
+									PRIVATE bght)
 
 add_executable(test_types test_types.cu)
 set_target_properties(test_types PROPERTIES
