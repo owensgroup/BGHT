@@ -338,7 +338,7 @@ def plot_avg_probes_fixed_keys_best(dfs, xcol, output_dir, svg_name, x_title, y_
     print('                 |                 |   100%   |    50%   | 0%')
 
     best_prefix = ['CHT' , 'BCHT', 'PB2HT', 'IHT']
-    best_suffix = ['1','16', '32', '32_80']
+    best_suffix = ['1','16', '32', '16_80']
     for df, s, p, m in zip(dfs, best_suffix, best_prefix, markers):
         insert_c = 'insert_' + s
         find_c = 'find_' + s + '_'
