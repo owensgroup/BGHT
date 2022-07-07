@@ -20,6 +20,9 @@ template <typename Key>
 struct universal_hash {
   using key_type = Key;
   using result_type = Key;
+
+  __host__ __device__ constexpr universal_hash() : hash_x_(1), hash_y_(2) {}
+
   __host__ __device__ constexpr universal_hash(uint32_t hash_x, uint32_t hash_y)
       : hash_x_(hash_x), hash_y_(hash_y) {}
 
@@ -28,7 +31,6 @@ struct universal_hash {
   }
 
   universal_hash(const universal_hash&) = default;
-  universal_hash() = default;
   universal_hash(universal_hash&&) = default;
   universal_hash& operator=(universal_hash const&) = default;
   universal_hash& operator=(universal_hash&&) = default;
@@ -158,6 +160,7 @@ Hash initialize_hf(RNG& rng) {
     std::cout << "seed: " << x << std::endl;
     return Hash(x);
   }
+  return Hash{};
 }
 
 }  // namespace bght

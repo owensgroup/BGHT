@@ -42,7 +42,7 @@ namespace bght {
  */
 template <class Key,
           class T,
-          class Hash = bght::universal_hash<Key>,
+          class Hash = bght::MurmurHash3_32<Key>,
           class KeyEqual = bght::equal_to<Key>,
           cuda::thread_scope Scope = cuda::thread_scope_device,
           class Allocator = bght::cuda_allocator<char>>
