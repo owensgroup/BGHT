@@ -1,4 +1,4 @@
-# BGHT: Better GPU Hash Tables
+# [BGHT: Better GPU Hash Tables](https://owensgroup.github.io/BGHT/)
 
 <table><tr>
 <th><b><a href="https://github.com/owensgroup/BGHT/tree/main/test">Examples/Tests</a></b></th>
