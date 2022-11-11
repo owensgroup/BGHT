@@ -1,0 +1,293 @@
+\hypertarget{structbght_1_1bcht}{}\doxysection{bght\+::bcht$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$ Struct Template Reference}
+\label{structbght_1_1bcht}\index{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
+
+
+B\+C\+HT B\+C\+HT (bucketed cuckoo hash table) is an associative static G\+PU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the cuckoo hashing probing scheme (bucketed and using three hash functions).  
+
+
+
+
+{\ttfamily \#include $<$bcht.\+hpp$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a4b3cd889e1796dc5d4968c384a3532b2}\label{structbght_1_1bcht_a4b3cd889e1796dc5d4968c384a3532b2}} 
+using {\bfseries value\+\_\+type} = pair$<$ Key, T $>$
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_aa6d9c3f77ff3f9684fe98b764a7fa257}\label{structbght_1_1bcht_aa6d9c3f77ff3f9684fe98b764a7fa257}} 
+using {\bfseries key\+\_\+type} = Key
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a34bc9b1e3f7bccc1d6ab8ed2f94c52bf}\label{structbght_1_1bcht_a34bc9b1e3f7bccc1d6ab8ed2f94c52bf}} 
+using {\bfseries mapped\+\_\+type} = T
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_aadc402d49fd3bae9f1efd23e97278190}\label{structbght_1_1bcht_aadc402d49fd3bae9f1efd23e97278190}} 
+using {\bfseries atomic\+\_\+pair\+\_\+type} = cuda\+::atomic$<$ value\+\_\+type, Scope $>$
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a0042b766b372f5d61e4474f679847c95}\label{structbght_1_1bcht_a0042b766b372f5d61e4474f679847c95}} 
+using {\bfseries allocator\+\_\+type} = Allocator
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_abc80abbcc891e1b3127d247f353cdef4}\label{structbght_1_1bcht_abc80abbcc891e1b3127d247f353cdef4}} 
+using {\bfseries hasher} = Hash
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a0f91a6131ebdf91b1b9013a3e39cfce1}\label{structbght_1_1bcht_a0f91a6131ebdf91b1b9013a3e39cfce1}} 
+using {\bfseries size\+\_\+type} = std\+::size\+\_\+t
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a4c03e045fb356f9814898e5fab277502}\label{structbght_1_1bcht_a4c03e045fb356f9814898e5fab277502}} 
+using {\bfseries atomic\+\_\+pair\+\_\+allocator\+\_\+type} = typename std\+::allocator\+\_\+traits$<$ Allocator $>$\+::rebind\+\_\+alloc$<$ atomic\+\_\+pair\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a1614f4477cc58eb9d8468291a81b7b3f}\label{structbght_1_1bcht_a1614f4477cc58eb9d8468291a81b7b3f}} 
+using {\bfseries pool\+\_\+allocator\+\_\+type} = typename std\+::allocator\+\_\+traits$<$ Allocator $>$\+::rebind\+\_\+alloc$<$ bool $>$
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_abda2b8b73ccf612e1686c631eafe8d9e}\label{structbght_1_1bcht_abda2b8b73ccf612e1686c631eafe8d9e}} 
+using {\bfseries size\+\_\+type\+\_\+allocator\+\_\+type} = typename std\+::allocator\+\_\+traits$<$ Allocator $>$\+::rebind\+\_\+alloc$<$ size\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a7f2e7dd47dc09db67be1c11962650bd6}\label{structbght_1_1bcht_a7f2e7dd47dc09db67be1c11962650bd6}} 
+using {\bfseries key\+\_\+equal} = Key\+Equal
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structbght_1_1bcht_ab77ebf40b39673ff2943fbe950f6cee8}{bcht}} (std\+::size\+\_\+t capacity, Key sentinel\+\_\+key, T sentinel\+\_\+value, Allocator const \&allocator=Allocator\{\})
+\begin{DoxyCompactList}\small\item\em Constructs the hash table with the specified capacity and uses the specified sentinel key and value to define a sentinel pair. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structbght_1_1bcht_aab4f5aaf7d1d1c16581c63425c22d98f}\label{structbght_1_1bcht_aab4f5aaf7d1d1c16581c63425c22d98f}} 
+\mbox{\hyperlink{structbght_1_1bcht_aab4f5aaf7d1d1c16581c63425c22d98f}{bcht}} (const \mbox{\hyperlink{structbght_1_1bcht}{bcht}} \&other)
+\begin{DoxyCompactList}\small\item\em A shallow-\/copy constructor. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structbght_1_1bcht_afdc822e8c97860d7d63b30ff66cd44a7}\label{structbght_1_1bcht_afdc822e8c97860d7d63b30ff66cd44a7}} 
+\mbox{\hyperlink{structbght_1_1bcht_afdc822e8c97860d7d63b30ff66cd44a7}{bcht}} (\mbox{\hyperlink{structbght_1_1bcht}{bcht}} \&\&)=delete
+\begin{DoxyCompactList}\small\item\em Move constructor is currently deleted. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a3fe35baae860c109e0c3e5294cb1a431}\label{structbght_1_1bcht_a3fe35baae860c109e0c3e5294cb1a431}} 
+\mbox{\hyperlink{structbght_1_1bcht}{bcht}} \& \mbox{\hyperlink{structbght_1_1bcht_a3fe35baae860c109e0c3e5294cb1a431}{operator=}} (const \mbox{\hyperlink{structbght_1_1bcht}{bcht}} \&)=delete
+\begin{DoxyCompactList}\small\item\em The assignment operator for the B\+C\+HT is currently deleted. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a2875dcd7fd19380a51b719792821b397}\label{structbght_1_1bcht_a2875dcd7fd19380a51b719792821b397}} 
+\mbox{\hyperlink{structbght_1_1bcht}{bcht}} \& \mbox{\hyperlink{structbght_1_1bcht_a2875dcd7fd19380a51b719792821b397}{operator=}} (\mbox{\hyperlink{structbght_1_1bcht}{bcht}} \&\&)=delete
+\begin{DoxyCompactList}\small\item\em The move assignment operator for the B\+C\+HT is currently deleted. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a99a897955e80d66cb83d62ef33d79110}\label{structbght_1_1bcht_a99a897955e80d66cb83d62ef33d79110}} 
+\mbox{\hyperlink{structbght_1_1bcht_a99a897955e80d66cb83d62ef33d79110}{$\sim$bcht}} ()
+\begin{DoxyCompactList}\small\item\em Destructor that destroys the hash map and deallocate memory if no copies exist. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structbght_1_1bcht_a798fc4be13d418089ac8d491e98b5147}\label{structbght_1_1bcht_a798fc4be13d418089ac8d491e98b5147}} 
+void \mbox{\hyperlink{structbght_1_1bcht_a798fc4be13d418089ac8d491e98b5147}{clear}} ()
+\begin{DoxyCompactList}\small\item\em Clears the hash map and resets all slots. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Input\+It $>$ }\\bool \mbox{\hyperlink{structbght_1_1bcht_a2e8e21183a7978f2908a801f98138d22}{insert}} (Input\+It first, Input\+It last, cuda\+Stream\+\_\+t stream=0)
+\begin{DoxyCompactList}\small\item\em Host-\/side A\+PI for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Input\+It , typename Output\+It $>$ }\\void \mbox{\hyperlink{structbght_1_1bcht_aa00dd13fd68144e59cfdd1bd0ce212dc}{find}} (Input\+It first, Input\+It last, Output\+It output\+\_\+begin, cuda\+Stream\+\_\+t stream=0)
+\begin{DoxyCompactList}\small\item\em Host-\/side A\+PI for finding all keys defined by the input argument iterators. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename tile\+\_\+type $>$ }\\\+\_\+\+\_\+device\+\_\+\+\_\+ bool \mbox{\hyperlink{structbght_1_1bcht_a8ca06cef309ce158a21ba686088a5804}{insert}} (value\+\_\+type const \&pair, tile\+\_\+type const \&tile)
+\begin{DoxyCompactList}\small\item\em Device-\/side cooperative insertion A\+PI that inserts a single pair into the hash map. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename tile\+\_\+type $>$ }\\\+\_\+\+\_\+device\+\_\+\+\_\+ mapped\+\_\+type \mbox{\hyperlink{structbght_1_1bcht_adbbadf9704bd5752b55fe0e7ab9d788c}{find}} (key\+\_\+type const \&key, tile\+\_\+type const \&tile)
+\begin{DoxyCompactList}\small\item\em Device-\/side cooperative find A\+PI that finds a single pair into the hash map. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename R\+NG $>$ }\\void \mbox{\hyperlink{structbght_1_1bcht_afceb31cd69d17b0051edd59550babd23}{randomize\+\_\+hash\+\_\+functions}} (R\+NG \&rng)
+\begin{DoxyCompactList}\small\item\em Host-\/side A\+PI to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. \end{DoxyCompactList}\item 
+size\+\_\+type \mbox{\hyperlink{structbght_1_1bcht_a4fc21878958c178a66d686039c18f957}{size}} (cuda\+Stream\+\_\+t stream=0)
+\begin{DoxyCompactList}\small\item\em Compute the number of elements in the map. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structbght_1_1bcht_adab32be4f06400b48898b2ee2e0bc54a}\label{structbght_1_1bcht_adab32be4f06400b48898b2ee2e0bc54a}} 
+static constexpr auto {\bfseries bucket\+\_\+size} = B
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$class Key, class T, class Hash = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$\newline
+struct bght\+::bcht$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$}
+
+B\+C\+HT B\+C\+HT (bucketed cuckoo hash table) is an associative static G\+PU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the cuckoo hashing probing scheme (bucketed and using three hash functions). 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Key} & Type for the hash map key \\
+\hline
+{\em T} & Type for the mapped value \\
+\hline
+{\em Hash} & Unary function object class that defines the hash function. The function must have an {\ttfamily initialize\+\_\+hf} specialization to initialize the hash function using a random number generator \\
+\hline
+{\em Key\+Equal} & Binary function object class that compares two keys \\
+\hline
+{\em Allocator} & The allocator to use for allocating G\+PU device memory \\
+\hline
+{\em B} & Bucket size for the hash table \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structbght_1_1bcht_ab77ebf40b39673ff2943fbe950f6cee8}\label{structbght_1_1bcht_ab77ebf40b39673ff2943fbe950f6cee8}} 
+\index{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!bcht@{bcht}}
+\index{bcht@{bcht}!bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
+\doxysubsubsection{\texorpdfstring{bcht()}{bcht()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+\mbox{\hyperlink{structbght_1_1bcht}{bght\+::bcht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::\mbox{\hyperlink{structbght_1_1bcht}{bcht}} (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{capacity,  }\item[{Key}]{sentinel\+\_\+key,  }\item[{T}]{sentinel\+\_\+value,  }\item[{Allocator const \&}]{allocator = {\ttfamily Allocator\{\}} }\end{DoxyParamCaption})}
+
+
+
+Constructs the hash table with the specified capacity and uses the specified sentinel key and value to define a sentinel pair. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em capacity} & The number of slots to use in the hash table. If the capacity is not multiple of the bucket size, it will be rounded \\
+\hline
+{\em sentinel\+\_\+key} & A reserved sentinel key that defines an empty key \\
+\hline
+{\em sentinel\+\_\+value} & A reserved sentinel value that defines an empty value \\
+\hline
+{\em allocator} & The allocator to use for allocating G\+PU device memory \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structbght_1_1bcht_aa00dd13fd68144e59cfdd1bd0ce212dc}\label{structbght_1_1bcht_aa00dd13fd68144e59cfdd1bd0ce212dc}} 
+\index{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!find@{find}}
+\index{find@{find}!bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+template$<$typename Input\+It , typename Output\+It $>$ \\
+void \mbox{\hyperlink{structbght_1_1bcht}{bght\+::bcht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::find (\begin{DoxyParamCaption}\item[{Input\+It}]{first,  }\item[{Input\+It}]{last,  }\item[{Output\+It}]{output\+\_\+begin,  }\item[{cuda\+Stream\+\_\+t}]{stream = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Host-\/side A\+PI for finding all keys defined by the input argument iterators. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Input\+It} & Device-\/side iterator that can be converted to {\ttfamily key\+\_\+type} \\
+\hline
+{\em Output\+It} & Device-\/side iterator that can be converted to {\ttfamily mapped\+\_\+type} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em first} & An iterator defining the beginning of the input keys to find \\
+\hline
+{\em last} & An iterator defining the end of the input keys to find \\
+\hline
+{\em output\+\_\+begin} & An iterator defining the beginning of the output buffer to store the results into. The size of the buffer must match the number of queries defined by the input iterators. \\
+\hline
+{\em stream} & A C\+U\+DA stream where the insertion operation will take place \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{structbght_1_1bcht_adbbadf9704bd5752b55fe0e7ab9d788c}\label{structbght_1_1bcht_adbbadf9704bd5752b55fe0e7ab9d788c}} 
+\index{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!find@{find}}
+\index{find@{find}!bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+template$<$typename tile\+\_\+type $>$ \\
+\+\_\+\+\_\+device\+\_\+\+\_\+ mapped\+\_\+type \mbox{\hyperlink{structbght_1_1bcht}{bght\+::bcht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::find (\begin{DoxyParamCaption}\item[{key\+\_\+type const \&}]{key,  }\item[{tile\+\_\+type const \&}]{tile }\end{DoxyParamCaption})}
+
+
+
+Device-\/side cooperative find A\+PI that finds a single pair into the hash map. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em tile\+\_\+type} & A cooperative group tile with a size that must match the bucket size of the hash map (i.\+e., {\ttfamily bucket\+\_\+size}). It must support the tile-\/wide intrinsics {\ttfamily ballot}, {\ttfamily shfl} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em key} & A key to find in the hash map. The key must be the same for all threads in the cooperative group tile \\
+\hline
+{\em tile} & The cooperative group tile \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the key if it exists in the map or the {\ttfamily sentinel\+\_\+value} if the key does not exist in the hash map 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1bcht_a2e8e21183a7978f2908a801f98138d22}\label{structbght_1_1bcht_a2e8e21183a7978f2908a801f98138d22}} 
+\index{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!insert@{insert}}
+\index{insert@{insert}!bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+template$<$typename Input\+It $>$ \\
+bool \mbox{\hyperlink{structbght_1_1bcht}{bght\+::bcht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::insert (\begin{DoxyParamCaption}\item[{Input\+It}]{first,  }\item[{Input\+It}]{last,  }\item[{cuda\+Stream\+\_\+t}]{stream = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Host-\/side A\+PI for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Input\+It} & Device-\/side iterator that can be converted to {\ttfamily value\+\_\+type}. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em first} & An iterator defining the beginning of the input pairs to insert \\
+\hline
+{\em last} & An iterator defining the end of the input pairs to insert \\
+\hline
+{\em stream} & A C\+U\+DA stream where the insertion operation will take place \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean indicating success (true) or failure (false) of the insertion operation. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1bcht_a8ca06cef309ce158a21ba686088a5804}\label{structbght_1_1bcht_a8ca06cef309ce158a21ba686088a5804}} 
+\index{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!insert@{insert}}
+\index{insert@{insert}!bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+template$<$typename tile\+\_\+type $>$ \\
+\+\_\+\+\_\+device\+\_\+\+\_\+ bool \mbox{\hyperlink{structbght_1_1bcht}{bght\+::bcht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::insert (\begin{DoxyParamCaption}\item[{value\+\_\+type const \&}]{pair,  }\item[{tile\+\_\+type const \&}]{tile }\end{DoxyParamCaption})}
+
+
+
+Device-\/side cooperative insertion A\+PI that inserts a single pair into the hash map. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em tile\+\_\+type} & A cooperative group tile with a size that must match the bucket size of the hash map (i.\+e., {\ttfamily bucket\+\_\+size}). It must support the tile-\/wide intrinsics {\ttfamily ballot}, {\ttfamily shfl} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em pair} & A key-\/value pair to insert into the hash map. The pair must be the same for all threads in the cooperative group tile \\
+\hline
+{\em tile} & The cooperative group tile \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean indicating success (true) or failure (false) of the insertion operation. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1bcht_afceb31cd69d17b0051edd59550babd23}\label{structbght_1_1bcht_afceb31cd69d17b0051edd59550babd23}} 
+\index{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!randomize\_hash\_functions@{randomize\_hash\_functions}}
+\index{randomize\_hash\_functions@{randomize\_hash\_functions}!bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
+\doxysubsubsection{\texorpdfstring{randomize\_hash\_functions()}{randomize\_hash\_functions()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+template$<$typename R\+NG $>$ \\
+void \mbox{\hyperlink{structbght_1_1bcht}{bght\+::bcht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::randomize\+\_\+hash\+\_\+functions (\begin{DoxyParamCaption}\item[{R\+NG \&}]{rng }\end{DoxyParamCaption})}
+
+
+
+Host-\/side A\+PI to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em R\+NG} & A pseudo-\/random number generator \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em rng} & An instantiation of the pseudo-\/random number generator \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{structbght_1_1bcht_a4fc21878958c178a66d686039c18f957}\label{structbght_1_1bcht_a4fc21878958c178a66d686039c18f957}} 
+\index{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!size@{size}}
+\index{size@{size}!bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::bcht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+size\+\_\+type \mbox{\hyperlink{structbght_1_1bcht}{bght\+::bcht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::size (\begin{DoxyParamCaption}\item[{cuda\+Stream\+\_\+t}]{stream = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Compute the number of elements in the map. 
+
+\begin{DoxyReturn}{Returns}
+The number of elements in the map 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/bcht.\+hpp\end{DoxyCompactItemize}
