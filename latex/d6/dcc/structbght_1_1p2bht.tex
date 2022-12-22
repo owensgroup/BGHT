@@ -2,7 +2,7 @@
 \label{structbght_1_1p2bht}\index{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
 
 
-P2\+B\+HT P2\+B\+HT (power-\/of-\/two bucketed hash table) is an associative static G\+PU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the power-\/of-\/two hashing to balance loads between buckets (bucketed and using two hash functions).  
+P2\+BHT P2\+BHT (power-\/of-\/two bucketed hash table) is an associative static GPU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the power-\/of-\/two hashing to balance loads between buckets (bucketed and using two hash functions).  
 
 
 
@@ -69,15 +69,15 @@ using {\bfseries key\+\_\+equal} = Key\+Equal
 void \mbox{\hyperlink{structbght_1_1p2bht_ab2181363291624ae8b152a4438ff6caf}{clear}} ()
 \begin{DoxyCompactList}\small\item\em Clears the hash map and resets all slots. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename Input\+It $>$ }\\bool \mbox{\hyperlink{structbght_1_1p2bht_afaf41c013493f4912537f20ec716f015}{insert}} (Input\+It first, Input\+It last, cuda\+Stream\+\_\+t stream=0)
-\begin{DoxyCompactList}\small\item\em Host-\/side A\+PI for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Host-\/side API for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename Input\+It , typename Output\+It $>$ }\\void \mbox{\hyperlink{structbght_1_1p2bht_a1d024b93ef3392e9634b1160ab679d92}{find}} (Input\+It first, Input\+It last, Output\+It output\+\_\+begin, cuda\+Stream\+\_\+t stream=0)
-\begin{DoxyCompactList}\small\item\em Host-\/side A\+PI for finding all keys defined by the input argument iterators. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Host-\/side API for finding all keys defined by the input argument iterators. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename tile\+\_\+type $>$ }\\\+\_\+\+\_\+device\+\_\+\+\_\+ bool \mbox{\hyperlink{structbght_1_1p2bht_ad6bcca773f08880cdfe156352b8925d8}{insert}} (value\+\_\+type const \&pair, tile\+\_\+type const \&tile)
-\begin{DoxyCompactList}\small\item\em Device-\/side cooperative insertion A\+PI that inserts a single pair into the hash map. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Device-\/side cooperative insertion API that inserts a single pair into the hash map. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename tile\+\_\+type $>$ }\\\+\_\+\+\_\+device\+\_\+\+\_\+ mapped\+\_\+type \mbox{\hyperlink{structbght_1_1p2bht_a913cca5c95d7b9c7ad5a61ea6769e9d6}{find}} (key\+\_\+type const \&key, tile\+\_\+type const \&tile)
-\begin{DoxyCompactList}\small\item\em Device-\/side cooperative find A\+PI that finds a single pair into the hash map. \end{DoxyCompactList}\item 
-{\footnotesize template$<$typename R\+NG $>$ }\\void \mbox{\hyperlink{structbght_1_1p2bht_a9112b518945f384f948ed52aa0c5ad80}{randomize\+\_\+hash\+\_\+functions}} (R\+NG \&rng)
-\begin{DoxyCompactList}\small\item\em Host-\/side A\+PI to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Device-\/side cooperative find API that finds a single pair into the hash map. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename RNG $>$ }\\void \mbox{\hyperlink{structbght_1_1p2bht_a9112b518945f384f948ed52aa0c5ad80}{randomize\+\_\+hash\+\_\+functions}} (RNG \&rng)
+\begin{DoxyCompactList}\small\item\em Host-\/side API to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. \end{DoxyCompactList}\item 
 size\+\_\+type \mbox{\hyperlink{structbght_1_1p2bht_a4f95a1f7a39e693a0ca1cd67951c1ec7}{size}} (cuda\+Stream\+\_\+t stream=0)
 \begin{DoxyCompactList}\small\item\em Compute the number of elements in the map. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Public Attributes}
@@ -92,7 +92,7 @@ static constexpr auto {\bfseries bucket\+\_\+size} = B
 \subsubsection*{template$<$class Key, class T, class Hash = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$\newline
 struct bght\+::p2bht$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$}
 
-P2\+B\+HT P2\+B\+HT (power-\/of-\/two bucketed hash table) is an associative static G\+PU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the power-\/of-\/two hashing to balance loads between buckets (bucketed and using two hash functions). 
+P2\+BHT P2\+BHT (power-\/of-\/two bucketed hash table) is an associative static GPU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the power-\/of-\/two hashing to balance loads between buckets (bucketed and using two hash functions). 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -104,7 +104,7 @@ P2\+B\+HT P2\+B\+HT (power-\/of-\/two bucketed hash table) is an associative sta
 \hline
 {\em Key\+Equal} & Binary function object class that compares two keys \\
 \hline
-{\em Allocator} & The allocator to use for allocating G\+PU device memory \\
+{\em Allocator} & The allocator to use for allocating GPU device memory \\
 \hline
 {\em B} & Bucket size for the hash table \\
 \hline
@@ -131,7 +131,7 @@ Constructs the hash table with the specified capacity and uses the specified sen
 \hline
 {\em sentinel\+\_\+value} & A reserved sentinel value that defines an empty value \\
 \hline
-{\em allocator} & The allocator to use for allocating G\+PU device memory \\
+{\em allocator} & The allocator to use for allocating GPU device memory \\
 \hline
 \end{DoxyParams}
 
@@ -147,7 +147,7 @@ void \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\
 
 
 
-Host-\/side A\+PI for finding all keys defined by the input argument iterators. 
+Host-\/side API for finding all keys defined by the input argument iterators. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -164,7 +164,7 @@ Host-\/side A\+PI for finding all keys defined by the input argument iterators.
 \hline
 {\em output\+\_\+begin} & An iterator defining the beginning of the output buffer to store the results into. The size of the buffer must match the number of queries defined by the input iterators. \\
 \hline
-{\em stream} & A C\+U\+DA stream where the insertion operation will take place \\
+{\em stream} & A CUDA stream where the insertion operation will take place \\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{structbght_1_1p2bht_a913cca5c95d7b9c7ad5a61ea6769e9d6}\label{structbght_1_1p2bht_a913cca5c95d7b9c7ad5a61ea6769e9d6}} 
@@ -177,7 +177,7 @@ template$<$typename tile\+\_\+type $>$ \\
 
 
 
-Device-\/side cooperative find A\+PI that finds a single pair into the hash map. 
+Device-\/side cooperative find API that finds a single pair into the hash map. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -204,7 +204,7 @@ bool \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\
 
 
 
-Host-\/side A\+PI for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. 
+Host-\/side API for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -217,7 +217,7 @@ Host-\/side A\+PI for inserting all pairs defined by the input argument iterator
 \hline
 {\em last} & An iterator defining the end of the input pairs to insert \\
 \hline
-{\em stream} & A C\+U\+DA stream where the insertion operation will take place \\
+{\em stream} & A CUDA stream where the insertion operation will take place \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -233,7 +233,7 @@ template$<$typename tile\+\_\+type $>$ \\
 
 
 
-Device-\/side cooperative insertion A\+PI that inserts a single pair into the hash map. 
+Device-\/side cooperative insertion API that inserts a single pair into the hash map. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -255,16 +255,16 @@ A boolean indicating success (true) or failure (false) of the insertion operatio
 \index{randomize\_hash\_functions@{randomize\_hash\_functions}!bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
 \doxysubsubsection{\texorpdfstring{randomize\_hash\_functions()}{randomize\_hash\_functions()}}
 {\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
-template$<$typename R\+NG $>$ \\
-void \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::randomize\+\_\+hash\+\_\+functions (\begin{DoxyParamCaption}\item[{R\+NG \&}]{rng }\end{DoxyParamCaption})}
+template$<$typename RNG $>$ \\
+void \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::randomize\+\_\+hash\+\_\+functions (\begin{DoxyParamCaption}\item[{RNG \&}]{rng }\end{DoxyParamCaption})}
 
 
 
-Host-\/side A\+PI to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. 
+Host-\/side API to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em R\+NG} & A pseudo-\/random number generator \\
+{\em RNG} & A pseudo-\/random number generator \\
 \hline
 \end{DoxyTemplParams}
 

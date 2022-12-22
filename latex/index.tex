@@ -1,17 +1,19 @@
-$\vert$ \href{https://owensgroup.github.io/BGHT/}{\texttt{ {\bfseries{Documentation}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/tree/main/test}{\texttt{ {\bfseries{Examples/\+Tests}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/tree/main/benchmarks}{\texttt{ {\bfseries{Benchmarks}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/blob/main/results.md}{\texttt{ {\bfseries{Results}}}} $\vert$ $\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$
+\label{index_md_README}%
+\Hypertarget{index_md_README}%
+ $\vert$ \href{https://owensgroup.github.io/BGHT/}{\texttt{ {\bfseries{Documentation}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/tree/main/test}{\texttt{ {\bfseries{Examples/\+Tests}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/tree/main/benchmarks}{\texttt{ {\bfseries{Benchmarks}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/blob/main/results.md}{\texttt{ {\bfseries{Results}}}} $\vert$ $\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$
 
-B\+G\+HT is a collection of high-\/performance static G\+PU hash tables. B\+G\+HT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-\/of-\/two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-\/of-\/art static hash table. For more information, please check our paper\+:
+BGHT is a collection of high-\/performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-\/of-\/two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-\/of-\/art static hash table. For more information, please check our paper\+:
 
-\href{https://arxiv.org/abs/2108.07232}{\texttt{ {\bfseries{Better G\+PU Hash Tables}}}}~\newline
+\href{https://arxiv.org/abs/2108.07232}{\texttt{ {\bfseries{Better GPU Hash Tables}}}}~\newline
  {\itshape \href{https://maawad.github.io/}{\texttt{ Muhammad A. Awad}}, \href{https://scholar.google.com/citations?user=Z4_ZfiEAAAAJ&hl=en}{\texttt{ Saman Ashkiani}}, \href{https://web.cs.ucdavis.edu/~porumbes/}{\texttt{ Serban D. Porumbescu}}, \href{https://people.cs.rutgers.edu/~farach/}{\texttt{ Martín Farach-\/\+Colton}}, and \href{https://www.ece.ucdavis.edu/~jowens/}{\texttt{ John D. Owens}}}\hypertarget{index_autotoc_md1}{}\doxysection{Key features}\label{index_autotoc_md1}
 
 \begin{DoxyItemize}
-\item State-\/of-\/the-\/art static G\+PU hash tables
-\item Device and host side A\+P\+Is
+\item State-\/of-\/the-\/art static GPU hash tables
+\item Device and host side APIs
 \item Support for different types of keys and values
-\item Standard-\/like A\+P\+Is
+\item Standard-\/like APIs
 \end{DoxyItemize}\hypertarget{index_autotoc_md2}{}\doxysection{How to use}\label{index_autotoc_md2}
-B\+G\+HT is a header-\/only library. To use the library, you can add it as a submodule or use \href{https://github.com/cpm-cmake/CPM.cmake}{\texttt{ C\+Make Package Manager (C\+PM)}} to fetch the library into your C\+Make-\/based project (\href{https://github.com/owensgroup/BGHT/tree/main/test/cpm}{\texttt{ complete example}}). 
+BGHT is a header-\/only library. To use the library, you can add it as a submodule or use \href{https://github.com/cpm-cmake/CPM.cmake}{\texttt{ CMake Package Manager (CPM)}} to fetch the library into your CMake-\/based project (\href{https://github.com/owensgroup/BGHT/tree/main/test/cpm}{\texttt{ complete example}}). 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{cmake\_minimum\_required(VERSION 3.8 FATAL\_ERROR)}
 \DoxyCodeLine{CPMAddPackage(}
@@ -19,13 +21,14 @@ B\+G\+HT is a header-\/only library. To use the library, you can add it as a sub
 \DoxyCodeLine{  GITHUB\_REPOSITORY owensgroup/BGHT}
 \DoxyCodeLine{  GIT\_TAG main}
 \DoxyCodeLine{  OPTIONS}
-\DoxyCodeLine{     "build\_tests OFF"}
-\DoxyCodeLine{     "build\_benchmarks OFF"}
+\DoxyCodeLine{     "{}build\_tests OFF"{}}
+\DoxyCodeLine{     "{}build\_benchmarks OFF"{}}
 \DoxyCodeLine{)}
 \DoxyCodeLine{target\_link\_libraries(my\_library PRIVATE bght)}
+
 \end{DoxyCode}
-\hypertarget{index_autotoc_md3}{}\doxysubsection{A\+P\+Is}\label{index_autotoc_md3}
-All the data structures follow the C++ standard hash map ({\ttfamily std\+::unordered\+\_\+map}) A\+P\+Is closely. An example A\+P\+Is for B\+C\+HT is shown below\+: 
+\hypertarget{index_autotoc_md3}{}\doxysubsection{APIs}\label{index_autotoc_md3}
+All the data structures follow the C++ standard hash map ({\ttfamily std\+::unordered\+\_\+map}) APIs closely. An example APIs for BCHT is shown below\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{ \{c++\}}
 \DoxyCodeLine{template <class Key,}
@@ -35,8 +38,9 @@ All the data structures follow the C++ standard hash map ({\ttfamily std\+::unor
 \DoxyCodeLine{          cuda::thread\_scope Scope = cuda::thread\_scope\_device,}
 \DoxyCodeLine{          class Allocator = bght::cuda\_allocator<char>,}
 \DoxyCodeLine{          int B = 16> class bcht;}
+
 \end{DoxyCode}
-\hypertarget{index_autotoc_md4}{}\doxysubsubsection{Member functions}\label{index_autotoc_md4}
+ \hypertarget{index_autotoc_md4}{}\doxysubsubsection{Member functions}\label{index_autotoc_md4}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{ \{c++\}}
@@ -55,8 +59,9 @@ All the data structures follow the C++ standard hash map ({\ttfamily std\+::unor
 \DoxyCodeLine{\_\_device\_\_ bool insert(value\_type const\& pair, tile\_type const\& tile);}
 \DoxyCodeLine{template <typename tile\_type>}
 \DoxyCodeLine{\_\_device\_\_ mapped\_type find(key\_type const\& key, tile\_type const\& tile);}
+
 \end{DoxyCode}
-\hypertarget{index_autotoc_md5}{}\doxysubsection{Member types}\label{index_autotoc_md5}
+ \hypertarget{index_autotoc_md5}{}\doxysubsection{Member types}\label{index_autotoc_md5}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{Member type                     Definition}
@@ -65,6 +70,7 @@ All the data structures follow the C++ standard hash map ({\ttfamily std\+::unor
 \DoxyCodeLine{value\_type                      bght::pair<Key, T>}
 \DoxyCodeLine{allocator\_type                  Allocator}
 \DoxyCodeLine{bucket\_size                     Bucket size for device-\/side APIs cooperative groups tile construction}
+
 \end{DoxyCode}
 \hypertarget{index_autotoc_md6}{}\doxysubsubsection{Example}\label{index_autotoc_md6}
 
@@ -92,10 +98,9 @@ All the data structures follow the C++ standard hash map ({\ttfamily std\+::unor
 \DoxyCodeLine{  // ... allocate queries and results}
 \DoxyCodeLine{  table.find(queries, queries + num\_keys, results);}
 \DoxyCodeLine{\}}
+
 \end{DoxyCode}
-
-
-
+ 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{ \{c++\}}
 \DoxyCodeLine{// Example using device-\/side APIs}
@@ -115,29 +120,31 @@ All the data structures follow the C++ standard hash map ({\ttfamily std\+::unor
 \DoxyCodeLine{  // Pass the hash table to a GPU kernel}
 \DoxyCodeLine{  kernel<<<...>>>(table);}
 \DoxyCodeLine{\}}
+
 \end{DoxyCode}
 \hypertarget{index_autotoc_md7}{}\doxysection{Requirements and limitations}\label{index_autotoc_md7}
 Please create an issue if you face challenges with any of the following limitations and requirements. \hypertarget{index_autotoc_md8}{}\doxysubsection{Requirements}\label{index_autotoc_md8}
 
 \begin{DoxyItemize}
-\item C++17/\+C\+U\+DA C++17
-\item N\+V\+I\+D\+IA Volta G\+PU or later microarchitectures
-\item C\+Make 3.\+8 or later
-\item C\+U\+DA 11.\+5 or later
-\end{DoxyItemize}\hypertarget{index_autotoc_md9}{}\doxysubsection{limitations}\label{index_autotoc_md9}
+\item C++17/\+CUDA C++17
+\item NVIDIA Volta GPU or later microarchitectures
+\item CMake 3.\+8 or later
+\item CUDA 11.\+5 or later
+\end{DoxyItemize}\hypertarget{index_autotoc_md9}{}\doxysubsubsection{Using Docker}\label{index_autotoc_md9}
+We provide a docker image that include the software requirements (except for CUDA drivers). To build the docker image, run\+: {\ttfamily source docker/build} To start the container, run\+: {\ttfamily source docker/run} After starting the container, you can build and execute BGHT code without any additional requirements.\hypertarget{index_autotoc_md10}{}\doxysubsection{limitations}\label{index_autotoc_md10}
 
 \begin{DoxyItemize}
-\item Currently hash tables based on cuckoo hashing do not support concurrent insertion and queries. I\+HT and P2\+B\+HT support concurrent insertions and queries.
+\item Currently hash tables based on cuckoo hashing do not support concurrent insertion and queries. IHT and P2\+BHT support concurrent insertions and queries.
 \item Keys must be unique
-\item Construction of the data structures offered {\itshape may} fail. In these scenarios, reconstructing the table using a larger capacity or a lower load factor should be considered. Our paper offers recommended hash table load factors (for uniformly distributed unsigned keys) to achieve at least a 99\% success rate (\href{https://arxiv.org/abs/2108.07232}{\texttt{ See Fig. 2}}). For example, B\+C\+HT will offer a 100\% success rate for up to 0.\+991 load factor. Please create an issue if you encounter any problems with different key distributions.
-\end{DoxyItemize}\hypertarget{index_autotoc_md10}{}\doxysection{Reproducing the ar\+Xiv paper results}\label{index_autotoc_md10}
-To reproduce the results, follow the following steps. You can also view our results here. If you find any mismatch (either faster or slower) between the results offered in the repository or the paper, please create an issue, and we will investigate the performance changes.\hypertarget{index_autotoc_md11}{}\doxysection{Benchmarks}\label{index_autotoc_md11}
+\item Construction of the data structures offered {\itshape may} fail. In these scenarios, reconstructing the table using a larger capacity or a lower load factor should be considered. Our paper offers recommended hash table load factors (for uniformly distributed unsigned keys) to achieve at least a 99\% success rate (\href{https://arxiv.org/abs/2108.07232}{\texttt{ See Fig. 2}}). For example, BCHT will offer a 100\% success rate for up to 0.\+991 load factor. Please create an issue if you encounter any problems with different key distributions.
+\end{DoxyItemize}\hypertarget{index_autotoc_md11}{}\doxysection{Reproducing the ar\+Xiv paper results}\label{index_autotoc_md11}
+To reproduce the results, follow the following steps. You can also view our results here. If you find any mismatch (either faster or slower) between the results offered in the repository or the paper, please create an issue, and we will investigate the performance changes.\hypertarget{index_autotoc_md12}{}\doxysection{Benchmarks}\label{index_autotoc_md12}
 Please check our \href{https://arxiv.org/abs/2108.07232}{\texttt{ paper}} for comprehensive analysis and benchmarks. Also, see the following steps to reproduce the results.
 
-An additional comparison of our B\+C\+HT to {\ttfamily cuc\+Collection}\textquotesingle{}s {\ttfamily cuco\+::static\+\_\+map} is shown below. The comparison is between our B\+C\+HT with B = 16 (default configuration) and {\ttfamily cuco\+::static\+\_\+map}. Input keys (50 million pairs) are uniformly distributed unsigned keys. The benchmarking was performed on an N\+V\+I\+D\+IA Titan V G\+PU (higher is better)\+:
+An additional comparison of our BCHT to {\ttfamily cuc\+Collection}\textquotesingle{}s {\ttfamily cuco\+::static\+\_\+map} is shown below. The comparison is between our BCHT with B = 16 (default configuration) and {\ttfamily cuco\+::static\+\_\+map}. Input keys (50 million pairs) are uniformly distributed unsigned keys. The benchmarking was performed on an NVIDIA Titan V GPU (higher is better)\+:
 
-\hypertarget{index_autotoc_md12}{}\doxysection{Questions and bug report}\label{index_autotoc_md12}
-Please create an issue. We will welcome any contributions that improve the usability and quality of our repository.\hypertarget{index_autotoc_md13}{}\doxysection{Bibtex}\label{index_autotoc_md13}
+\hypertarget{index_autotoc_md13}{}\doxysection{Questions and bug report}\label{index_autotoc_md13}
+Please create an issue. We will welcome any contributions that improve the usability and quality of our repository.\hypertarget{index_autotoc_md14}{}\doxysection{Bibtex}\label{index_autotoc_md14}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{@inproceedings\{Awad:2023:AAI,}
@@ -154,6 +161,7 @@ Please create an issue. We will welcome any contributions that improve the usabi
 \DoxyCodeLine{  eprint\_ = \{2108.07232\},}
 \DoxyCodeLine{  url = \{https://escholarship.org/uc/item/6cb1q6rz\}}
 \DoxyCodeLine{\}}
+
 \end{DoxyCode}
-\hypertarget{index_autotoc_md14}{}\doxysection{Acknowledgments}\label{index_autotoc_md14}
-The structure and organization of the repository were inspired by \href{https://github.com/nviDIA/cuCollections/}{\texttt{ N\+V\+I\+D\+IA\textquotesingle{}s cu\+Collection}} and \href{https://github.com/owensgroup/RXMesh}{\texttt{ R\+X\+Mesh}}. 
+\hypertarget{index_autotoc_md15}{}\doxysection{Acknowledgments}\label{index_autotoc_md15}
+The structure and organization of the repository were inspired by \href{https://github.com/nviDIA/cuCollections/}{\texttt{ NVIDIA\textquotesingle{}s cu\+Collection}} and \href{https://github.com/owensgroup/RXMesh}{\texttt{ RXMesh}}. 

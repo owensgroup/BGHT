@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['_7ebcht_10',['~bcht',['../d3/d16/structbght_1_1bcht.html#a99a897955e80d66cb83d62ef33d79110',1,'bght::bcht']]],
-  ['_7echt_11',['~cht',['../d3/dad/structbght_1_1cht.html#a4e5e1879dbce693b73fd9569e9d86a34',1,'bght::cht']]],
-  ['_7eiht_12',['~iht',['../db/d24/structbght_1_1iht.html#a1eb1c14a9683be082405b20cd4ac0fb5',1,'bght::iht']]],
-  ['_7ep2bht_13',['~p2bht',['../d6/dcc/structbght_1_1p2bht.html#aee3fe77f75a7825a060d9b891726cff3',1,'bght::p2bht']]]
+  ['size_10',['size',['../d3/d16/structbght_1_1bcht.html#a4fc21878958c178a66d686039c18f957',1,'bght::bcht::size()'],['../db/d24/structbght_1_1iht.html#a0efa940784530baf1893c7cfbf901651',1,'bght::iht::size()'],['../d6/dcc/structbght_1_1p2bht.html#a4f95a1f7a39e693a0ca1cd67951c1ec7',1,'bght::p2bht::size()']]]
 ];

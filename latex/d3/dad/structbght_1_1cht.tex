@@ -2,7 +2,7 @@
 \label{structbght_1_1cht}\index{bght::cht$<$ Key, T, Hash, KeyEqual, Scope, Allocator $>$@{bght::cht$<$ Key, T, Hash, KeyEqual, Scope, Allocator $>$}}
 
 
-C\+HT C\+HT (cuckoo hash table) is an associative static G\+PU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the cuckoo hashing probing scheme (bucket size of one and using four hash functions).  
+CHT CHT (cuckoo hash table) is an associative static GPU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the cuckoo hashing probing scheme (bucket size of one and using four hash functions).  
 
 
 
@@ -63,22 +63,22 @@ using {\bfseries key\+\_\+equal} = Key\+Equal
 void \mbox{\hyperlink{structbght_1_1cht_a28b618c3f217d021318f097dab537c4a}{clear}} ()
 \begin{DoxyCompactList}\small\item\em Clears the hash map and resets all slots. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename Input\+It $>$ }\\bool \mbox{\hyperlink{structbght_1_1cht_a33b47bb3d9abe89ab834e04b210f571c}{insert}} (Input\+It first, Input\+It last, cuda\+Stream\+\_\+t stream=0)
-\begin{DoxyCompactList}\small\item\em Host-\/side A\+PI for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Host-\/side API for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename Input\+It , typename Output\+It $>$ }\\void \mbox{\hyperlink{structbght_1_1cht_a81fdda2b20c3dc2fd2c237e1e8c9ccac}{find}} (Input\+It first, Input\+It last, Output\+It output\+\_\+begin, cuda\+Stream\+\_\+t stream=0)
-\begin{DoxyCompactList}\small\item\em Host-\/side A\+PI for finding all keys defined by the input argument iterators. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Host-\/side API for finding all keys defined by the input argument iterators. \end{DoxyCompactList}\item 
 \+\_\+\+\_\+device\+\_\+\+\_\+ bool \mbox{\hyperlink{structbght_1_1cht_a8a868596bd28694f9885d410ef3b37a3}{insert}} (value\+\_\+type const \&pair)
-\begin{DoxyCompactList}\small\item\em Device-\/side cooperative insertion A\+PI that inserts a single pair into the hash map. This function is called by a single thread. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Device-\/side cooperative insertion API that inserts a single pair into the hash map. This function is called by a single thread. \end{DoxyCompactList}\item 
 \+\_\+\+\_\+device\+\_\+\+\_\+ mapped\+\_\+type \mbox{\hyperlink{structbght_1_1cht_a6f45a140a4f942230ffb4609096982ec}{find}} (key\+\_\+type const \&key)
-\begin{DoxyCompactList}\small\item\em Device-\/side cooperative find A\+PI that finds a single pair into the hash map. \end{DoxyCompactList}\item 
-{\footnotesize template$<$typename R\+NG $>$ }\\void \mbox{\hyperlink{structbght_1_1cht_a9e7ca5b7d83f47e4188ffbeacbc4b7dc}{randomize\+\_\+hash\+\_\+functions}} (R\+NG \&rng)
-\begin{DoxyCompactList}\small\item\em Host-\/side A\+PI to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Device-\/side cooperative find API that finds a single pair into the hash map. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename RNG $>$ }\\void \mbox{\hyperlink{structbght_1_1cht_a9e7ca5b7d83f47e4188ffbeacbc4b7dc}{randomize\+\_\+hash\+\_\+functions}} (RNG \&rng)
+\begin{DoxyCompactList}\small\item\em Host-\/side API to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 \subsubsection*{template$<$class Key, class T, class Hash = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator = bght\+::cuda\+\_\+allocator$<$char$>$$>$\newline
 struct bght\+::cht$<$ Key, T, Hash, Key\+Equal, Scope, Allocator $>$}
 
-C\+HT C\+HT (cuckoo hash table) is an associative static G\+PU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the cuckoo hashing probing scheme (bucket size of one and using four hash functions). 
+CHT CHT (cuckoo hash table) is an associative static GPU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the cuckoo hashing probing scheme (bucket size of one and using four hash functions). 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -90,7 +90,7 @@ C\+HT C\+HT (cuckoo hash table) is an associative static G\+PU hash table that c
 \hline
 {\em Key\+Equal} & Binary function object class that compares two keys \\
 \hline
-{\em Allocator} & The allocator to use for allocating G\+PU device memory \\
+{\em Allocator} & The allocator to use for allocating GPU device memory \\
 \hline
 \end{DoxyTemplParams}
 
@@ -115,7 +115,7 @@ Constructs the hash table with the specified capacity and uses the specified sen
 \hline
 {\em sentinel\+\_\+value} & A reserved sentinel value that defines an empty value \\
 \hline
-{\em allocator} & The allocator to use for allocating G\+PU device memory \\
+{\em allocator} & The allocator to use for allocating GPU device memory \\
 \hline
 \end{DoxyParams}
 
@@ -131,7 +131,7 @@ void \mbox{\hyperlink{structbght_1_1cht}{bght\+::cht}}$<$ Key, T, Hash, Key\+Equ
 
 
 
-Host-\/side A\+PI for finding all keys defined by the input argument iterators. 
+Host-\/side API for finding all keys defined by the input argument iterators. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -148,7 +148,7 @@ Host-\/side A\+PI for finding all keys defined by the input argument iterators.
 \hline
 {\em output\+\_\+begin} & An iterator defining the beginning of the output buffer to store the results into. The size of the buffer must match the number of queries defined by the input iterators. \\
 \hline
-{\em stream} & A C\+U\+DA stream where the insertion operation will take place \\
+{\em stream} & A CUDA stream where the insertion operation will take place \\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{structbght_1_1cht_a6f45a140a4f942230ffb4609096982ec}\label{structbght_1_1cht_a6f45a140a4f942230ffb4609096982ec}} 
@@ -160,7 +160,7 @@ Host-\/side A\+PI for finding all keys defined by the input argument iterators.
 
 
 
-Device-\/side cooperative find A\+PI that finds a single pair into the hash map. 
+Device-\/side cooperative find API that finds a single pair into the hash map. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -180,7 +180,7 @@ bool \mbox{\hyperlink{structbght_1_1cht}{bght\+::cht}}$<$ Key, T, Hash, Key\+Equ
 
 
 
-Host-\/side A\+PI for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. 
+Host-\/side API for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -193,7 +193,7 @@ Host-\/side A\+PI for inserting all pairs defined by the input argument iterator
 \hline
 {\em last} & An iterator defining the end of the input pairs to insert \\
 \hline
-{\em stream} & A C\+U\+DA stream where the insertion operation will take place \\
+{\em stream} & A CUDA stream where the insertion operation will take place \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -208,7 +208,7 @@ A boolean indicating success (true) or failure (false) of the insertion operatio
 
 
 
-Device-\/side cooperative insertion A\+PI that inserts a single pair into the hash map. This function is called by a single thread. 
+Device-\/side cooperative insertion API that inserts a single pair into the hash map. This function is called by a single thread. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -223,16 +223,16 @@ A boolean indicating success (true) or failure (false) of the insertion operatio
 \index{randomize\_hash\_functions@{randomize\_hash\_functions}!bght::cht$<$ Key, T, Hash, KeyEqual, Scope, Allocator $>$@{bght::cht$<$ Key, T, Hash, KeyEqual, Scope, Allocator $>$}}
 \doxysubsubsection{\texorpdfstring{randomize\_hash\_functions()}{randomize\_hash\_functions()}}
 {\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$$>$ \\
-template$<$typename R\+NG $>$ \\
-void \mbox{\hyperlink{structbght_1_1cht}{bght\+::cht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator $>$\+::randomize\+\_\+hash\+\_\+functions (\begin{DoxyParamCaption}\item[{R\+NG \&}]{rng }\end{DoxyParamCaption})}
+template$<$typename RNG $>$ \\
+void \mbox{\hyperlink{structbght_1_1cht}{bght\+::cht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator $>$\+::randomize\+\_\+hash\+\_\+functions (\begin{DoxyParamCaption}\item[{RNG \&}]{rng }\end{DoxyParamCaption})}
 
 
 
-Host-\/side A\+PI to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. 
+Host-\/side API to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em R\+NG} & A pseudo-\/random number generator \\
+{\em RNG} & A pseudo-\/random number generator \\
 \hline
 \end{DoxyTemplParams}
 

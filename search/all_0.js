@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bcht_0',['bcht',['../d3/d16/structbght_1_1bcht.html',1,'bght::bcht&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B &gt;'],['../d3/d16/structbght_1_1bcht.html#ab77ebf40b39673ff2943fbe950f6cee8',1,'bght::bcht::bcht(std::size_t capacity, Key sentinel_key, T sentinel_value, Allocator const &amp;allocator=Allocator{})'],['../d3/d16/structbght_1_1bcht.html#aab4f5aaf7d1d1c16581c63425c22d98f',1,'bght::bcht::bcht(const bcht &amp;other)'],['../d3/d16/structbght_1_1bcht.html#afdc822e8c97860d7d63b30ff66cd44a7',1,'bght::bcht::bcht(bcht &amp;&amp;)=delete']]]
+  ['_3ca_20href_3d_22https_3a_2f_2fowensgroup_2egithub_2eio_2fbght_2f_22_3ebght_3a_20better_20gpu_20hash_20tables_3c_2fa_3e_0',['&lt;a href=&quot;https://owensgroup.github.io/BGHT/&quot;&gt;BGHT: Better GPU Hash Tables&lt;/a&gt;',['../index.html',1,'']]]
 ];
