@@ -1,6 +1,6 @@
 # [BGHT: Better GPU Hash Tables](https://owensgroup.github.io/BGHT/)
 
-| [**Documentation**](https://owensgroup.github.io/BGHT/) | [**Examples/Tests**](https://github.com/owensgroup/BGHT/tree/main/test)  | [**Benchmarks**](https://github.com/owensgroup/BGHT/tree/main/benchmarks) | [**Results**](https://github.com/owensgroup/BGHT/blob/main/results.md) | 
+| [**Documentation**](https://owensgroup.github.io/BGHT/) | [**Examples/Tests**](https://github.com/owensgroup/BGHT/tree/main/test)  | [**Benchmarks**](https://github.com/owensgroup/BGHT/tree/main/benchmarks) | [**Results**](https://github.com/owensgroup/BGHT/blob/main/results.md) |
 |--------------|----------------------|-------------------|-------------------|
 
 BGHT is a collection of high-performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-of-two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-of-art static hash table.
@@ -123,6 +123,13 @@ Please create an issue if you face challenges with any of the following limitati
 * NVIDIA Volta GPU or later microarchitectures
 * CMake 3.8 or later
 * CUDA 11.5 or later
+
+#### Using Docker
+We provide a docker image that include the software requirements (except for CUDA drivers). To build the docker image, run:
+`source docker/build`
+To start the container, run:
+`source docker/run`
+After starting the container, you can build and execute BGHT code without any additional requirements.
 
 ### limitations
 * Currently hash tables based on cuckoo hashing do not support concurrent insertion and queries. IHT and P2BHT support concurrent insertions and queries.
