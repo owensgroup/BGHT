@@ -24,7 +24,17 @@
 
 // Based on sample6_unittest
 // https://github.com/google/googletest/blob/main/googletest/samples/sample6_unittest.cc
+
 namespace {
+
+template <typename T>
+constexpr auto get_sentinel() {
+  if constexpr (std::is_pointer<T>::value) {
+    return nullptr;
+  } else {
+    return std::numeric_limits<T>::max();
+  }
+}
 
 template <class HashMap, std::size_t Capacity, auto SentinelKey, auto SentinelValue>
 struct HashMapData {
@@ -63,14 +73,14 @@ struct mapped_vector {
 
 template <class key_type, class value_type, class pair_type>
 struct testing_input {
-  testing_input(std::size_t input_num_keys)
+  testing_input(std::size_t input_num_keys, bool contain_sentinel = false)
       : num_keys(input_num_keys)
       , pairs(input_num_keys)
       , keys_exist(input_num_keys)
       , keys_not_exist(input_num_keys) {
-    make_input();
+    make_input(contain_sentinel);
   }
-  void make_input() {
+  void make_input(bool contain_sentinel) {
     for (std::size_t i = 0; i < num_keys; i++) {
       value_type value{};
       if constexpr (std::is_pointer<value_type>::value) {
@@ -78,7 +88,11 @@ struct testing_input {
       } else {
         value = static_cast<value_type>(i);
       }
-      pairs[i] = {static_cast<key_type>(i), value};
+      key_type key = i;
+      if (contain_sentinel) {
+        key = get_sentinel<key_type>();
+      }
+      pairs[i] = {key, value};
       keys_exist[i] = pairs[i].first;
       keys_not_exist[i] = pairs[i].first + static_cast<key_type>(num_keys);
     }
@@ -94,15 +108,6 @@ struct testing_input {
   mapped_vector<key_type> keys_exist;
   mapped_vector<key_type> keys_not_exist;
 };
-
-template <typename T>
-constexpr auto get_sentinel() {
-  if constexpr (std::is_pointer<T>::value) {
-    return nullptr;
-  } else {
-    return std::numeric_limits<T>::max();
-  }
-}
 
 template <template <class...> class HashMap, typename K, class V>
 using MakeHashMapData =
@@ -235,6 +240,19 @@ TYPED_TEST(HashMapTest, FindNotExist) {
   input.free();
 }
 
+TYPED_TEST(HashMapTest, InsertSentinel) {
+  std::size_t num_keys = 1;
+  using key_type = typename TestFixture::map_data::hash_map::key_type;
+  using value_type = typename TestFixture::map_data::hash_map::mapped_type;
+  using pair_type = typename TestFixture::map_data::hash_map::value_type;
+  bool contain_sentinel = true;
+  testing_input<key_type, value_type, pair_type> input(num_keys, contain_sentinel);
+  bool success =
+      this->hashmap_->insert(input.pairs.data(), input.pairs.data() + num_keys);
+  EXPECT_EQ(cudaDeviceSynchronize(), cudaSuccess);
+  EXPECT_EQ(success, false);
+  input.free();
+}
 // other tests to add:
 // custom types
 // custom allocator

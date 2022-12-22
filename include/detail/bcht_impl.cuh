@@ -181,6 +181,10 @@ __device__ bool bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert(
     tile_type const& tile) {
   detail::mars_rng_32 rng;
 
+  if (key_equal{}(pair.first, sentinel_key_)) {
+    return false;
+  }
+
   auto bucket_id = hf0_(pair.first) % num_buckets_;
 
   uint32_t cuckoo_counter = 0;

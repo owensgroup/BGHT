@@ -174,6 +174,10 @@ __device__ bool bght::p2bht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert
   auto bucket0_id = hf0_(pair.first) % num_buckets_;
   auto bucket1_id = hf1_(pair.first) % num_buckets_;
 
+  if (key_equal{}(pair.first, sentinel_key_)) {
+    return false;
+  }
+
   auto lane_id = tile.thread_rank();
   const int elected_lane = 0;
   value_type sentinel_pair{sentinel_key_, sentinel_value_};
