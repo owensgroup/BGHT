@@ -1,0 +1,54 @@
+#!/bin/bash
+
+print_help(){
+   echo "Builds DS Docker image for AMD or NVIDIA GPUs."
+   echo
+   echo "Syntax: $0 [-t|h]"
+   echo "options:"
+   echo "h     Prints this message."
+   echo "t     Target is amd or nvidia. Default is amd."
+   echo
+}
+
+target=amd
+while getopts "t:?h:" option; do
+    case $option in
+        t)
+            target=$OPTARG;;
+        h|?)
+            print_help
+            exit;;
+    esac
+done
+echo $target
+
+
+git_directoy=$(pwd -P)
+rocprofiler_directoy="/home/muhammad/github/rocprofiler/"
+user=`whoami`
+uid=`id -u`
+gid=`id -g`
+
+docker_args=$(cat <<EOF
+-it --rm\
+ -e USER=$user -e UID=$uid -e GID=$gid\
+ -v $git_directoy:$git_directoy\
+ -v $rocprofiler_directoy:$rocprofiler_directoy\
+ -w $git_directoy
+EOF
+)
+
+if [[ $target == "amd" ]]; then
+    gpu_args="--device=/dev/kfd --device=/dev/dri"
+    image="hip-ds-amd"
+    name=$image
+    echo docker run --name $name $docker_args $gpu_args $image
+    docker run --name $name $docker_args $gpu_args $image
+elif [[ $target == "nvidia" ]]; then
+    gpu_args="--gpus all"
+    image="hip-ds-nv"
+    name=$image
+    docker run --name $name $docker_args $gpu_args $image
+else
+    print_help
+fi

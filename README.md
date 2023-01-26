@@ -40,8 +40,8 @@ template <class Key,
           class T,
           class Hash = bght::universal_hash<Key>,
           class KeyEqual = bght::equal_to<Key>,
-          cuda::thread_scope Scope = cuda::thread_scope_device,
-          class Allocator = bght::cuda_allocator<char>,
+          bght::thread_scope Scope = bght::thread_scope_device,
+          class Allocator = bght::hip_allocator<char>,
           int B = 16> class bcht;
 ```
 #### Member functions
@@ -53,9 +53,9 @@ bcht(std::size_t capacity,
      Allocator const& allocator = Allocator{});
 // Host-side APIs
 template <typename InputIt>
-  bool insert(InputIt first, InputIt last, cudaStream_t stream = 0);
+  bool insert(InputIt first, InputIt last, hipStream_t stream = 0);
 template <typename InputIt, typename OutputIt>
-  void find(InputIt first, InputIt last, OutputIt output_begin, cudaStream_t stream = 0);
+  void find(InputIt first, InputIt last, OutputIt output_begin, hipStream_t stream = 0);
 // Device-side APIs
 template <typename tile_type>
 __device__ bool insert(value_type const& pair, tile_type const& tile);

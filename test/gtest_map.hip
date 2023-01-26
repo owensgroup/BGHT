@@ -50,12 +50,12 @@ struct mapped_vector {
   mapped_vector(std::size_t capacity) : capacity_(capacity) { allocate(capacity); }
   T& operator[](std::size_t index) { return dh_buffer_[index]; }
   ~mapped_vector() {}
-  void free() { cuda_try(cudaFreeHost(dh_buffer_)); }
+  void free() { hip_try(hipFreeHost(dh_buffer_)); }
   T* data() const { return dh_buffer_; }
 
  private:
   void allocate(std::size_t count) {
-    cuda_try(cudaMallocHost(&dh_buffer_, sizeof(T) * count));
+    hip_try(hipMallocHost(&dh_buffer_, sizeof(T) * count));
   }
   std::size_t capacity_;
   T* dh_buffer_;
@@ -139,8 +139,8 @@ typedef testing::Types<MakeHashMapData<bght::bcht, uint32_t, uint32_t>,
 TYPED_TEST_SUITE(HashMapTest, Implementations);
 
 TYPED_TEST(HashMapTest, Construction) {
-  auto last_error = cudaPeekAtLastError();
-  EXPECT_TRUE(last_error == cudaSuccess);
+  auto last_error = hipPeekAtLastError();
+  EXPECT_TRUE(last_error == hipSuccess);
 }
 
 TYPED_TEST(HashMapTest, InsertSuccess) {
@@ -162,8 +162,8 @@ TYPED_TEST(HashMapTest, EmptySize) {
 
 TYPED_TEST(HashMapTest, Clear) {
   this->hashmap_->clear();
-  auto last_error = cudaPeekAtLastError();
-  EXPECT_TRUE(last_error == cudaSuccess);
+  auto last_error = hipPeekAtLastError();
+  EXPECT_TRUE(last_error == hipSuccess);
 }
 
 TYPED_TEST(HashMapTest, InsertSize) {
@@ -204,7 +204,7 @@ TYPED_TEST(HashMapTest, FindExist) {
   this->hashmap_->insert(input.pairs.data(), input.pairs.data() + num_keys);
   this->hashmap_->find(
       input.keys_exist.data(), input.keys_exist.data() + num_keys, find_results.data());
-  EXPECT_EQ(cudaDeviceSynchronize(), cudaSuccess);
+  EXPECT_EQ(hipDeviceSynchronize(), hipSuccess);
   for (std::size_t i = 0; i < num_keys; i++) {
     auto expected_value = input.pairs[i].second;
     auto found_value = find_results[i];
@@ -225,7 +225,7 @@ TYPED_TEST(HashMapTest, FindNotExist) {
   this->hashmap_->find(input.keys_not_exist.data(),
                        input.keys_not_exist.data() + num_keys,
                        find_results.data());
-  EXPECT_EQ(cudaDeviceSynchronize(), cudaSuccess);
+  EXPECT_EQ(hipDeviceSynchronize(), hipSuccess);
   for (std::size_t i = 0; i < num_keys; i++) {
     auto expected_value = TestFixture::map_data::sentinel_value;
     auto found_value = find_results[i];

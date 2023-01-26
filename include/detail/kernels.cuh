@@ -15,9 +15,12 @@
  */
 
 #pragma once
-#include <cooperative_groups.h>
-#include <cub/cub.cuh>
-#include <detail/cuda_helpers.cuh>
+#include <detail/cooperative_groups.hpp>
+
+#include <detail/hip_helpers.cuh>
+#include <rocprim/rocprim.hpp>
+
+#include <rocprim/block/block_reduce.hpp>
 
 namespace bght {
 namespace detail {
@@ -140,12 +143,12 @@ __global__ void find_kernel(InputIt first,
 template <int BlockSize, typename InputT, typename HashMap>
 __global__ void count_kernel(const InputT count_key, std::size_t* count, HashMap map) {
   auto thread_id = threadIdx.x + blockIdx.x * blockDim.x;
-  typedef cub::BlockReduce<std::size_t, BlockSize> BlockReduce;
+  typedef rocprim::BlockReduce<std::size_t, BlockSize> BlockReduce;
   __shared__ typename BlockReduce::TempStorage temp_storage;
 
   std::size_t match = 0;
   if (thread_id < map.capacity_) {
-    const auto key = map.d_table_[thread_id].load(cuda::memory_order_relaxed).first;
+    const auto key = map.d_table_[thread_id].load(bght::memory_order_relaxed).first;
     match = (key == count_key);
   }
   std::size_t block_num_matches = BlockReduce(temp_storage).Sum(match);

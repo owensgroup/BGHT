@@ -1,0 +1,23 @@
+FROM nvidia/cuda:12.0.0-devel-ubuntu22.04
+LABEL maintainer="Muhammad Awad <mawad@duck.com>"
+
+# Install dependencies
+RUN apt-get update && apt-get -y install wget curl build-essential git
+
+RUN curl -fsSL https://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/rocm-keyring.gpg
+RUN echo 'deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/rocm-keyring.gpg] https://repo.radeon.com/amdgpu/latest/ubuntu jammy main' | tee /etc/apt/sources.list.d/rocm.list
+RUN echo 'deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/rocm-keyring.gpg] https://repo.radeon.com/rocm/apt/debian/ jammy main' | tee /etc/apt/sources.list.d/rocm.list
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y hip-runtime-nvidia hip-dev
+
+# Install CMake
+ARG CMAKE_VERSION=3.25.1
+RUN wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh &&\
+    chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh &&\
+    mkdir /opt/cmake && \
+    ./cmake-${CMAKE_VERSION}-linux-x86_64.sh  --skip-license --prefix=/opt/cmake  &&\
+    ln -s /opt/cmake/bin/* /usr/local/bin/
+
+# Set environment variables
+ENV PATH="$PATH:/opt/rocm/bin:/opt/rocm/rocprofiler/bin:/opt/rocm/hip/bin"
+ENV LD_LIBRARY_PATH="/opt/rocm/lib:/opt/rocm/llvm/lib:/opt/rocm/hip/lib"

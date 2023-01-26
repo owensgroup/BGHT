@@ -4,21 +4,26 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.8)
 endif()
 
 
-project(bght LANGUAGES CXX CUDA)
+project(bght LANGUAGES CXX HIP)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CUDA_STANDARD 17)
-set(CMAKE_CUDA_STANDARD_REQUIRED TRUE)
+set(CMAKE_HIP_STANDARD 17)
+set(CMAKE_HIP_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 
 # options
 option(build_benchmarks "Build benchmarks" ON)
 option(build_tests "Build tests" ON)
+option(target_amd "Platform AMD" ON)
+option(target_nvidia "Platform AMD" OFF)
 
 
 # Auto-detect GPU architecture, sets ${CUDA_ARCHS}
-include("cmake/AutoDetectCudaArch.cmake")
+if(target_nvidia)
+    include("cmake/AutoDetectCudaArch.cmake")
+else()
+endif()
 
 # Direct all output to /bin directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
@@ -29,7 +34,7 @@ set(template_define "${CMAKE_CURRENT_SOURCE_DIR}/outputs")
 # bght flags
 add_library(bght INTERFACE)
 
-# CUDA and C++ compiler flags
+# HIP and C++ compiler flags
 set(CXX_FLAGS
         $<IF:$<CXX_COMPILER_ID:MSVC>,
         /std:c++17,
@@ -55,6 +60,17 @@ set(CUDA_FLAGS
     $<$<CONFIG:Release>:-Xptxas -warn-spills -res-usage>
     )
 
+set(HIP_FLAGS
+    -O3
+)
+
+
+if(target_nvidia)
+    set(PLATORM_FLAGS ${CUDA_FLAGS})
+endif()
+
+# message("platform = ${platform}")
+# message("PLATORM_FLAGS = ${PLATORM_FLAGS}")
 
 set(external_includes "${CMAKE_CURRENT_SOURCE_DIR}/external")
 set(bght_includes "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -64,7 +80,7 @@ target_include_directories( developer_flags
                             INTERFACE ${external_includes})
 target_compile_options(developer_flags INTERFACE
     $<$<COMPILE_LANGUAGE:CXX>:${CXX_FLAGS}>
-    $<$<COMPILE_LANGUAGE:CUDA>:${CUDA_FLAGS}>)
+    $<$<COMPILE_LANGUAGE:HIP>:${PLATORM_FLAGS}>)
 
 target_link_libraries(bght
     INTERFACE $<BUILD_INTERFACE:developer_flags>

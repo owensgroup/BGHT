@@ -15,10 +15,10 @@
  */
 
 #pragma once
-#include <cuda/atomic>
 #include <detail/allocator.hpp>
-#include <detail/cuda_helpers.cuh>
+#include <detail/atomic.hpp>
 #include <detail/hash_functions.cuh>
+#include <detail/hip_helpers.cuh>
 #include <detail/kernels.cuh>
 #include <detail/pair.cuh>
 #include <detail/prime.hpp>
@@ -46,8 +46,8 @@ template <class Key,
           class T,
           class Hash = bght::MurmurHash3_32<Key>,
           class KeyEqual = bght::equal_to<Key>,
-          cuda::thread_scope Scope = cuda::thread_scope_device,
-          class Allocator = bght::cuda_allocator<char>,
+          bght::thread_scope Scope = bght::thread_scope_device,
+          class Allocator = bght::hip_allocator<char>,
           int B = 16,
           int Threshold = 14>
 struct iht {
@@ -56,17 +56,17 @@ struct iht {
   using value_type = pair<Key, T>;
   using key_type = Key;
   using mapped_type = T;
-  using atomic_pair_type = cuda::atomic<value_type, Scope>;
+  using atomic_pair_type = detail::atomic<value_type, Scope>;
   using allocator_type = Allocator;
   using hasher = Hash;
   using size_type = std::size_t;
 
   using atomic_pair_allocator_type =
-      typename std::allocator_traits<Allocator>::rebind_alloc<atomic_pair_type>;
+      typename std::allocator_traits<Allocator>::template rebind_alloc<atomic_pair_type>;
   using pool_allocator_type =
-      typename std::allocator_traits<Allocator>::rebind_alloc<bool>;
+      typename std::allocator_traits<Allocator>::template rebind_alloc<bool>;
   using size_type_allocator_type =
-      typename std::allocator_traits<Allocator>::rebind_alloc<size_type>;
+      typename std::allocator_traits<Allocator>::template rebind_alloc<size_type>;
 
   static constexpr auto bucket_size = B;
   using key_equal = KeyEqual;
@@ -126,7 +126,7 @@ struct iht {
    * operation.
    */
   template <typename InputIt>
-  bool insert(InputIt first, InputIt last, cudaStream_t stream = 0);
+  bool insert(InputIt first, InputIt last, hipStream_t stream = 0);
 
   /**
    * @brief Host-side API for finding all keys defined by the input argument iterators.
@@ -140,7 +140,7 @@ struct iht {
    * @param stream  A CUDA stream where the insertion operation will take place
    */
   template <typename InputIt, typename OutputIt>
-  void find(InputIt first, InputIt last, OutputIt output_begin, cudaStream_t stream = 0);
+  void find(InputIt first, InputIt last, OutputIt output_begin, hipStream_t stream = 0);
 
   /**
    * @brief Device-side cooperative insertion API that inserts a single pair into the
@@ -186,7 +186,7 @@ struct iht {
    * @brief Compute the number of elements in the map
    * @return The number of elements in the map
    */
-  size_type size(cudaStream_t stream = 0);
+  size_type size(hipStream_t stream = 0);
 
   /**
    * @brief Returns an iterator to the first element of the tables including all invalid
@@ -254,8 +254,8 @@ using iht8 = typename bght::iht<Key,
                                 T,
                                 bght::MurmurHash3_32<Key>,
                                 bght::equal_to<Key>,
-                                cuda::thread_scope_device,
-                                bght::cuda_allocator<char>,
+                                bght::thread_scope_device,
+                                bght::hip_allocator<char>,
                                 8,
                                 Threshold>;
 
@@ -264,8 +264,8 @@ using iht16 = typename bght::iht<Key,
                                  T,
                                  bght::MurmurHash3_32<Key>,
                                  bght::equal_to<Key>,
-                                 cuda::thread_scope_device,
-                                 bght::cuda_allocator<char>,
+                                 bght::thread_scope_device,
+                                 bght::hip_allocator<char>,
                                  16,
                                  Threshold>;
 template <typename Key, typename T, int Threshold = 25>
@@ -273,8 +273,8 @@ using iht32 = typename bght::iht<Key,
                                  T,
                                  bght::MurmurHash3_32<Key>,
                                  bght::equal_to<Key>,
-                                 cuda::thread_scope_device,
-                                 bght::cuda_allocator<char>,
+                                 bght::thread_scope_device,
+                                 bght::hip_allocator<char>,
                                  32,
                                  Threshold>;
 

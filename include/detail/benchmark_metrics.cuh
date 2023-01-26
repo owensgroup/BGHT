@@ -24,10 +24,10 @@ __device__ __managed__ uint32_t global_probes_count = 0;
 #define INCREMENT_PROBES atomicAdd(&global_probes_count, 1);
 namespace bght {
 uint32_t get_num_probes() {
-  cudaDeviceSynchronize();
+  hipDeviceSynchronize();
   auto count = global_probes_count;
   global_probes_count = 0;
-  cudaDeviceSynchronize();
+  hipDeviceSynchronize();
   return count;
 }
 }  // namespace bght

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+print_help(){
+   echo "Builds DS Docker image for AMD or NVIDIA GPUs."
+   echo
+   echo "Syntax: $0 [-t|h]"
+   echo "options:"
+   echo "h     Prints this message."
+   echo "t     Target is amd or nvidia. Default is amd."
+   echo
+}
+
+target=amd
+while getopts "t:?h:" option; do
+    case $option in
+        t)
+            target=$OPTARG;;
+        h|?)
+            print_help
+            exit;;
+    esac
+done
+echo $target
+
+if [[ $target == "amd" ]]; then
+    docker build -t hip-ds-amd -f docker/Dockerfile.amd .
+elif [[ $target == "nvidia" ]]; then
+    docker build -t hip-ds-nv -f docker/Dockerfile.nvidia .
+else
+    print_help
+fi

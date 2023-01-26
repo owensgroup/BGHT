@@ -17,12 +17,12 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 #include <thrust/sequence.h>
-#include <benchmark_helpers.cuh>
-#include <cht.hpp>
+#include <bcht.hpp>
 #include <cmd.hpp>
 #include <gpu_timer.hpp>
 #include <limits>
 #include <perf_report.hpp>
+#include <rkg.hpp>
 #include <type_traits>
 
 int main(int argc, char** argv) {
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
   std::cout << "load-factor: " << load_factor << '\n';
   bght::set_device(device);
 
-  std::size_t capacity = static_cast<std::size_t>(double(num_keys) / load_factor);
+  std::size_t capacity = double(num_keys) / load_factor;
 
   auto invalid_key = std::numeric_limits<key_type>::max();
   auto invalid_value = std::numeric_limits<value_type>::max();
@@ -47,7 +47,8 @@ int main(int argc, char** argv) {
   using pair_type = bght::pair<key_type, value_type>;
 
   std::vector<key_type> h_keys;
-  benchmark::generate_uniform_unique_keys(h_keys, num_keys);
+  std::vector<key_type> h_values;
+  rkg::generate_uniform_unique_pairs(h_keys, h_values, num_keys);
 
   thrust::device_vector<key_type> d_keys(num_keys);
   thrust::device_vector<pair_type> d_pairs(num_keys);
@@ -64,7 +65,7 @@ int main(int argc, char** argv) {
   // prepare queries
   d_queries = d_keys;
 
-  bght::cht<key_type, value_type> test(capacity, invalid_key, invalid_value);
+  bght::bcht<key_type, value_type> test(capacity, invalid_key, invalid_value);
 
   auto input_start = d_pairs.data().get();
   auto input_last = input_start + num_keys;
@@ -73,8 +74,8 @@ int main(int argc, char** argv) {
   auto queries_last = queries_start + num_keys;
   auto output_start = d_results.data().get();
 
-  cudaStream_t stream;
-  cudaStreamCreate(&stream);
+  hipStream_t stream;
+  hipStreamCreate(&stream);
 
   gpu_timer insertion_timer(stream);
   insertion_timer.start_timer();
@@ -82,7 +83,7 @@ int main(int argc, char** argv) {
   insertion_timer.stop_timer();
   auto insertion_s = insertion_timer.get_elapsed_s();
 
-  cuda_try(cudaStreamSynchronize(stream));
+  hip_try(hipStreamSynchronize(stream));
 
   gpu_timer find_timer(stream);
   find_timer.start_timer();
@@ -90,7 +91,7 @@ int main(int argc, char** argv) {
   find_timer.stop_timer();
   auto find_s = find_timer.get_elapsed_s();
 
-  cuda_try(cudaDeviceSynchronize());
+  hip_try(hipDeviceSynchronize());
 
   // Comoute stats
   if (!insertion_success) {

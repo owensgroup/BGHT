@@ -1,33 +1,33 @@
 project (test)
 
-add_executable(test_1cht test_1cht.cu)
+add_executable(test_1cht test_1cht.hip)
 set_target_properties(test_1cht PROPERTIES
 								FOLDER "tests")
 target_link_libraries(test_1cht PRIVATE bght
 								  PRIVATE bght)
 
 
-add_executable(test_bcht test_bcht.cu)
+add_executable(test_bcht test_bcht.hip)
 set_target_properties(test_bcht PROPERTIES
 								FOLDER "tests")
 target_link_libraries(test_bcht PRIVATE bght
 								  PRIVATE bght)
 
 
-add_executable(test_iht test_iht.cu)
+add_executable(test_iht test_iht.hip)
 set_target_properties(test_iht PROPERTIES
 								  FOLDER "tests")
 target_link_libraries(test_iht PRIVATE bght
 									PRIVATE bght)
 
-add_executable(test_types test_types.cu)
+add_executable(test_types test_types.hip)
 set_target_properties(test_types PROPERTIES
 								FOLDER "tests")
 target_link_libraries(test_types PRIVATE bght
 								  PRIVATE bght)
 
 
-add_executable(test_allocator test_allocator.cu)
+add_executable(test_allocator test_allocator.hip)
 set_target_properties(test_allocator PROPERTIES
 								FOLDER "tests")
 target_link_libraries(test_allocator PRIVATE bght
@@ -44,7 +44,7 @@ CPMAddPackage(
   VERSION 1.11.0
   OPTIONS "INSTALL_GTEST OFF" "gtest_force_shared_crt"
 )
-add_executable(gtest_map gtest_map.cu)
+add_executable(gtest_map gtest_map.hip)
 target_link_libraries(gtest_map PRIVATE bght
 								  PRIVATE bght
 								  PRIVATE gtest)

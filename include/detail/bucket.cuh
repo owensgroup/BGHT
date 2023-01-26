@@ -15,8 +15,7 @@
  */
 
 #pragma once
-#include <cuda/atomic>
-#include <cuda/std/atomic>
+#include <detail/atomic.hpp>
 
 namespace bght {
 namespace detail {
@@ -30,7 +29,7 @@ struct bucket {
   bucket(const bucket& other) : lane_pair_(other.lane_pair_), ptr_(other.ptr_) {}
 
   DEVICE_QUALIFIER
-  void load(cuda::memory_order order = cuda::memory_order_seq_cst) {
+  void load(bght::memory_order order = bght::memory_order_seq_cst) {
     lane_pair_ = ptr_[tile_.thread_rank()].load(order);
   }
   DEVICE_QUALIFIER
@@ -57,8 +56,8 @@ struct bucket {
   bool weak_cas_at_location(const pair_type& pair,
                             const int location,
                             const pair_type& sentinel,
-                            cuda::memory_order success = cuda::memory_order_seq_cst,
-                            cuda::memory_order failure = cuda::memory_order_seq_cst) {
+                            bght::memory_order success = bght::memory_order_seq_cst,
+                            bght::memory_order failure = bght::memory_order_seq_cst) {
     pair_type expected = sentinel;
     pair_type desired = pair;
     bool cas_success =
@@ -70,8 +69,8 @@ struct bucket {
   bool strong_cas_at_location(const pair_type& pair,
                               const int location,
                               const pair_type& sentinel,
-                              cuda::memory_order success = cuda::memory_order_seq_cst,
-                              cuda::memory_order failure = cuda::memory_order_seq_cst) {
+                              bght::memory_order success = bght::memory_order_seq_cst,
+                              bght::memory_order failure = bght::memory_order_seq_cst) {
     pair_type expected = sentinel;
     pair_type desired = pair;
     bool cas_success =
@@ -82,7 +81,7 @@ struct bucket {
   DEVICE_QUALIFIER
   pair_type exch_at_location(const pair_type& pair,
                              const int location,
-                             cuda::memory_order order = cuda::memory_order_seq_cst) {
+                             bght::memory_order order = bght::memory_order_seq_cst) {
     auto old = ptr_[location].exchange(pair, order);
     return old;
   }

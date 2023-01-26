@@ -23,16 +23,16 @@ namespace bght {
 #define _kernel_ __global__
 #define DEVICE_QUALIFIER __device__ inline
 namespace detail {
-#define cuda_try(call)                                                                  \
-  do {                                                                                  \
-    cudaError_t err = call;                                                             \
-    if (err != cudaSuccess) {                                                           \
-      printf("CUDA error at %s %d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err)); \
-      std::terminate();                                                                 \
-    }                                                                                   \
+#define hip_try(call)                                                                 \
+  do {                                                                                \
+    hipError_t err = call;                                                            \
+    if (err != hipSuccess) {                                                          \
+      printf("HIP error at %s %d: %s\n", __FILE__, __LINE__, hipGetErrorString(err)); \
+      std::terminate();                                                               \
+    }                                                                                 \
   } while (0)
 
-_device_ void cuda_assert(bool expression_result, char* message = nullptr) {
+_device_ void hip_assert(bool expression_result, char* message = nullptr) {
   if (!expression_result) {
     if (message && (threadIdx.x & 0x1f == 0)) {
       printf("assert failed: %s", message);
@@ -45,14 +45,14 @@ _device_ void cuda_assert(bool expression_result, char* message = nullptr) {
 
 void set_device(int device_id) {
   int device_count;
-  cudaGetDeviceCount(&device_count);
-  cudaDeviceProp devProp;
+  hipGetDeviceCount(&device_count);
+  hipDeviceProp_t devProp;
   if (device_id < device_count) {
-    cudaSetDevice(device_id);
-    cudaGetDeviceProperties(&devProp, device_id);
+    hipSetDevice(device_id);
+    hipGetDeviceProperties(&devProp, device_id);
     std::cout << "Device[" << device_id << "]: " << devProp.name << std::endl;
   } else {
-    std::cout << "No capable CUDA device found." << std::endl;
+    std::cout << "No capable HIP device found." << std::endl;
     std::terminate();
   }
 }

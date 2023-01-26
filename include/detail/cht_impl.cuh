@@ -15,7 +15,8 @@
  */
 
 #pragma once
-#include <cooperative_groups.h>
+#include <detail/cooperative_groups.hpp>
+
 #include <thrust/execution_policy.h>
 #include <thrust/fill.h>
 #include <detail/benchmark_metrics.cuh>
@@ -30,7 +31,7 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          bght::thread_scope Scope,
           typename Allocator>
 cht<Key, T, Hash, KeyEqual, Scope, Allocator>::cht(std::size_t capacity,
                                                    Key empty_key_sentinel,
@@ -46,11 +47,11 @@ cht<Key, T, Hash, KeyEqual, Scope, Allocator>::cht(std::size_t capacity,
   d_table_ = std::allocator_traits<atomic_pair_allocator_type>::allocate(
       atomic_pairs_allocator_, capacity_);
   table_ =
-      std::shared_ptr<atomic_pair_type>(d_table_, bght::cuda_deleter<atomic_pair_type>());
+      std::shared_ptr<atomic_pair_type>(d_table_, bght::hip_deleter<atomic_pair_type>());
 
   d_build_success_ =
       std::allocator_traits<pool_allocator_type>::allocate(pool_allocator_, 1);
-  build_success_ = std::shared_ptr<bool>(d_build_success_, bght::cuda_deleter<bool>());
+  build_success_ = std::shared_ptr<bool>(d_build_success_, bght::hip_deleter<bool>());
 
   value_type empty_pair{sentinel_key_, sentinel_value_};
 
@@ -68,14 +69,14 @@ cht<Key, T, Hash, KeyEqual, Scope, Allocator>::cht(std::size_t capacity,
   hf3_ = initialize_hf<hasher>(rng);
 
   bool success = true;
-  cuda_try(cudaMemcpy(d_build_success_, &success, sizeof(bool), cudaMemcpyHostToDevice));
+  hip_try(hipMemcpy(d_build_success_, &success, sizeof(bool), hipMemcpyHostToDevice));
 }
 
 template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          bght::thread_scope Scope,
           class Allocator>
 cht<Key, T, Hash, KeyEqual, Scope, Allocator>::cht(const cht& other)
     : capacity_(other.capacity_)
@@ -99,7 +100,7 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          bght::thread_scope Scope,
           typename Allocator>
 cht<Key, T, Hash, KeyEqual, Scope, Allocator>::~cht() {}
 
@@ -107,25 +108,25 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          bght::thread_scope Scope,
           typename Allocator>
 void cht<Key, T, Hash, KeyEqual, Scope, Allocator>::clear() {
   value_type empty_pair{sentinel_key_, sentinel_value_};
   thrust::fill(thrust::device, d_table_, d_table_ + capacity_, empty_pair);
   bool success = true;
-  cuda_try(cudaMemcpy(d_build_success_, &success, sizeof(bool), cudaMemcpyHostToDevice));
+  hip_try(hipMemcpy(d_build_success_, &success, sizeof(bool), hipMemcpyHostToDevice));
 }
 
 template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          bght::thread_scope Scope,
           typename Allocator>
 template <typename InputIt>
 bool cht<Key, T, Hash, KeyEqual, Scope, Allocator>::insert(InputIt first,
                                                            InputIt last,
-                                                           cudaStream_t stream) {
+                                                           hipStream_t stream) {
   const auto num_keys = std::distance(first, last);
 
   const uint32_t block_size = 128;
@@ -133,11 +134,11 @@ bool cht<Key, T, Hash, KeyEqual, Scope, Allocator>::insert(InputIt first,
       static_cast<uint32_t>((num_keys + block_size - 1) / block_size);
   detail::kernels::insert_kernel<<<num_blocks, block_size, 0, stream>>>(
       first, last, *this);
-  // cuda_try(cudaPeekAtLastError());
+  // hip_try(hipPeekAtLastError());
 
   bool success;
-  cuda_try(cudaMemcpyAsync(
-      &success, d_build_success_, sizeof(bool), cudaMemcpyDeviceToHost, stream));
+  hip_try(hipMemcpyAsync(
+      &success, d_build_success_, sizeof(bool), hipMemcpyDeviceToHost, stream));
   return success;
 }
 
@@ -145,13 +146,13 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          bght::thread_scope Scope,
           typename Allocator>
 template <typename InputIt, typename OutputIt>
 void cht<Key, T, Hash, KeyEqual, Scope, Allocator>::find(InputIt first,
                                                          InputIt last,
                                                          OutputIt output_begin,
-                                                         cudaStream_t stream) {
+                                                         hipStream_t stream) {
   const auto num_keys = std::distance(first, last);
 
   const uint32_t block_size = 128;
@@ -160,14 +161,14 @@ void cht<Key, T, Hash, KeyEqual, Scope, Allocator>::find(InputIt first,
 
   detail::kernels::find_kernel<<<num_blocks, block_size, 0, stream>>>(
       first, last, output_begin, *this);
-  // cuda_try(cudaPeekAtLastError());
+  // hip_try(hipPeekAtLastError());
 }
 
 template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          bght::thread_scope Scope,
           class Allocator>
 __device__ bool bght::cht<Key, T, Hash, KeyEqual, Scope, Allocator>::insert(
     value_type const& pair) {
@@ -178,7 +179,7 @@ __device__ bool bght::cht<Key, T, Hash, KeyEqual, Scope, Allocator>::insert(
   value_type insertion_pair = pair;
   do {
     auto old_pair =
-        d_table_[bucket_id].exchange(insertion_pair, cuda::memory_order_relaxed);
+        d_table_[bucket_id].exchange(insertion_pair, bght::memory_order_relaxed);
     INCREMENT_PROBES
     if (old_pair.first == sentinel_key_) {
       return true;
@@ -205,14 +206,14 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          bght::thread_scope Scope,
           class Allocator>
 __device__ bght::cht<Key, T, Hash, KeyEqual, Scope, Allocator>::mapped_type
 bght::cht<Key, T, Hash, KeyEqual, Scope, Allocator>::find(key_type const& key) {
   const int num_hfs = 4;
   auto bucket_id = hf0_(key) % num_buckets_;
   for (int hf = 0; hf < num_hfs; hf++) {
-    auto pair = d_table_[bucket_id].load(cuda::memory_order_relaxed);
+    auto pair = d_table_[bucket_id].load(bght::memory_order_relaxed);
     INCREMENT_PROBES
     if (pair.first == key) {
       return pair.second;
@@ -236,7 +237,7 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          bght::thread_scope Scope,
           class Allocator>
 template <typename RNG>
 void bght::cht<Key, T, Hash, KeyEqual, Scope, Allocator>::randomize_hash_functions(

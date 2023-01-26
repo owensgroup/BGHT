@@ -17,15 +17,16 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 #include <thrust/sequence.h>
-#include <bcht.hpp>
 #include <cmd.hpp>
 #include <gpu_timer.hpp>
+#include <iht.hpp>
 #include <limits>
 #include <perf_report.hpp>
 #include <rkg.hpp>
 #include <type_traits>
 
-int main(int argc, char** argv) {
+template <template <typename, typename, int> class hashmap, int threshold>
+void do_test(int argc, char** argv) {
   using key_type = uint32_t;
   using value_type = uint32_t;
 
@@ -34,9 +35,12 @@ int main(int argc, char** argv) {
       get_arg_value<std::size_t>(arguments, "num-keys").value_or(16ull);
   double load_factor = get_arg_value<double>(arguments, "load-factor").value_or(0.9);
   int device = get_arg_value<int>(arguments, "device").value_or(0);
+  int bucket_size = get_arg_value<int>(arguments, "b").value_or(16);
 
   std::cout << "num-keys: " << num_keys << '\n';
   std::cout << "load-factor: " << load_factor << '\n';
+  std::cout << "bucket-size: " << bucket_size << '\n';
+  std::cout << "threshold: " << threshold << '\n';
   bght::set_device(device);
 
   std::size_t capacity = double(num_keys) / load_factor;
@@ -65,7 +69,7 @@ int main(int argc, char** argv) {
   // prepare queries
   d_queries = d_keys;
 
-  bght::bcht<key_type, value_type> test(capacity, invalid_key, invalid_value);
+  hashmap<key_type, value_type, threshold> test(capacity, invalid_key, invalid_value);
 
   auto input_start = d_pairs.data().get();
   auto input_last = input_start + num_keys;
@@ -74,8 +78,8 @@ int main(int argc, char** argv) {
   auto queries_last = queries_start + num_keys;
   auto output_start = d_results.data().get();
 
-  cudaStream_t stream;
-  cudaStreamCreate(&stream);
+  hipStream_t stream;
+  hipStreamCreate(&stream);
 
   gpu_timer insertion_timer(stream);
   insertion_timer.start_timer();
@@ -83,7 +87,7 @@ int main(int argc, char** argv) {
   insertion_timer.stop_timer();
   auto insertion_s = insertion_timer.get_elapsed_s();
 
-  cuda_try(cudaStreamSynchronize(stream));
+  hip_try(hipStreamSynchronize(stream));
 
   gpu_timer find_timer(stream);
   find_timer.start_timer();
@@ -91,7 +95,7 @@ int main(int argc, char** argv) {
   find_timer.stop_timer();
   auto find_s = find_timer.get_elapsed_s();
 
-  cuda_try(cudaDeviceSynchronize());
+  hip_try(hipDeviceSynchronize());
 
   // Comoute stats
   if (!insertion_success) {
@@ -114,4 +118,31 @@ int main(int argc, char** argv) {
     }
   }
   std::cout << "Success\n";
+}
+int main(int argc, char** argv) {
+  auto arguments = std::vector<std::string>(argv, argv + argc);
+  int bucket_size = get_arg_value<int>(arguments, "b").value_or(16);
+  int threshold = get_arg_value<int>(arguments, "t").value_or(12);
+
+  if (threshold == 0) {
+    if (bucket_size == 8) {
+      do_test<iht8, 0>(argc, argv);
+    } else if (bucket_size == 16) {
+      do_test<iht16, 0>(argc, argv);
+    } else if (bucket_size == 32) {
+      do_test<iht32, 0>(argc, argv);
+    } else {
+      std::cout << "Not supported bucket size\n";
+    }
+  } else {
+    if (bucket_size == 8) {
+      do_test<iht8, 6>(argc, argv);
+    } else if (bucket_size == 16) {
+      do_test<iht16, 12>(argc, argv);
+    } else if (bucket_size == 32) {
+      do_test<iht32, 25>(argc, argv);
+    } else {
+      std::cout << "Not supported bucket size\n";
+    }
+  }
 }

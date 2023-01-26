@@ -1,0 +1,66 @@
+#FROM ubuntu:20.04
+FROM ubuntu:22.04
+LABEL maintainer="Muhammad Awad <mawad@duck.com>"
+
+# Install dependencies
+RUN apt-get update && apt-get -y install wget build-essential git
+
+
+# Install ROCm
+# ROCm 5.5.2 & ubuntu 22.04
+RUN wget https://repo.radeon.com/amdgpu-install/5.4.2/ubuntu/jammy/amdgpu-install_5.4.50402-1_all.deb
+RUN apt-get install -y ./amdgpu-install_5.4.50402-1_all.deb
+RUN DEBIAN_FRONTEND=noninteractive  amdgpu-install --accept-eula -y --usecase=rocm,hiplibsdk --no-dkms
+
+# ROCm 5.4
+# Getting this error:
+# /opt/rocm-5.4.0/include/hip/amd_detail/hip_cooperative_groups_helper.h:117:22: error: use of undeclared identifier 'hipBlockDim_z'
+# return (uint32_t)((hipBlockDim_z * hipGridDim_z) * (hipBlockDim_y * hipGridDim_y)
+
+# RUN wget https://repo.radeon.com/amdgpu-install/5.4/ubuntu/jammy/amdgpu-install_5.4.50400-1_all.deb
+# RUN apt-get -y install ./amdgpu-install_5.4.50400-1_all.deb
+# RUN DEBIAN_FRONTEND=noninteractive  amdgpu-install --accept-eula -y --usecase=rocm,hiplibsdk --no-dkms
+
+
+# ROCm 5.2
+# ubuntu:20.04
+# RUN wget https://repo.radeon.com/amdgpu-install/22.20/ubuntu/focal/amdgpu-install_22.20.50200-1_all.deb
+# RUN apt-get -y install ./amdgpu-install_22.20.50200-1_all.deb
+# RUN DEBIAN_FRONTEND=noninteractive  amdgpu-install --accept-eula -y --usecase=rocm,hiplibsdk --no-dkms
+
+# ROCm 5.1
+# ubuntu:20.04
+# RUN apt-get update  && wget https://repo.radeon.com/amdgpu-install/22.10/ubuntu/focal/amdgpu-install_22.10.50100-1_all.deb
+# RUN apt-get -y install ./amdgpu-install_22.10.50100-1_all.deb
+# RUN DEBIAN_FRONTEND=noninteractive  amdgpu-install --accept-eula -y --usecase=rocm,hiplibsdk --no-dkms
+
+# Set environment variables
+ENV PATH="$PATH:/opt/rocm/bin:/opt/rocm/rocprofiler/bin:/opt/rocm/hip/bin"
+ENV LD_LIBRARY_PATH="/opt/rocm/lib:/opt/rocm/llvm/lib:/opt/rocm/hip/lib"
+
+# Install CMake
+ARG CMAKE_VERSION=3.25.1
+RUN wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh &&\
+    chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh &&\
+    mkdir /opt/cmake && \
+    ./cmake-${CMAKE_VERSION}-linux-x86_64.sh  --skip-license --prefix=/opt/cmake  &&\
+    ln -s /opt/cmake/bin/* /usr/local/bin/
+
+# Install Omniperf
+RUN apt-get -y install python3 python3-pip
+ARG OMNIPERF_VERSION=1.0.6
+ARG INSTALL_DIR=/opt/omniperf/
+RUN wget https://github.com/AMDResearch/omniperf/releases/download/v${OMNIPERF_VERSION}/omniperf-v${OMNIPERF_VERSION}.tar.gz &&\
+    tar xfz omniperf-v1.0.6.tar.gz &&\
+    cd omniperf-1.0.6 &&\
+    python3 -m pip install -t ${INSTALL_DIR}/python-libs -r requirements.txt &&\
+    mkdir build && cd build &&\
+    cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/1.0.6 \
+            -DPYTHON_DEPS=${INSTALL_DIR}/python-libs \
+            -DMOD_INSTALL_PATH=${INSTALL_DIR}/modulefiles .. &&\
+    make install
+# Set enviroment varlaibles
+ENV PATH="$INSTALL_DIR/${OMNIPERF_VERSION}/bin:$PATH"
+ENV PYTHONPATH="$INSTALL_DIR/python-libs"
+
+RUN apt-get install -y libnuma-dev rpm
