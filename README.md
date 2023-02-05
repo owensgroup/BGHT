@@ -155,19 +155,20 @@ Please create an issue. We will welcome any contributions that improve the usabi
 
 ## Bibtex
 ```bibtex
-@inproceedings{Awad:2023:AAI,
-  title = {Analyzing and Implementing {GPU} Hash Tables},
-  author = {Muhammad A. Awad and Saman Ashkiani and Serban D.
-                  Porumbescu and Mart{\'{i}}n Farach-Colton and John
-                  D. Owens},
-  booktitle = {SIAM Symposium on Algorithmic Principles of Computer
-                  Systems},
-  series = {APOCS23},
-  year = 2023,
-  month = jan,
-  archiveprefix_ = {arXiv},
-  eprint_ = {2108.07232},
-  url = {https://escholarship.org/uc/item/6cb1q6rz}
+@InProceedings{   Awad:2023:AAI,
+  title         = {Analyzing and Implementing {GPU} Hash Tables},
+  author        = {Muhammad A. Awad and Saman Ashkiani and Serban D.
+                  Porumbescu and Mart{\'{i}}n Farach-Colton and John D.
+                  Owens},
+  booktitle     = "SIAM Symposium on Algorithmic Principles of Computer
+                  Systems",
+  series        = {APOCS23},
+  year          = 2023,
+  month         = jan,
+  pages         = {33--50},
+  code          = {https://github.com/owensgroup/BGHT},
+  doi           = {10.1137/1.9781611977578.ch3},
+  url           = {https://escholarship.org/uc/item/6cb1q6rz}
 }
 ```
 
