@@ -131,7 +131,17 @@ Please create an issue if you face challenges with any of the following limitati
 \item CMake 3.\+8 or later
 \item CUDA 11.\+5 or later
 \end{DoxyItemize}\hypertarget{index_autotoc_md9}{}\doxysubsubsection{Using Docker}\label{index_autotoc_md9}
-We provide a docker image that include the software requirements (except for CUDA drivers). To build the docker image, run\+: {\ttfamily source docker/build} To start the container, run\+: {\ttfamily source docker/run} After starting the container, you can build and execute BGHT code without any additional requirements.\hypertarget{index_autotoc_md10}{}\doxysubsection{limitations}\label{index_autotoc_md10}
+We provide a docker image that include the software requirements (except for CUDA drivers). To build the docker image, run\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{source docker/build}
+
+\end{DoxyCode}
+ To start the container, run\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{source docker/run}
+
+\end{DoxyCode}
+ After starting the container, you can build and execute BGHT code without any additional requirements.\hypertarget{index_autotoc_md10}{}\doxysubsection{limitations}\label{index_autotoc_md10}
 
 \begin{DoxyItemize}
 \item Currently hash tables based on cuckoo hashing do not support concurrent insertion and queries. IHT and P2\+BHT support concurrent insertions and queries.
