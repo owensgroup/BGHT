@@ -126,9 +126,13 @@ Please create an issue if you face challenges with any of the following limitati
 
 #### Using Docker
 We provide a docker image that include the software requirements (except for CUDA drivers). To build the docker image, run:
-`source docker/build`
+```bash
+source docker/build
+```
 To start the container, run:
-`source docker/run`
+```bash
+source docker/run
+```
 After starting the container, you can build and execute BGHT code without any additional requirements.
 
 ### limitations
