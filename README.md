@@ -4,9 +4,9 @@
 |--------------|----------------------|-------------------|-------------------|
 
 BGHT is a collection of high-performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-of-two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-of-art static hash table.
-For more information, please check our paper:
+For more information, please check our papers:
 
-[**Better GPU Hash Tables**](https://arxiv.org/abs/2108.07232)<br>
+[**Better GPU Hash Tables**](https://owensgroup.github.io/BGHT/) [[arXiv]](https://arxiv.org/abs/2108.07232) [[APOCS]](https://escholarship.org/uc/item/6cb1q6rz)<br>
 *[Muhammad A. Awad](https://maawad.github.io/), [Saman Ashkiani](https://scholar.google.com/citations?user=Z4_ZfiEAAAAJ&hl=en), [Serban D. Porumbescu](https://web.cs.ucdavis.edu/~porumbes/), [Martín Farach-Colton](https://people.cs.rutgers.edu/~farach/), and [John D. Owens](https://www.ece.ucdavis.edu/~jowens/)*
 
 ## Key features
