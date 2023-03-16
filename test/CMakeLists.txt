@@ -13,6 +13,12 @@ set_target_properties(test_bcht PROPERTIES
 target_link_libraries(test_bcht PRIVATE bght
 								  PRIVATE bght)
 
+add_executable(test_monkey test_monkey.cu)
+set_target_properties(test_monkey PROPERTIES
+								FOLDER "tests")
+target_link_libraries(test_monkey PRIVATE bght
+								  PRIVATE bght)
+
 
 
 add_executable(test_types test_types.cu)
