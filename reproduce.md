@@ -1,5 +1,11 @@
 # Reproducing the arXiv paper results:
 
+The instructions below applies to the tag `arxiv-version` which you can get via cloning the tag:
+
+```terminal 
+git clone --branch arxiv-version https://github.com/owensgroup/BGHT.git
+```
+
 ## Summary
 ```bash
 # Building the benchmarks
