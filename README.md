@@ -1,6 +1,6 @@
 # [BGHT: Better GPU Hash Tables](https://owensgroup.github.io/BGHT/)
 
-| [**Documentation**](https://owensgroup.github.io/BGHT/) | [**Examples/Tests**](https://github.com/owensgroup/BGHT/tree/main/test)  | [**Benchmarks**](https://github.com/owensgroup/BGHT/tree/main/benchmarks) | [**Results**](https://github.com/owensgroup/BGHT/blob/main/results.md) |
+| [**Documentation**](https://owensgroup.github.io/BGHT/) | [**Examples**](https://github.com/owensgroup/BGHT/tree/main/test)  | [**Examples**](https://github.com/owensgroup/BGHT/tree/main/examples)  |  [**Benchmarks**](https://github.com/owensgroup/BGHT/tree/main/benchmarks) | [**Results**](https://github.com/owensgroup/BGHT/blob/main/results.md) |
 |--------------|----------------------|-------------------|-------------------|
 
 BGHT is a collection of high-performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-of-two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-of-art static hash table.
