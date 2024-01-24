@@ -15,6 +15,8 @@
  */
 
 #pragma once
+#include <iostream>
+
 namespace bght {
 #define _device_ __device__ __forceinline__
 #define _host_device_ __device__ __host__ __forceinline__
