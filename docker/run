@@ -1,0 +1,15 @@
+#!/bin/bash
+
+git_directoy=$(pwd -P)
+user=`whoami`
+uid=`id -u`
+gid=`id -g`
+
+docker run -it --rm\
+ --name bght\
+ --gpus all\
+ -e USER=$user -e UID=$uid -e GID=$gid\
+ -v $git_directoy:$git_directoy\
+ -w $git_directoy/\
+ bght\
+ /bin/bash

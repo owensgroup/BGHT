@@ -1,15 +1,12 @@
-# BGHT: Better GPU Hash Tables
+# [BGHT: Better GPU Hash Tables](https://owensgroup.github.io/BGHT/)
 
-<table><tr>
-<th><b><a href="https://github.com/owensgroup/BGHT/tree/main/test">Examples/Tests</a></b></th>
-<th><b><a href="https://github.com/owensgroup/BGHT/tree/main/benchmarks">Benchmarks</a></b></th>
-<th><b><a href="https://github.com/owensgroup/BGHT/blob/main/results.md">Results</a></b></th>
-</tr></table>
+| [**Documentation**](https://owensgroup.github.io/BGHT/) | [**Examples/Tests**](https://github.com/owensgroup/BGHT/tree/main/test)  | [**Benchmarks**](https://github.com/owensgroup/BGHT/tree/main/benchmarks) | [**Results**](https://github.com/owensgroup/BGHT/blob/main/results.md) |
+|--------------|----------------------|-------------------|-------------------|
 
 BGHT is a collection of high-performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-of-two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-of-art static hash table.
-For more information, please check our paper:
+For more information, please check our papers:
 
-[**Better GPU Hash Tables**](https://arxiv.org/abs/2108.07232)<br>
+[**Better GPU Hash Tables**](https://owensgroup.github.io/BGHT/) [[arXiv]](https://arxiv.org/abs/2108.07232) [[APOCS]](https://escholarship.org/uc/item/6cb1q6rz)<br>
 *[Muhammad A. Awad](https://maawad.github.io/), [Saman Ashkiani](https://scholar.google.com/citations?user=Z4_ZfiEAAAAJ&hl=en), [Serban D. Porumbescu](https://web.cs.ucdavis.edu/~porumbes/), [Martín Farach-Colton](https://people.cs.rutgers.edu/~farach/), and [John D. Owens](https://www.ece.ucdavis.edu/~jowens/)*
 
 ## Key features
@@ -127,6 +124,17 @@ Please create an issue if you face challenges with any of the following limitati
 * CMake 3.8 or later
 * CUDA 11.5 or later
 
+#### Using Docker
+We provide a docker image that include the software requirements (except for CUDA drivers). To build the docker image, run:
+```bash
+source docker/build
+```
+To start the container, run:
+```bash
+source docker/run
+```
+After starting the container, you can build and execute BGHT code without any additional requirements.
+
 ### limitations
 * Currently hash tables based on cuckoo hashing do not support concurrent insertion and queries. IHT and P2BHT support concurrent insertions and queries.
 * Keys must be unique
@@ -147,21 +155,20 @@ Please create an issue. We will welcome any contributions that improve the usabi
 
 ## Bibtex
 ```bibtex
-@article{Awad:2021:BGH,
-  title = {Better {GPU} Hash Tables},
-  author = {Muhammad A. Awad and Saman Ashkiani and Serban D.
-                  Porumbescu and Mart{\'{i}}n Farach-Colton and John
-                  D. Owens},
-  year = 2021,
-  month = aug,
-  primaryclass = {cs.DS},
-  journal = {CoRR},
-  volume = {abs/2108.07232},
-  archiveprefix = {arXiv},
-  number = {2108.07232},
-  eprint = {2108.07232},
-  nonrefereed = {true},
-  code = {https://github.com/owensgroup/BGHT}
+@InProceedings{   Awad:2023:AAI,
+  title         = {Analyzing and Implementing {GPU} Hash Tables},
+  author        = {Muhammad A. Awad and Saman Ashkiani and Serban D.
+                  Porumbescu and Mart{\'{i}}n Farach-Colton and John D.
+                  Owens},
+  booktitle     = "SIAM Symposium on Algorithmic Principles of Computer
+                  Systems",
+  series        = {APOCS23},
+  year          = 2023,
+  month         = jan,
+  pages         = {33--50},
+  code          = {https://github.com/owensgroup/BGHT},
+  doi           = {10.1137/1.9781611977578.ch3},
+  url           = {https://escholarship.org/uc/item/6cb1q6rz}
 }
 ```
 

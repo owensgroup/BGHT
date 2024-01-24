@@ -183,6 +183,10 @@ __device__ bool bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold
   const int elected_lane = 0;
   value_type sentinel_pair{sentinel_key_, sentinel_value_};
 
+  if (key_equal{}(pair.first, sentinel_key_)) {
+    return false;
+  }
+
   using bucket_type = detail::bucket<atomic_pair_type, value_type, tile_type>;
 
   int load = 0;

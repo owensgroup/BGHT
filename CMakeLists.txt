@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 # options
 option(build_benchmarks "Build benchmarks" ON)
 option(build_tests "Build tests" ON)
+option(build_examples "Build examples" ON)
 
 # Direct all output to /bin directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
@@ -19,6 +20,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 # bght flags
 add_library(bght INTERFACE)
 add_library(bght::bght ALIAS bght)
+
+add_library(bght::bght ALIAS bght)
+
 
 # CUDA and C++ compiler flags
 set(CXX_FLAGS
@@ -91,3 +95,9 @@ endif(build_tests)
 if(build_benchmarks)
    add_subdirectory(benchmarks)
 endif(build_benchmarks)
+
+
+
+if(build_examples)
+   add_subdirectory(examples)
+endif(build_examples)
