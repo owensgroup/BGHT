@@ -29,8 +29,8 @@ namespace bght {
 /**
  * @brief IHT IHT (iceberg hash table) is an associative static GPU hash table
  * that contains key-value pairs with unique keys. The hash table is an open addressing
- * hash table based on the cuckoo hashing probing scheme (bucketed and using a primary
- * hash function and two secondary hash functions).
+ * hash table based on the double hashing probing scheme (bucketed and using a primary
+ * hash function followed by double hashing).
  *
  * @tparam Key Type for the hash map key
  * @tparam T Type for the mapped value

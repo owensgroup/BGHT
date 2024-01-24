@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cuda_arch="70"
+cuda_arch="75" #specify your GPU SM/gencode
 build_dir="build"
 targets=("all")
 

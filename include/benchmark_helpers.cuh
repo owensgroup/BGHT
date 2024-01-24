@@ -17,6 +17,7 @@
 #pragma once
 #include <thrust/copy.h>
 #include <thrust/device_vector.h>
+#include <thrust/execution_policy.h>
 #include <thrust/fill.h>
 #include <detail/pair.cuh>
 #include <filesystem>
