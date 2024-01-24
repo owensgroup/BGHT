@@ -1,7 +1,7 @@
 # [BGHT: Better GPU Hash Tables](https://owensgroup.github.io/BGHT/)
 
-| [**Documentation**](https://owensgroup.github.io/BGHT/) | [**Examples/Tests**](https://github.com/owensgroup/BGHT/tree/main/test)  | [**Benchmarks**](https://github.com/owensgroup/BGHT/tree/main/benchmarks) | [**Results**](https://github.com/owensgroup/BGHT/blob/main/results.md) |
-|--------------|----------------------|-------------------|-------------------|
+| [**Documentation**](https://owensgroup.github.io/BGHT/) | [**Examples**](https://github.com/owensgroup/BGHT/tree/main/test)  | [**Examples**](https://github.com/owensgroup/BGHT/tree/main/examples)  |  [**Benchmarks**](https://github.com/owensgroup/BGHT/tree/main/benchmarks) | [**Results**](https://github.com/owensgroup/BGHT/blob/main/results.md) |
+|--------------|----------------------|-------------------|-------------------|-------------------|
 
 BGHT is a collection of high-performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-of-two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-of-art static hash table.
 For more information, please check our papers:
@@ -16,7 +16,7 @@ For more information, please check our papers:
 * Standard-like APIs
 
 ## How to use
-BGHT is a header-only library. To use the library, you can add it as a submodule or use [CMake Package Manager (CPM)](https://github.com/cpm-cmake/CPM.cmake) to fetch the library into your CMake-based project ([complete example](https://github.com/owensgroup/BGHT/tree/main/test/cpm)).
+BGHT is a header-only library. To use the library, you can add it as a submodule or use [CMake Package Manager (CPM)](https://github.com/cpm-cmake/CPM.cmake) to fetch the library into your CMake-based project ([complete example](https://github.com/owensgroup/BGHT/tree/main/examples/cpm)).
 ```
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 CPMAddPackage(
@@ -145,10 +145,6 @@ To reproduce the results, follow the following [steps](reproduce.md). You can al
 
 ## Benchmarks
 Please check our [paper](https://arxiv.org/abs/2108.07232) for comprehensive analysis and benchmarks. Also, see the following steps to [reproduce](reproduce.md) the results.
-
-An additional comparison of our BCHT to `cucCollection`'s `cuco::static_map` is shown below. The comparison is between our BCHT with B = 16 (default configuration) and `cuco::static_map`. Input keys (50 million pairs) are uniformly distributed unsigned keys. The benchmarking was performed on an NVIDIA Titan V GPU (higher is better):
-
-![](/figs/arxiv/NVIDIA-TITAN-V/bcht_vs_cuco.svg)
 
 ## Questions and bug report
 Please create an issue. We will welcome any contributions that improve the usability and quality of our repository.

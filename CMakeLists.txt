@@ -1,8 +1,4 @@
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.8)
-  cmake_policy(SET CMP0104 OLD)
-endif()
-
 
 project(bght LANGUAGES CXX CUDA)
 
@@ -17,18 +13,13 @@ option(build_benchmarks "Build benchmarks" ON)
 option(build_tests "Build tests" ON)
 option(build_examples "Build examples" ON)
 
-
-# Auto-detect GPU architecture, sets ${CUDA_ARCHS}
-include("cmake/AutoDetectCudaArch.cmake")
-
 # Direct all output to /bin directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
-
-set(template_define "${CMAKE_CURRENT_SOURCE_DIR}/outputs")
 
 
 # bght flags
 add_library(bght INTERFACE)
+add_library(bght::bght ALIAS bght)
 
 add_library(bght::bght ALIAS bght)
 
@@ -49,7 +40,6 @@ set(CUDA_FLAGS
     $<IF:$<CONFIG:Debug>,
         -G -src-in-ptx,
         -lineinfo>
-    ${CUDA_ARCHS}
 	--expt-extended-lambda
     -extended-lambda
     -Wno-deprecated-gpu-targets #silence deprecated architectures
