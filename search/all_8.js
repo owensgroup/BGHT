@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['size_10',['size',['../d3/d16/structbght_1_1bcht.html#a4fc21878958c178a66d686039c18f957',1,'bght::bcht::size()'],['../db/d24/structbght_1_1iht.html#a0efa940784530baf1893c7cfbf901651',1,'bght::iht::size()'],['../d6/dcc/structbght_1_1p2bht.html#a4f95a1f7a39e693a0ca1cd67951c1ec7',1,'bght::p2bht::size()']]]
+  ['p2bht_11',['p2bht',['../d6/dcc/structbght_1_1p2bht.html',1,'bght::p2bht&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B &gt;'],['../d6/dcc/structbght_1_1p2bht.html#a9e57cde3bed4b452a1699802f1390b58',1,'bght::p2bht::p2bht(std::size_t capacity, Key sentinel_key, T sentinel_value, Allocator const &amp;allocator=Allocator{})'],['../d6/dcc/structbght_1_1p2bht.html#a5b86e49577c0fec06aed5c6990cf93b9',1,'bght::p2bht::p2bht(const p2bht &amp;other)'],['../d6/dcc/structbght_1_1p2bht.html#afd4542b3692395f6af3ef6a214fc0001',1,'bght::p2bht::p2bht(p2bht &amp;&amp;)=delete']]]
 ];

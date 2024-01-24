@@ -176,7 +176,7 @@ static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>buck
 <tr class="separator:afccd5329f7841fb32ca3018f1cf851c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Key, class T, class Hash = bght::universal_hash&lt;Key&gt;, class KeyEqual = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator = bght::cuda_allocator&lt;char&gt;, int B = 16&gt;<br />
+<div class="textblock"><h3>template&lt;class Key, class T, class Hash = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator = bght::cuda_allocator&lt;char&gt;, int B = 16&gt;<br />
 struct bght::p2bht&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B &gt;</h3>
 
 <p>P2BHT P2BHT (power-of-two bucketed hash table) is an associative static GPU hash table that contains key-value pairs with unique keys. The hash table is an open addressing hash table based on the power-of-two hashing to balance loads between buckets (bucketed and using two hash functions). </p>
@@ -198,7 +198,7 @@ struct bght::p2bht&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B &gt;</h3>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Key , class T , class Hash  = bght::universal_hash&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="../../d6/dcc/structbght_1_1p2bht.html">bght::p2bht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B &gt;::<a class="el" href="../../d6/dcc/structbght_1_1p2bht.html">p2bht</a> </td>
@@ -252,7 +252,7 @@ template&lt;class Key , class T , class Hash  = bght::universal_hash&lt;Key&gt;,
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Key , class T , class Hash  = bght::universal_hash&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
 <div class="memtemplate">
 template&lt;typename InputIt , typename OutputIt &gt; </div>
       <table class="memname">
@@ -314,7 +314,7 @@ template&lt;typename InputIt , typename OutputIt &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Key , class T , class Hash  = bght::universal_hash&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
 <div class="memtemplate">
 template&lt;typename tile_type &gt; </div>
       <table class="memname">
@@ -362,7 +362,7 @@ template&lt;typename tile_type &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Key , class T , class Hash  = bght::universal_hash&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
 <div class="memtemplate">
 template&lt;typename InputIt &gt; </div>
       <table class="memname">
@@ -417,7 +417,7 @@ template&lt;typename InputIt &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Key , class T , class Hash  = bght::universal_hash&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
 <div class="memtemplate">
 template&lt;typename tile_type &gt; </div>
       <table class="memname">
@@ -465,7 +465,7 @@ template&lt;typename tile_type &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Key , class T , class Hash  = bght::universal_hash&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
 <div class="memtemplate">
 template&lt;typename RNG &gt; </div>
       <table class="memname">
@@ -501,7 +501,7 @@ template&lt;typename RNG &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Key , class T , class Hash  = bght::universal_hash&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">size_type <a class="el" href="../../d6/dcc/structbght_1_1p2bht.html">bght::p2bht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B &gt;::size </td>

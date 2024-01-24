@@ -1,10 +1,10 @@
 \label{index_md_README}%
 \Hypertarget{index_md_README}%
- $\vert$ \href{https://owensgroup.github.io/BGHT/}{\texttt{ {\bfseries{Documentation}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/tree/main/test}{\texttt{ {\bfseries{Examples/\+Tests}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/tree/main/benchmarks}{\texttt{ {\bfseries{Benchmarks}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/blob/main/results.md}{\texttt{ {\bfseries{Results}}}} $\vert$ $\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$
+ $\vert$ \href{https://owensgroup.github.io/BGHT/}{\texttt{ {\bfseries{Documentation}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/tree/main/test}{\texttt{ {\bfseries{Examples}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/tree/main/examples}{\texttt{ {\bfseries{Examples}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/tree/main/benchmarks}{\texttt{ {\bfseries{Benchmarks}}}} $\vert$ \href{https://github.com/owensgroup/BGHT/blob/main/results.md}{\texttt{ {\bfseries{Results}}}} $\vert$ $\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$
 
-BGHT is a collection of high-\/performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-\/of-\/two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-\/of-\/art static hash table. For more information, please check our paper\+:
+BGHT is a collection of high-\/performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-\/of-\/two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-\/of-\/art static hash table. For more information, please check our papers\+:
 
-\href{https://arxiv.org/abs/2108.07232}{\texttt{ {\bfseries{Better GPU Hash Tables}}}}~\newline
+\href{https://owensgroup.github.io/BGHT/}{\texttt{ {\bfseries{Better GPU Hash Tables}}}} \href{https://arxiv.org/abs/2108.07232}{\texttt{ \mbox{[}ar\+Xiv\mbox{]}}} \href{https://escholarship.org/uc/item/6cb1q6rz}{\texttt{ \mbox{[}APOCS\mbox{]}}}~\newline
  {\itshape \href{https://maawad.github.io/}{\texttt{ Muhammad A. Awad}}, \href{https://scholar.google.com/citations?user=Z4_ZfiEAAAAJ&hl=en}{\texttt{ Saman Ashkiani}}, \href{https://web.cs.ucdavis.edu/~porumbes/}{\texttt{ Serban D. Porumbescu}}, \href{https://people.cs.rutgers.edu/~farach/}{\texttt{ Martín Farach-\/\+Colton}}, and \href{https://www.ece.ucdavis.edu/~jowens/}{\texttt{ John D. Owens}}}\hypertarget{index_autotoc_md1}{}\doxysection{Key features}\label{index_autotoc_md1}
 
 \begin{DoxyItemize}
@@ -13,7 +13,7 @@ BGHT is a collection of high-\/performance static GPU hash tables. BGHT contains
 \item Support for different types of keys and values
 \item Standard-\/like APIs
 \end{DoxyItemize}\hypertarget{index_autotoc_md2}{}\doxysection{How to use}\label{index_autotoc_md2}
-BGHT is a header-\/only library. To use the library, you can add it as a submodule or use \href{https://github.com/cpm-cmake/CPM.cmake}{\texttt{ CMake Package Manager (CPM)}} to fetch the library into your CMake-\/based project (\href{https://github.com/owensgroup/BGHT/tree/main/test/cpm}{\texttt{ complete example}}). 
+BGHT is a header-\/only library. To use the library, you can add it as a submodule or use \href{https://github.com/cpm-cmake/CPM.cmake}{\texttt{ CMake Package Manager (CPM)}} to fetch the library into your CMake-\/based project (\href{https://github.com/owensgroup/BGHT/tree/main/examples/cpm}{\texttt{ complete example}}). 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{cmake\_minimum\_required(VERSION 3.8 FATAL\_ERROR)}
 \DoxyCodeLine{CPMAddPackage(}
@@ -149,11 +149,7 @@ We provide a docker image that include the software requirements (except for CUD
 \item Construction of the data structures offered {\itshape may} fail. In these scenarios, reconstructing the table using a larger capacity or a lower load factor should be considered. Our paper offers recommended hash table load factors (for uniformly distributed unsigned keys) to achieve at least a 99\% success rate (\href{https://arxiv.org/abs/2108.07232}{\texttt{ See Fig. 2}}). For example, BCHT will offer a 100\% success rate for up to 0.\+991 load factor. Please create an issue if you encounter any problems with different key distributions.
 \end{DoxyItemize}\hypertarget{index_autotoc_md11}{}\doxysection{Reproducing the ar\+Xiv paper results}\label{index_autotoc_md11}
 To reproduce the results, follow the following steps. You can also view our results here. If you find any mismatch (either faster or slower) between the results offered in the repository or the paper, please create an issue, and we will investigate the performance changes.\hypertarget{index_autotoc_md12}{}\doxysection{Benchmarks}\label{index_autotoc_md12}
-Please check our \href{https://arxiv.org/abs/2108.07232}{\texttt{ paper}} for comprehensive analysis and benchmarks. Also, see the following steps to reproduce the results.
-
-An additional comparison of our BCHT to {\ttfamily cuc\+Collection}\textquotesingle{}s {\ttfamily cuco\+::static\+\_\+map} is shown below. The comparison is between our BCHT with B = 16 (default configuration) and {\ttfamily cuco\+::static\+\_\+map}. Input keys (50 million pairs) are uniformly distributed unsigned keys. The benchmarking was performed on an NVIDIA Titan V GPU (higher is better)\+:
-
-\hypertarget{index_autotoc_md13}{}\doxysection{Questions and bug report}\label{index_autotoc_md13}
+Please check our \href{https://arxiv.org/abs/2108.07232}{\texttt{ paper}} for comprehensive analysis and benchmarks. Also, see the following steps to reproduce the results.\hypertarget{index_autotoc_md13}{}\doxysection{Questions and bug report}\label{index_autotoc_md13}
 Please create an issue. We will welcome any contributions that improve the usability and quality of our repository.\hypertarget{index_autotoc_md14}{}\doxysection{Bibtex}\label{index_autotoc_md14}
 
 \begin{DoxyCode}{0}

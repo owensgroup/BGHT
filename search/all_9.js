@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['_7ebcht_11',['~bcht',['../d3/d16/structbght_1_1bcht.html#a99a897955e80d66cb83d62ef33d79110',1,'bght::bcht']]],
-  ['_7echt_12',['~cht',['../d3/dad/structbght_1_1cht.html#a4e5e1879dbce693b73fd9569e9d86a34',1,'bght::cht']]],
-  ['_7eiht_13',['~iht',['../db/d24/structbght_1_1iht.html#a1eb1c14a9683be082405b20cd4ac0fb5',1,'bght::iht']]],
-  ['_7ep2bht_14',['~p2bht',['../d6/dcc/structbght_1_1p2bht.html#aee3fe77f75a7825a060d9b891726cff3',1,'bght::p2bht']]]
+  ['randomize_5fhash_5ffunctions_12',['randomize_hash_functions',['../d3/d16/structbght_1_1bcht.html#afceb31cd69d17b0051edd59550babd23',1,'bght::bcht::randomize_hash_functions()'],['../d3/dad/structbght_1_1cht.html#a9e7ca5b7d83f47e4188ffbeacbc4b7dc',1,'bght::cht::randomize_hash_functions()'],['../db/d24/structbght_1_1iht.html#acf9f5c49d7306e3567482b5a26b3b88b',1,'bght::iht::randomize_hash_functions()'],['../d6/dcc/structbght_1_1p2bht.html#a9112b518945f384f948ed52aa0c5ad80',1,'bght::p2bht::randomize_hash_functions()']]]
 ];

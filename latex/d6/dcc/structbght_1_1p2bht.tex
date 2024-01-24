@@ -89,7 +89,7 @@ static constexpr auto {\bfseries bucket\+\_\+size} = B
 
 
 \doxysubsection{Detailed Description}
-\subsubsection*{template$<$class Key, class T, class Hash = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$\newline
+\subsubsection*{template$<$class Key, class T, class Hash = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$\newline
 struct bght\+::p2bht$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$}
 
 P2\+BHT P2\+BHT (power-\/of-\/two bucketed hash table) is an associative static GPU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the power-\/of-\/two hashing to balance loads between buckets (bucketed and using two hash functions). 
@@ -116,7 +116,7 @@ P2\+BHT P2\+BHT (power-\/of-\/two bucketed hash table) is an associative static 
 \index{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!p2bht@{p2bht}}
 \index{p2bht@{p2bht}!bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
 \doxysubsubsection{\texorpdfstring{p2bht()}{p2bht()}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
 \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::\mbox{\hyperlink{structbght_1_1p2bht}{p2bht}} (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{capacity,  }\item[{Key}]{sentinel\+\_\+key,  }\item[{T}]{sentinel\+\_\+value,  }\item[{Allocator const \&}]{allocator = {\ttfamily Allocator\{\}} }\end{DoxyParamCaption})}
 
 
@@ -141,7 +141,7 @@ Constructs the hash table with the specified capacity and uses the specified sen
 \index{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!find@{find}}
 \index{find@{find}!bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
 \doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
 template$<$typename Input\+It , typename Output\+It $>$ \\
 void \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::find (\begin{DoxyParamCaption}\item[{Input\+It}]{first,  }\item[{Input\+It}]{last,  }\item[{Output\+It}]{output\+\_\+begin,  }\item[{cuda\+Stream\+\_\+t}]{stream = {\ttfamily 0} }\end{DoxyParamCaption})}
 
@@ -171,7 +171,7 @@ Host-\/side API for finding all keys defined by the input argument iterators.
 \index{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!find@{find}}
 \index{find@{find}!bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
 \doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
 template$<$typename tile\+\_\+type $>$ \\
 \+\_\+\+\_\+device\+\_\+\+\_\+ mapped\+\_\+type \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::find (\begin{DoxyParamCaption}\item[{key\+\_\+type const \&}]{key,  }\item[{tile\+\_\+type const \&}]{tile }\end{DoxyParamCaption})}
 
@@ -198,7 +198,7 @@ The value of the key if it exists in the map or the {\ttfamily sentinel\+\_\+val
 \index{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!insert@{insert}}
 \index{insert@{insert}!bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
 \doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
 template$<$typename Input\+It $>$ \\
 bool \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::insert (\begin{DoxyParamCaption}\item[{Input\+It}]{first,  }\item[{Input\+It}]{last,  }\item[{cuda\+Stream\+\_\+t}]{stream = {\ttfamily 0} }\end{DoxyParamCaption})}
 
@@ -227,7 +227,7 @@ A boolean indicating success (true) or failure (false) of the insertion operatio
 \index{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!insert@{insert}}
 \index{insert@{insert}!bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
 \doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
 template$<$typename tile\+\_\+type $>$ \\
 \+\_\+\+\_\+device\+\_\+\+\_\+ bool \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::insert (\begin{DoxyParamCaption}\item[{value\+\_\+type const \&}]{pair,  }\item[{tile\+\_\+type const \&}]{tile }\end{DoxyParamCaption})}
 
@@ -254,7 +254,7 @@ A boolean indicating success (true) or failure (false) of the insertion operatio
 \index{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!randomize\_hash\_functions@{randomize\_hash\_functions}}
 \index{randomize\_hash\_functions@{randomize\_hash\_functions}!bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
 \doxysubsubsection{\texorpdfstring{randomize\_hash\_functions()}{randomize\_hash\_functions()}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
 template$<$typename RNG $>$ \\
 void \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::randomize\+\_\+hash\+\_\+functions (\begin{DoxyParamCaption}\item[{RNG \&}]{rng }\end{DoxyParamCaption})}
 
@@ -276,7 +276,7 @@ Host-\/side API to randomize the hash functions used for the probing scheme. Thi
 \index{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}!size@{size}}
 \index{size@{size}!bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$@{bght::p2bht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B $>$}}
 \doxysubsubsection{\texorpdfstring{size()}{size()}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16$>$ \\
 size\+\_\+type \mbox{\hyperlink{structbght_1_1p2bht}{bght\+::p2bht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B $>$\+::size (\begin{DoxyParamCaption}\item[{cuda\+Stream\+\_\+t}]{stream = {\ttfamily 0} }\end{DoxyParamCaption})}
 
 

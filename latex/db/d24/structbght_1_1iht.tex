@@ -2,7 +2,7 @@
 \label{structbght_1_1iht}\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 
 
-IHT IHT (iceberg hash table) is an associative static GPU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the cuckoo hashing probing scheme (bucketed and using a primary hash function and two secondary hash functions).  
+IHT IHT (iceberg hash table) is an associative static GPU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the double hashing probing scheme (bucketed and using a primary hash function followed by double hashing).  
 
 
 
@@ -44,6 +44,12 @@ using {\bfseries size\+\_\+type\+\_\+allocator\+\_\+type} = typename std\+::allo
 \item 
 \mbox{\Hypertarget{structbght_1_1iht_a32e2f61403ade32d10acb42ef9ffae0a}\label{structbght_1_1iht_a32e2f61403ade32d10acb42ef9ffae0a}} 
 using {\bfseries key\+\_\+equal} = Key\+Equal
+\item 
+\mbox{\Hypertarget{structbght_1_1iht_aec2c8c5dc51b253780364fa0b91a3d36}\label{structbght_1_1iht_aec2c8c5dc51b253780364fa0b91a3d36}} 
+using {\bfseries iterator} = atomic\+\_\+pair\+\_\+type \&
+\item 
+\mbox{\Hypertarget{structbght_1_1iht_adcc5906dd0e25fc658e592c88519515e}\label{structbght_1_1iht_adcc5906dd0e25fc658e592c88519515e}} 
+using {\bfseries const\+\_\+iterator} = iterator
 \end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
@@ -79,7 +85,13 @@ void \mbox{\hyperlink{structbght_1_1iht_a076471ca81f32b45a0d91ac5a004946e}{clear
 {\footnotesize template$<$typename RNG $>$ }\\void \mbox{\hyperlink{structbght_1_1iht_acf9f5c49d7306e3567482b5a26b3b88b}{randomize\+\_\+hash\+\_\+functions}} (RNG \&rng)
 \begin{DoxyCompactList}\small\item\em Host-\/side API to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. \end{DoxyCompactList}\item 
 size\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a0efa940784530baf1893c7cfbf901651}{size}} (cuda\+Stream\+\_\+t stream=0)
-\begin{DoxyCompactList}\small\item\em Compute the number of elements in the map. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Compute the number of elements in the map. \end{DoxyCompactList}\item 
+const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht_a38f55e28c9bb3d2a3a4529858f112387}{begin}} () const
+\begin{DoxyCompactList}\small\item\em Returns an iterator to the first element of the tables including all invalid entries. \end{DoxyCompactList}\item 
+const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht_a4d9277399a37d56eb8e99eba66cf1eb6}{end}} () const
+\begin{DoxyCompactList}\small\item\em Returns an iterator to the last element of the tables including all invalid entries. \end{DoxyCompactList}\item 
+size\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a0189105d05f2739c74d4dc72349763d4}{max\+\_\+size}} () const
+\begin{DoxyCompactList}\small\item\em Returns the maximum number of elements the container is able to hold. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -89,10 +101,10 @@ static constexpr auto {\bfseries bucket\+\_\+size} = B
 
 
 \doxysubsection{Detailed Description}
-\subsubsection*{template$<$class Key, class T, class Hash = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$\newline
+\subsubsection*{template$<$class Key, class T, class Hash = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$\newline
 struct bght\+::iht$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$}
 
-IHT IHT (iceberg hash table) is an associative static GPU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the cuckoo hashing probing scheme (bucketed and using a primary hash function and two secondary hash functions). 
+IHT IHT (iceberg hash table) is an associative static GPU hash table that contains key-\/value pairs with unique keys. The hash table is an open addressing hash table based on the double hashing probing scheme (bucketed and using a primary hash function followed by double hashing). 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -118,7 +130,7 @@ IHT IHT (iceberg hash table) is an associative static GPU hash table that contai
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!iht@{iht}}
 \index{iht@{iht}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{iht()}{iht()}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
 \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::\mbox{\hyperlink{structbght_1_1iht}{iht}} (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{capacity,  }\item[{Key}]{sentinel\+\_\+key,  }\item[{T}]{sentinel\+\_\+value,  }\item[{Allocator const \&}]{allocator = {\ttfamily Allocator\{\}} }\end{DoxyParamCaption})}
 
 
@@ -139,11 +151,39 @@ Constructs the hash table with the specified capacity and uses the specified sen
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structbght_1_1iht_a38f55e28c9bb3d2a3a4529858f112387}\label{structbght_1_1iht_a38f55e28c9bb3d2a3a4529858f112387}} 
+\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!begin@{begin}}
+\index{begin@{begin}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::begin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Returns an iterator to the first element of the tables including all invalid entries. 
+
+\begin{DoxyReturn}{Returns}
+const\+\_\+iterator constant iterator to the first element of the table 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1iht_a4d9277399a37d56eb8e99eba66cf1eb6}\label{structbght_1_1iht_a4d9277399a37d56eb8e99eba66cf1eb6}} 
+\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!end@{end}}
+\index{end@{end}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Returns an iterator to the last element of the tables including all invalid entries. 
+
+\begin{DoxyReturn}{Returns}
+const\+\_\+iterator constant iterator to the last element of the table 
+\end{DoxyReturn}
 \mbox{\Hypertarget{structbght_1_1iht_ac6aa71eb51d1f76879cd0ec3c398fadc}\label{structbght_1_1iht_ac6aa71eb51d1f76879cd0ec3c398fadc}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!find@{find}}
 \index{find@{find}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
 template$<$typename Input\+It , typename Output\+It $>$ \\
 void \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::find (\begin{DoxyParamCaption}\item[{Input\+It}]{first,  }\item[{Input\+It}]{last,  }\item[{Output\+It}]{output\+\_\+begin,  }\item[{cuda\+Stream\+\_\+t}]{stream = {\ttfamily 0} }\end{DoxyParamCaption})}
 
@@ -173,7 +213,7 @@ Host-\/side API for finding all keys defined by the input argument iterators.
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!find@{find}}
 \index{find@{find}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
 template$<$typename tile\+\_\+type $>$ \\
 \+\_\+\+\_\+device\+\_\+\+\_\+ mapped\+\_\+type \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::find (\begin{DoxyParamCaption}\item[{key\+\_\+type const \&}]{key,  }\item[{tile\+\_\+type const \&}]{tile }\end{DoxyParamCaption})}
 
@@ -200,7 +240,7 @@ The value of the key if it exists in the map or the {\ttfamily sentinel\+\_\+val
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!insert@{insert}}
 \index{insert@{insert}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
 template$<$typename Input\+It $>$ \\
 bool \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::insert (\begin{DoxyParamCaption}\item[{Input\+It}]{first,  }\item[{Input\+It}]{last,  }\item[{cuda\+Stream\+\_\+t}]{stream = {\ttfamily 0} }\end{DoxyParamCaption})}
 
@@ -229,7 +269,7 @@ A boolean indicating success (true) or failure (false) of the insertion operatio
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!insert@{insert}}
 \index{insert@{insert}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
 template$<$typename tile\+\_\+type $>$ \\
 \+\_\+\+\_\+device\+\_\+\+\_\+ bool \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::insert (\begin{DoxyParamCaption}\item[{value\+\_\+type const \&}]{pair,  }\item[{tile\+\_\+type const \&}]{tile }\end{DoxyParamCaption})}
 
@@ -252,11 +292,25 @@ Device-\/side cooperative insertion API that inserts a single pair into the hash
 \begin{DoxyReturn}{Returns}
 A boolean indicating success (true) or failure (false) of the insertion operation. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1iht_a0189105d05f2739c74d4dc72349763d4}\label{structbght_1_1iht_a0189105d05f2739c74d4dc72349763d4}} 
+\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!max\_size@{max\_size}}
+\index{max\_size@{max\_size}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
+\doxysubsubsection{\texorpdfstring{max\_size()}{max\_size()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+size\+\_\+type \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::max\+\_\+size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Returns the maximum number of elements the container is able to hold. 
+
+\begin{DoxyReturn}{Returns}
+size\+\_\+type maximum number of elements including all invalid entries. 
+\end{DoxyReturn}
 \mbox{\Hypertarget{structbght_1_1iht_acf9f5c49d7306e3567482b5a26b3b88b}\label{structbght_1_1iht_acf9f5c49d7306e3567482b5a26b3b88b}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!randomize\_hash\_functions@{randomize\_hash\_functions}}
 \index{randomize\_hash\_functions@{randomize\_hash\_functions}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{randomize\_hash\_functions()}{randomize\_hash\_functions()}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
 template$<$typename RNG $>$ \\
 void \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::randomize\+\_\+hash\+\_\+functions (\begin{DoxyParamCaption}\item[{RNG \&}]{rng }\end{DoxyParamCaption})}
 
@@ -278,7 +332,7 @@ Host-\/side API to randomize the hash functions used for the probing scheme. Thi
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!size@{size}}
 \index{size@{size}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{size()}{size()}}
-{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::universal\+\_\+hash$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
 size\+\_\+type \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::size (\begin{DoxyParamCaption}\item[{cuda\+Stream\+\_\+t}]{stream = {\ttfamily 0} }\end{DoxyParamCaption})}
 
 

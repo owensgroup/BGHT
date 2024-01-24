@@ -66,9 +66,9 @@ $(function() {
 <div class="title"><a href="https://owensgroup.github.io/BGHT/">BGHT: Better GPU Hash Tables</a> </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> | <a href="https://owensgroup.github.io/BGHT/"><b>Documentation</b></a> | <a href="https://github.com/owensgroup/BGHT/tree/main/test"><b>Examples/Tests</b></a> | <a href="https://github.com/owensgroup/BGHT/tree/main/benchmarks"><b>Benchmarks</b></a> | <a href="https://github.com/owensgroup/BGHT/blob/main/results.md"><b>Results</b></a> | |-----------&mdash;|-------------------&mdash;|----------------&mdash;|----------------&mdash;|</p>
-<p>BGHT is a collection of high-performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-of-two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-of-art static hash table. For more information, please check our paper:</p>
-<p><a href="https://arxiv.org/abs/2108.07232"><b>Better GPU Hash Tables</b></a><br  />
+<div class="textblock"><p><a class="anchor" id="md_README"></a> | <a href="https://owensgroup.github.io/BGHT/"><b>Documentation</b></a> | <a href="https://github.com/owensgroup/BGHT/tree/main/test"><b>Examples</b></a> | <a href="https://github.com/owensgroup/BGHT/tree/main/examples"><b>Examples</b></a> | <a href="https://github.com/owensgroup/BGHT/tree/main/benchmarks"><b>Benchmarks</b></a> | <a href="https://github.com/owensgroup/BGHT/blob/main/results.md"><b>Results</b></a> | |-----------&mdash;|-------------------&mdash;|----------------&mdash;|----------------&mdash;|----------------&mdash;|</p>
+<p>BGHT is a collection of high-performance static GPU hash tables. BGHT contains hash tables that use three different probing schemes 1) bucketed cuckoo, 2) power-of-two, 3) iceberg hashing. Our bucketed static cuckoo hash table is the state-of-art static hash table. For more information, please check our papers:</p>
+<p><a href="https://owensgroup.github.io/BGHT/"><b>Better GPU Hash Tables</b></a> <a href="https://arxiv.org/abs/2108.07232">[arXiv]</a> <a href="https://escholarship.org/uc/item/6cb1q6rz">[APOCS]</a><br  />
  <em><a href="https://maawad.github.io/">Muhammad A. Awad</a>, <a href="https://scholar.google.com/citations?user=Z4_ZfiEAAAAJ&amp;hl=en">Saman Ashkiani</a>, <a href="https://web.cs.ucdavis.edu/~porumbes/">Serban D. Porumbescu</a>, <a href="https://people.cs.rutgers.edu/~farach/">Martín Farach-Colton</a>, and <a href="https://www.ece.ucdavis.edu/~jowens/">John D. Owens</a></em></p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Key features</h1>
@@ -80,7 +80,7 @@ Key features</h1>
 </ul>
 <h1><a class="anchor" id="autotoc_md2"></a>
 How to use</h1>
-<p>BGHT is a header-only library. To use the library, you can add it as a submodule or use <a href="https://github.com/cpm-cmake/CPM.cmake">CMake Package Manager (CPM)</a> to fetch the library into your CMake-based project (<a href="https://github.com/owensgroup/BGHT/tree/main/test/cpm">complete example</a>). </p><div class="fragment"><div class="line">cmake_minimum_required(VERSION 3.8 FATAL_ERROR)</div>
+<p>BGHT is a header-only library. To use the library, you can add it as a submodule or use <a href="https://github.com/cpm-cmake/CPM.cmake">CMake Package Manager (CPM)</a> to fetch the library into your CMake-based project (<a href="https://github.com/owensgroup/BGHT/tree/main/examples/cpm">complete example</a>). </p><div class="fragment"><div class="line">cmake_minimum_required(VERSION 3.8 FATAL_ERROR)</div>
 <div class="line">CPMAddPackage(</div>
 <div class="line">  NAME bght</div>
 <div class="line">  GITHUB_REPOSITORY owensgroup/BGHT</div>
@@ -198,8 +198,6 @@ Reproducing the arXiv paper results</h1>
 <h1><a class="anchor" id="autotoc_md12"></a>
 Benchmarks</h1>
 <p>Please check our <a href="https://arxiv.org/abs/2108.07232">paper</a> for comprehensive analysis and benchmarks. Also, see the following steps to reproduce the results.</p>
-<p>An additional comparison of our BCHT to <code>cucCollection</code>'s <code>cuco::static_map</code> is shown below. The comparison is between our BCHT with B = 16 (default configuration) and <code>cuco::static_map</code>. Input keys (50 million pairs) are uniformly distributed unsigned keys. The benchmarking was performed on an NVIDIA Titan V GPU (higher is better):</p>
-<p><img src="/figs/arxiv/NVIDIA-TITAN-V/bcht_vs_cuco.svg" alt="" style="pointer-events: none;" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md13"></a>
 Questions and bug report</h1>
 <p>Please create an issue. We will welcome any contributions that improve the usability and quality of our repository.</p>
