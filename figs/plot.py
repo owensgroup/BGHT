@@ -389,7 +389,7 @@ def plot_best(results_dir, output_dir):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--dir')
-    parser.add_argument('-od', '--output-dir', default='')
+    parser.add_argument('-od', '--output-dir', default='./')
     parser.add_argument('-mf','--min-find-throughput', default=-1,type=int)
     parser.add_argument('-xf','--max-find-throughput', default=-1,type=int)
     parser.add_argument('-mi','--min-insert-throughput', default=-1,type=int)
