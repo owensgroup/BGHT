@@ -115,9 +115,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type_allocator_
 <tr class="memitem:a32e2f61403ade32d10acb42ef9ffae0a"><td class="memItemLeft" align="right" valign="top"><a id="a32e2f61403ade32d10acb42ef9ffae0a"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>key_equal</b> = KeyEqual</td></tr>
 <tr class="separator:a32e2f61403ade32d10acb42ef9ffae0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec2c8c5dc51b253780364fa0b91a3d36"><td class="memItemLeft" align="right" valign="top"><a id="aec2c8c5dc51b253780364fa0b91a3d36"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b> = atomic_pair_type &amp;</td></tr>
-<tr class="separator:aec2c8c5dc51b253780364fa0b91a3d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26f14c06deedb29b7acb928ea2e58ba9"><td class="memItemLeft" align="right" valign="top"><a id="a26f14c06deedb29b7acb928ea2e58ba9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b> = atomic_pair_type *</td></tr>
+<tr class="separator:a26f14c06deedb29b7acb928ea2e58ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcc5906dd0e25fc658e592c88519515e"><td class="memItemLeft" align="right" valign="top"><a id="adcc5906dd0e25fc658e592c88519515e"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>const_iterator</b> = iterator</td></tr>
 <tr class="separator:adcc5906dd0e25fc658e592c88519515e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,15 +174,24 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 <tr class="memitem:a0efa940784530baf1893c7cfbf901651"><td class="memItemLeft" align="right" valign="top">size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#a0efa940784530baf1893c7cfbf901651">size</a> (cudaStream_t stream=0)</td></tr>
 <tr class="memdesc:a0efa940784530baf1893c7cfbf901651"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the number of elements in the map.  <a href="../../db/d24/structbght_1_1iht.html#a0efa940784530baf1893c7cfbf901651">More...</a><br /></td></tr>
 <tr class="separator:a0efa940784530baf1893c7cfbf901651"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38f55e28c9bb3d2a3a4529858f112387"><td class="memItemLeft" align="right" valign="top">const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#a38f55e28c9bb3d2a3a4529858f112387">begin</a> () const</td></tr>
-<tr class="memdesc:a38f55e28c9bb3d2a3a4529858f112387"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an iterator to the first element of the tables including all invalid entries.  <a href="../../db/d24/structbght_1_1iht.html#a38f55e28c9bb3d2a3a4529858f112387">More...</a><br /></td></tr>
-<tr class="separator:a38f55e28c9bb3d2a3a4529858f112387"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d9277399a37d56eb8e99eba66cf1eb6"><td class="memItemLeft" align="right" valign="top">const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#a4d9277399a37d56eb8e99eba66cf1eb6">end</a> () const</td></tr>
-<tr class="memdesc:a4d9277399a37d56eb8e99eba66cf1eb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an iterator to the last element of the tables including all invalid entries.  <a href="../../db/d24/structbght_1_1iht.html#a4d9277399a37d56eb8e99eba66cf1eb6">More...</a><br /></td></tr>
-<tr class="separator:a4d9277399a37d56eb8e99eba66cf1eb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0189105d05f2739c74d4dc72349763d4"><td class="memItemLeft" align="right" valign="top">size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#a0189105d05f2739c74d4dc72349763d4">max_size</a> () const</td></tr>
-<tr class="memdesc:a0189105d05f2739c74d4dc72349763d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum number of elements the container is able to hold.  <a href="../../db/d24/structbght_1_1iht.html#a0189105d05f2739c74d4dc72349763d4">More...</a><br /></td></tr>
-<tr class="separator:a0189105d05f2739c74d4dc72349763d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5e1003359a1d929aaed7a759a9227cd"><td class="memItemLeft" align="right" valign="top">__device__ __host__ const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#ac5e1003359a1d929aaed7a759a9227cd">begin</a> () const</td></tr>
+<tr class="memdesc:ac5e1003359a1d929aaed7a759a9227cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an iterator to the first element of the tables including all invalid entries.  <a href="../../db/d24/structbght_1_1iht.html#ac5e1003359a1d929aaed7a759a9227cd">More...</a><br /></td></tr>
+<tr class="separator:ac5e1003359a1d929aaed7a759a9227cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80b315235a726440e0e7a27011cdc092"><td class="memItemLeft" align="right" valign="top">__device__ __host__ const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#a80b315235a726440e0e7a27011cdc092">end</a> () const</td></tr>
+<tr class="memdesc:a80b315235a726440e0e7a27011cdc092"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an iterator to the last element of the tables including all invalid entries.  <a href="../../db/d24/structbght_1_1iht.html#a80b315235a726440e0e7a27011cdc092">More...</a><br /></td></tr>
+<tr class="separator:a80b315235a726440e0e7a27011cdc092"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f02d2678513bf0c6b3958c01326f98c"><td class="memItemLeft" align="right" valign="top">__device__ __host__ size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#a8f02d2678513bf0c6b3958c01326f98c">max_size</a> () const</td></tr>
+<tr class="memdesc:a8f02d2678513bf0c6b3958c01326f98c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum number of elements the container is able to hold.  <a href="../../db/d24/structbght_1_1iht.html#a8f02d2678513bf0c6b3958c01326f98c">More...</a><br /></td></tr>
+<tr class="separator:a8f02d2678513bf0c6b3958c01326f98c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad551a0a376c42bc7ef584fc57e24fee0"><td class="memItemLeft" align="right" valign="top">__device__ __host__ key_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#ad551a0a376c42bc7ef584fc57e24fee0">get_sentinel_key</a> () const</td></tr>
+<tr class="memdesc:ad551a0a376c42bc7ef584fc57e24fee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the sentinel key object.  <a href="../../db/d24/structbght_1_1iht.html#ad551a0a376c42bc7ef584fc57e24fee0">More...</a><br /></td></tr>
+<tr class="separator:ad551a0a376c42bc7ef584fc57e24fee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0a23c0bca118dd3be0056d85994547b"><td class="memItemLeft" align="right" valign="top">__device__ __host__ mapped_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#aa0a23c0bca118dd3be0056d85994547b">get_sentinel_value</a> () const</td></tr>
+<tr class="memdesc:aa0a23c0bca118dd3be0056d85994547b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the sentinel value object.  <a href="../../db/d24/structbght_1_1iht.html#aa0a23c0bca118dd3be0056d85994547b">More...</a><br /></td></tr>
+<tr class="separator:aa0a23c0bca118dd3be0056d85994547b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a377b1c548305ae6fbf35976dd2b186c4"><td class="memItemLeft" align="right" valign="top">__device__ __host__ value_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#a377b1c548305ae6fbf35976dd2b186c4">get_sentinel_pair</a> () const</td></tr>
+<tr class="memdesc:a377b1c548305ae6fbf35976dd2b186c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the sentinel pair object.  <a href="../../db/d24/structbght_1_1iht.html#a377b1c548305ae6fbf35976dd2b186c4">More...</a><br /></td></tr>
+<tr class="separator:a377b1c548305ae6fbf35976dd2b186c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -262,8 +271,8 @@ template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;,
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a38f55e28c9bb3d2a3a4529858f112387"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38f55e28c9bb3d2a3a4529858f112387">&#9670;&nbsp;</a></span>begin()</h2>
+<a id="ac5e1003359a1d929aaed7a759a9227cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5e1003359a1d929aaed7a759a9227cd">&#9670;&nbsp;</a></span>begin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,7 +280,7 @@ template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;,
 template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16, int Threshold = 14&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const_iterator <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::begin </td>
+          <td class="memname">__device__ __host__ const_iterator <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::begin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -284,8 +293,8 @@ template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;,
 
 </div>
 </div>
-<a id="a4d9277399a37d56eb8e99eba66cf1eb6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d9277399a37d56eb8e99eba66cf1eb6">&#9670;&nbsp;</a></span>end()</h2>
+<a id="a80b315235a726440e0e7a27011cdc092"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80b315235a726440e0e7a27011cdc092">&#9670;&nbsp;</a></span>end()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,7 +302,7 @@ template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;,
 template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16, int Threshold = 14&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const_iterator <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::end </td>
+          <td class="memname">__device__ __host__ const_iterator <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::end </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -416,6 +425,96 @@ template&lt;typename tile_type &gt; </div>
 
 </div>
 </div>
+<a id="ad551a0a376c42bc7ef584fc57e24fee0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad551a0a376c42bc7ef584fc57e24fee0">&#9670;&nbsp;</a></span>get_sentinel_key()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16, int Threshold = 14&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">__device__ __host__ key_type <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::get_sentinel_key </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the sentinel key object. </p>
+<dl class="section return"><dt>Returns</dt><dd>key_type Sentinel key </dd></dl>
+
+</div>
+</div>
+<a id="a377b1c548305ae6fbf35976dd2b186c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a377b1c548305ae6fbf35976dd2b186c4">&#9670;&nbsp;</a></span>get_sentinel_pair()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16, int Threshold = 14&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">__device__ __host__ value_type <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::get_sentinel_pair </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the sentinel pair object. </p>
+<dl class="section return"><dt>Returns</dt><dd>value_type Sentinel pair </dd></dl>
+
+</div>
+</div>
+<a id="aa0a23c0bca118dd3be0056d85994547b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0a23c0bca118dd3be0056d85994547b">&#9670;&nbsp;</a></span>get_sentinel_value()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16, int Threshold = 14&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">__device__ __host__ mapped_type <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::get_sentinel_value </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the sentinel value object. </p>
+<dl class="section return"><dt>Returns</dt><dd>mapped_type Sentinel value </dd></dl>
+
+</div>
+</div>
 <a id="afcb16a7c2cc72a322d90e0bd8805cb50"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afcb16a7c2cc72a322d90e0bd8805cb50">&#9670;&nbsp;</a></span>insert() <span class="overload">[1/2]</span></h2>
 
@@ -519,8 +618,8 @@ template&lt;typename tile_type &gt; </div>
 
 </div>
 </div>
-<a id="a0189105d05f2739c74d4dc72349763d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0189105d05f2739c74d4dc72349763d4">&#9670;&nbsp;</a></span>max_size()</h2>
+<a id="a8f02d2678513bf0c6b3958c01326f98c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f02d2678513bf0c6b3958c01326f98c">&#9670;&nbsp;</a></span>max_size()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -528,7 +627,7 @@ template&lt;typename tile_type &gt; </div>
 template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16, int Threshold = 14&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_type <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::max_size </td>
+          <td class="memname">__device__ __host__ size_type <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::max_size </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>

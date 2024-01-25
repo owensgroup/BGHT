@@ -45,8 +45,8 @@ using {\bfseries size\+\_\+type\+\_\+allocator\+\_\+type} = typename std\+::allo
 \mbox{\Hypertarget{structbght_1_1iht_a32e2f61403ade32d10acb42ef9ffae0a}\label{structbght_1_1iht_a32e2f61403ade32d10acb42ef9ffae0a}} 
 using {\bfseries key\+\_\+equal} = Key\+Equal
 \item 
-\mbox{\Hypertarget{structbght_1_1iht_aec2c8c5dc51b253780364fa0b91a3d36}\label{structbght_1_1iht_aec2c8c5dc51b253780364fa0b91a3d36}} 
-using {\bfseries iterator} = atomic\+\_\+pair\+\_\+type \&
+\mbox{\Hypertarget{structbght_1_1iht_a26f14c06deedb29b7acb928ea2e58ba9}\label{structbght_1_1iht_a26f14c06deedb29b7acb928ea2e58ba9}} 
+using {\bfseries iterator} = atomic\+\_\+pair\+\_\+type $\ast$
 \item 
 \mbox{\Hypertarget{structbght_1_1iht_adcc5906dd0e25fc658e592c88519515e}\label{structbght_1_1iht_adcc5906dd0e25fc658e592c88519515e}} 
 using {\bfseries const\+\_\+iterator} = iterator
@@ -86,12 +86,18 @@ void \mbox{\hyperlink{structbght_1_1iht_a076471ca81f32b45a0d91ac5a004946e}{clear
 \begin{DoxyCompactList}\small\item\em Host-\/side API to randomize the hash functions used for the probing scheme. This can be used when the hash table construction fails. The hash table must be cleared after a call to this function. \end{DoxyCompactList}\item 
 size\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a0efa940784530baf1893c7cfbf901651}{size}} (cuda\+Stream\+\_\+t stream=0)
 \begin{DoxyCompactList}\small\item\em Compute the number of elements in the map. \end{DoxyCompactList}\item 
-const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht_a38f55e28c9bb3d2a3a4529858f112387}{begin}} () const
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht_ac5e1003359a1d929aaed7a759a9227cd}{begin}} () const
 \begin{DoxyCompactList}\small\item\em Returns an iterator to the first element of the tables including all invalid entries. \end{DoxyCompactList}\item 
-const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht_a4d9277399a37d56eb8e99eba66cf1eb6}{end}} () const
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht_a80b315235a726440e0e7a27011cdc092}{end}} () const
 \begin{DoxyCompactList}\small\item\em Returns an iterator to the last element of the tables including all invalid entries. \end{DoxyCompactList}\item 
-size\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a0189105d05f2739c74d4dc72349763d4}{max\+\_\+size}} () const
-\begin{DoxyCompactList}\small\item\em Returns the maximum number of elements the container is able to hold. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ size\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a8f02d2678513bf0c6b3958c01326f98c}{max\+\_\+size}} () const
+\begin{DoxyCompactList}\small\item\em Returns the maximum number of elements the container is able to hold. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ key\+\_\+type \mbox{\hyperlink{structbght_1_1iht_ad551a0a376c42bc7ef584fc57e24fee0}{get\+\_\+sentinel\+\_\+key}} () const
+\begin{DoxyCompactList}\small\item\em Get the sentinel key object. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ mapped\+\_\+type \mbox{\hyperlink{structbght_1_1iht_aa0a23c0bca118dd3be0056d85994547b}{get\+\_\+sentinel\+\_\+value}} () const
+\begin{DoxyCompactList}\small\item\em Get the sentinel value object. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ value\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a377b1c548305ae6fbf35976dd2b186c4}{get\+\_\+sentinel\+\_\+pair}} () const
+\begin{DoxyCompactList}\small\item\em Get the sentinel pair object. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -151,12 +157,12 @@ Constructs the hash table with the specified capacity and uses the specified sen
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{structbght_1_1iht_a38f55e28c9bb3d2a3a4529858f112387}\label{structbght_1_1iht_a38f55e28c9bb3d2a3a4529858f112387}} 
+\mbox{\Hypertarget{structbght_1_1iht_ac5e1003359a1d929aaed7a759a9227cd}\label{structbght_1_1iht_ac5e1003359a1d929aaed7a759a9227cd}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!begin@{begin}}
 \index{begin@{begin}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{begin()}{begin()}}
 {\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
-const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::begin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::begin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
 
 
 
@@ -165,12 +171,12 @@ Returns an iterator to the first element of the tables including all invalid ent
 \begin{DoxyReturn}{Returns}
 const\+\_\+iterator constant iterator to the first element of the table 
 \end{DoxyReturn}
-\mbox{\Hypertarget{structbght_1_1iht_a4d9277399a37d56eb8e99eba66cf1eb6}\label{structbght_1_1iht_a4d9277399a37d56eb8e99eba66cf1eb6}} 
+\mbox{\Hypertarget{structbght_1_1iht_a80b315235a726440e0e7a27011cdc092}\label{structbght_1_1iht_a80b315235a726440e0e7a27011cdc092}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!end@{end}}
 \index{end@{end}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{end()}{end()}}
 {\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
-const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
 
 
 
@@ -236,6 +242,48 @@ Device-\/side cooperative find API that finds a single pair into the hash map.
 \begin{DoxyReturn}{Returns}
 The value of the key if it exists in the map or the {\ttfamily sentinel\+\_\+value} if the key does not exist in the hash map 
 \end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1iht_ad551a0a376c42bc7ef584fc57e24fee0}\label{structbght_1_1iht_ad551a0a376c42bc7ef584fc57e24fee0}} 
+\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!get\_sentinel\_key@{get\_sentinel\_key}}
+\index{get\_sentinel\_key@{get\_sentinel\_key}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
+\doxysubsubsection{\texorpdfstring{get\_sentinel\_key()}{get\_sentinel\_key()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ key\+\_\+type \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::get\+\_\+sentinel\+\_\+key (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the sentinel key object. 
+
+\begin{DoxyReturn}{Returns}
+key\+\_\+type Sentinel key 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1iht_a377b1c548305ae6fbf35976dd2b186c4}\label{structbght_1_1iht_a377b1c548305ae6fbf35976dd2b186c4}} 
+\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!get\_sentinel\_pair@{get\_sentinel\_pair}}
+\index{get\_sentinel\_pair@{get\_sentinel\_pair}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
+\doxysubsubsection{\texorpdfstring{get\_sentinel\_pair()}{get\_sentinel\_pair()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ value\+\_\+type \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::get\+\_\+sentinel\+\_\+pair (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the sentinel pair object. 
+
+\begin{DoxyReturn}{Returns}
+value\+\_\+type Sentinel pair 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1iht_aa0a23c0bca118dd3be0056d85994547b}\label{structbght_1_1iht_aa0a23c0bca118dd3be0056d85994547b}} 
+\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!get\_sentinel\_value@{get\_sentinel\_value}}
+\index{get\_sentinel\_value@{get\_sentinel\_value}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
+\doxysubsubsection{\texorpdfstring{get\_sentinel\_value()}{get\_sentinel\_value()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ mapped\+\_\+type \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::get\+\_\+sentinel\+\_\+value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the sentinel value object. 
+
+\begin{DoxyReturn}{Returns}
+mapped\+\_\+type Sentinel value 
+\end{DoxyReturn}
 \mbox{\Hypertarget{structbght_1_1iht_afcb16a7c2cc72a322d90e0bd8805cb50}\label{structbght_1_1iht_afcb16a7c2cc72a322d90e0bd8805cb50}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!insert@{insert}}
 \index{insert@{insert}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
@@ -292,12 +340,12 @@ Device-\/side cooperative insertion API that inserts a single pair into the hash
 \begin{DoxyReturn}{Returns}
 A boolean indicating success (true) or failure (false) of the insertion operation. 
 \end{DoxyReturn}
-\mbox{\Hypertarget{structbght_1_1iht_a0189105d05f2739c74d4dc72349763d4}\label{structbght_1_1iht_a0189105d05f2739c74d4dc72349763d4}} 
+\mbox{\Hypertarget{structbght_1_1iht_a8f02d2678513bf0c6b3958c01326f98c}\label{structbght_1_1iht_a8f02d2678513bf0c6b3958c01326f98c}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!max\_size@{max\_size}}
 \index{max\_size@{max\_size}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{max\_size()}{max\_size()}}
 {\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
-size\+\_\+type \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::max\+\_\+size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ size\+\_\+type \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::max\+\_\+size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
 
 
 

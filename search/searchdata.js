@@ -1,8 +1,8 @@
 var indexSectionsWithContent =
 {
-  0: "<bcefimoprs~",
+  0: "<bcefgimoprs~",
   1: "bcip",
-  2: "bcefimoprs~",
+  2: "bcefgimoprs~",
   3: "<"
 };
 
