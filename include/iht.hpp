@@ -71,7 +71,7 @@ struct iht {
   static constexpr auto bucket_size = B;
   using key_equal = KeyEqual;
 
-  using iterator = atomic_pair_type&;
+  using iterator = atomic_pair_type*;
   using const_iterator = iterator;
 
   /**
@@ -194,21 +194,44 @@ struct iht {
    *
    * @return const_iterator constant iterator to the first element of the table
    */
-  const_iterator begin() const;
+  __device__ __host__ const_iterator begin() const;
   /**
    * @brief Returns an iterator to the last element of the tables including all invalid
    * entries.
    *
    * @return const_iterator constant iterator to the last element of the table
    */
-  const_iterator end() const;
+  __device__ __host__ const_iterator end() const;
 
   /**
    * @brief Returns the maximum number of elements the container is able to hold
    *
    * @return size_type maximum number of elements including all invalid entries.
    */
-  size_type max_size() const;
+  __device__ __host__ size_type max_size() const;
+
+  /**
+   * @brief Get the sentinel key object
+   *
+   * @return key_type Sentinel key
+   */
+  __device__ __host__ key_type get_sentinel_key() const { return sentinel_key_; }
+
+  /**
+   * @brief Get the sentinel value object
+   *
+   * @return mapped_type Sentinel value
+   */
+  __device__ __host__ mapped_type get_sentinel_value() const { return sentinel_value_; }
+
+  /**
+   * @brief Get the sentinel pair object
+   *
+   * @return value_type Sentinel pair
+   */
+  __device__ __host__ value_type get_sentinel_pair() const {
+    return {get_sentinel_key(), get_sentinel_value()};
+  }
 
  private:
   template <typename InputIt, typename HashMap>

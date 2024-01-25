@@ -32,10 +32,10 @@ struct alignas(detail::pair_alignment<T1, T2>()) padded_pair {
   padded_pair& operator=(padded_pair const&) = default;
   padded_pair& operator=(padded_pair&&) = default;
 
-  __host__ __device__ inline bool operator==(const padded_pair& rhs) {
+  __host__ __device__ inline bool operator==(const padded_pair& rhs) const {
     return (this->first == rhs.first) && (this->second == rhs.second);
   }
-  __host__ __device__ inline bool operator!=(const padded_pair& rhs) {
+  __host__ __device__ inline bool operator!=(const padded_pair& rhs) const {
     return !(*this == rhs);
   }
 
@@ -57,10 +57,10 @@ struct alignas(detail::pair_alignment<T1, T2>()) padded_pair<T1, T2, true> {
   padded_pair& operator=(padded_pair const&) = default;
   padded_pair& operator=(padded_pair&&) = default;
 
-  __host__ __device__ inline bool operator==(const padded_pair& rhs) {
+  __host__ __device__ inline bool operator==(const padded_pair& rhs) const {
     return (this->first == rhs.first) && (this->second == rhs.second);
   }
-  __host__ __device__ inline bool operator!=(const padded_pair& rhs) {
+  __host__ __device__ inline bool operator!=(const padded_pair& rhs) const {
     return !(*this == rhs);
   }
 

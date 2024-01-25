@@ -347,7 +347,8 @@ template <class Key,
           int B,
           int Threshold>
 typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::const_iterator
-iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::begin() const {
+    __device__ __host__
+    iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::begin() const {
   return d_table_;
 }
 
@@ -360,7 +361,8 @@ template <class Key,
           int B,
           int Threshold>
 typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::const_iterator
-iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::end() const {
+    __device__ __host__
+    iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::end() const {
   return d_table_ + capacity_;
 }
 
@@ -372,8 +374,9 @@ template <class Key,
           typename Allocator,
           int B,
           int Threshold>
-typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::size_type
-iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::max_size() const {
+__device__ __host__
+    typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::size_type
+    iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::max_size() const {
   return capacity_;
 }
 }  // namespace bght

@@ -10,6 +10,7 @@ set(example_targets
     bcht_example
     custom_types_example
     iht_example
+    hash_join
     )
 
 foreach(target ${example_targets})
