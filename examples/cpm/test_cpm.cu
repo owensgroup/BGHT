@@ -14,12 +14,20 @@
  *   limitations under the License.
  */
 
-#include <assert.h>
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
+#include <iostream>
 #include <limits>
 #include <vector>
 #include "bght/bcht.hpp"
+
+template <typename T1, typename T2>
+void CHECK(T1 t1, T2 t2) {
+  if (t1 != t2) {
+    std::cerr << t1 << "!=" << t2 << std::endl;
+    std::terminate();
+  }
+}
 
 int main() {
   using K = unsigned;
@@ -40,7 +48,10 @@ int main() {
 
   bool success =
       table.insert(d_pairs.data().get(), d_pairs.data().get() + d_pairs.size());
-  assert(success);
+  if (!success) {
+    std::cout << "build failed\n" << std::endl;
+    std::terminate();
+  }
 
   thrust::device_vector<K> d_queries(std::vector<K>{static_cast<K>(1),
                                                     static_cast<K>(3),
@@ -56,11 +67,11 @@ int main() {
              d_results.begin());
 
   thrust::host_vector<V> h_results = d_results;
-  assert(h_results[0] == static_cast<V>(5));
-  assert(h_results[1] == static_cast<V>(7));
-  assert(h_results[2] == static_cast<V>(sentinel_value));
-  assert(h_results[3] == static_cast<V>(6));
-  assert(h_results[4] == static_cast<V>(8));
-  assert(h_results[5] == static_cast<V>(sentinel_value));
+  CHECK(h_results[0], static_cast<V>(5));
+  CHECK(h_results[1], static_cast<V>(7));
+  CHECK(h_results[2], static_cast<V>(sentinel_value));
+  CHECK(h_results[3], static_cast<V>(6));
+  CHECK(h_results[4], static_cast<V>(8));
+  CHECK(h_results[5], static_cast<V>(sentinel_value));
   std::cout << "Success\n";
 }
