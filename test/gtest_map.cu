@@ -15,11 +15,14 @@
  */
 
 #include <gtest/gtest.h>
-#include <bcht.hpp>
+
+#include <bght/cht.hpp>
+
+#include <bght/bcht.hpp>
+#include <bght/iht.hpp>
+#include <bght/p2bht.hpp>
 #include <cstdint>
-#include <iht.hpp>
 #include <limits>
-#include <p2bht.hpp>
 #include <type_traits>
 
 // Based on sample6_unittest

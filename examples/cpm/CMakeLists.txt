@@ -12,6 +12,7 @@ CPMAddPackage(
   OPTIONS
      "build_tests OFF"
      "build_benchmarks OFF"
+     "build_examples OFF"
 )
 
 set(CUDA_ARCHS 70)

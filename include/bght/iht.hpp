@@ -17,9 +17,9 @@
 #pragma once
 #include <bght/detail/allocator.hpp>
 #include <bght/detail/cuda_helpers.cuh>
-#include <bght/detail/hash_functions.cuh>
 #include <bght/detail/kernels.cuh>
 #include <bght/detail/prime.hpp>
+#include <bght/hash_functions.hpp>
 #include <bght/pair.cuh>
 #include <cuda/atomic>
 #include <memory>
@@ -270,7 +270,6 @@ struct iht {
 
   std::size_t num_buckets_;
 };
-}  // namespace bght
 
 template <typename Key, typename T, int Threshold = 6>
 using iht8 = typename bght::iht<Key,
@@ -300,5 +299,7 @@ using iht32 = typename bght::iht<Key,
                                  bght::cuda_allocator<char>,
                                  32,
                                  Threshold>;
+
+}  // namespace bght
 
 #include <bght/detail/iht_impl.cuh>

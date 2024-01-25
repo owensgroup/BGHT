@@ -17,8 +17,8 @@
 #pragma once
 #include <bght/detail/allocator.hpp>
 #include <bght/detail/cuda_helpers.cuh>
-#include <bght/detail/hash_functions.cuh>
 #include <bght/detail/kernels.cuh>
+#include <bght/hash_functions.hpp>
 #include <bght/pair.cuh>
 #include <cuda/atomic>
 #include <cuda/std/utility>
@@ -214,8 +214,6 @@ struct p2bht {
   std::size_t num_buckets_;
 };
 
-}  // namespace bght
-
 template <typename Key, typename T>
 using p2bht8 = typename bght::p2bht<Key,
                                     T,
@@ -242,5 +240,7 @@ using p2bht32 = typename bght::p2bht<Key,
                                      cuda::thread_scope_device,
                                      bght::cuda_allocator<char>,
                                      32>;
+
+}  // namespace bght
 
 #include <bght/detail/p2bht_impl.cuh>

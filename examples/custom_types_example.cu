@@ -31,10 +31,10 @@
 #include <bght/p2bht.hpp>
 
 template <class K, class V>
-using iht16_80 = iht16<K, V, 12>;
+using iht16_80 = bght::iht16<K, V, 12>;
 
 template <class K, class V>
-using iht32_80 = iht32<K, V, 25>;
+using iht32_80 = bght::iht32<K, V, 25>;
 
 template <typename T1, typename T2>
 void CHECK(T1 t1, T2 t2) {
@@ -441,22 +441,22 @@ int main() {
   test_custom_type();
   std::cout << "Testing vec3-like type\n";
   test_vec3_like();
-  std::cout << "Testing bcht8\n";
-  test_scheme<bcht8>();
-  std::cout << "Testing bcht16\n";
-  test_scheme<bcht16>();
-  std::cout << "Testing bcht32\n";
-  test_scheme<bcht32>();
+  std::cout << "Testing bght::bcht8\n";
+  test_scheme<bght::bcht8>();
+  std::cout << "Testing bght::bcht16\n";
+  test_scheme<bght::bcht16>();
+  std::cout << "Testing bght::bcht32\n";
+  test_scheme<bght::bcht32>();
 
-  std::cout << "Testing iht16_80\n";
+  std::cout << "Testing bght::iht16_80\n";
   test_scheme<iht16_80>();
-  std::cout << "Testing iht32_80\n";
+  std::cout << "Testing bght::iht32_80\n";
   test_scheme<iht32_80>();
 
-  std::cout << "Testing p2bht16\n";
-  test_scheme<p2bht16>();
-  std::cout << "Testing p2bht32\n";
-  test_scheme<p2bht32>();
+  std::cout << "Testing bght::p2bht16\n";
+  test_scheme<bght::p2bht16>();
+  std::cout << "Testing bght::p2bht32\n";
+  test_scheme<bght::p2bht32>();
 
   std::cout << "Success\n";
 

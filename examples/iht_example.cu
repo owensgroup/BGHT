@@ -126,21 +126,21 @@ int main(int argc, char** argv) {
 
   if (threshold == 0) {
     if (bucket_size == 8) {
-      do_test<iht8, 0>(argc, argv);
+      do_test<bght::iht8, 0>(argc, argv);
     } else if (bucket_size == 16) {
-      do_test<iht16, 0>(argc, argv);
+      do_test<bght::iht16, 0>(argc, argv);
     } else if (bucket_size == 32) {
-      do_test<iht32, 0>(argc, argv);
+      do_test<bght::iht32, 0>(argc, argv);
     } else {
       std::cout << "Not supported bucket size\n";
     }
   } else {
     if (bucket_size == 8) {
-      do_test<iht8, 6>(argc, argv);
+      do_test<bght::iht8, 6>(argc, argv);
     } else if (bucket_size == 16) {
-      do_test<iht16, 12>(argc, argv);
+      do_test<bght::iht16, 12>(argc, argv);
     } else if (bucket_size == 32) {
-      do_test<iht32, 25>(argc, argv);
+      do_test<bght::iht32, 25>(argc, argv);
     } else {
       std::cout << "Not supported bucket size\n";
     }
