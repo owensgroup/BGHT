@@ -15,7 +15,7 @@
  */
 
 #pragma once
-#include <bght/detail/allocator.hpp>
+#include <bght/allocator.hpp>
 #include <bght/detail/cuda_helpers.cuh>
 #include <bght/detail/kernels.cuh>
 #include <bght/hash_functions.hpp>
