@@ -15,13 +15,13 @@
  */
 
 #pragma once
+#include <bght/detail/allocator.hpp>
+#include <bght/detail/cuda_helpers.cuh>
+#include <bght/detail/hash_functions.cuh>
+#include <bght/detail/kernels.cuh>
+#include <bght/pair.cuh>
 #include <cuda/atomic>
 #include <cuda/std/utility>
-#include <detail/allocator.hpp>
-#include <detail/cuda_helpers.cuh>
-#include <detail/hash_functions.cuh>
-#include <detail/kernels.cuh>
-#include <detail/pair.cuh>
 #include <memory>
 
 namespace bght {
@@ -247,4 +247,4 @@ using bcht32 = typename bght::bcht<Key,
                                    bght::cuda_allocator<char>,
                                    32>;
 
-#include <detail/bcht_impl.cuh>
+#include <bght/detail/bcht_impl.cuh>

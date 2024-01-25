@@ -17,12 +17,12 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 #include <thrust/sequence.h>
-#include <benchmark_helpers.cuh>
-#include <cht.hpp>
-#include <cmd.hpp>
-#include <gpu_timer.hpp>
+#include <bght/benchmark_helpers.cuh>
+#include <bght/cht.hpp>
+#include <bght/cmd.hpp>
+#include <bght/gpu_timer.hpp>
+#include <bght/perf_report.hpp>
 #include <limits>
-#include <perf_report.hpp>
 #include <type_traits>
 
 int main(int argc, char** argv) {

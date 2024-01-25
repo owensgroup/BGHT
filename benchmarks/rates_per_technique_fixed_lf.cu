@@ -26,16 +26,16 @@
 #include <unordered_set>
 #include <utility>
 
-#include <cht.hpp>
+#include <bght/cht.hpp>
 
 #include <thrust/device_vector.h>
-#include <bcht.hpp>
-#include <cmd.hpp>
-#include <gpu_timer.hpp>
-#include <iht.hpp>
-#include <p2bht.hpp>
+#include <bght/bcht.hpp>
+#include <bght/cmd.hpp>
+#include <bght/gpu_timer.hpp>
+#include <bght/iht.hpp>
+#include <bght/p2bht.hpp>
 
-#include <benchmark_helpers.cuh>
+#include <bght/benchmark_helpers.cuh>
 
 using key_type = uint32_t;
 using value_type = uint32_t;
@@ -66,7 +66,6 @@ template <typename HashMap,
           typename pair_type,
           typename Function>
 bench_insert_find_result bench_insert_find(
-    std::vector<key_type>& keys,
     thrust::device_vector<key_type>& d_keys,
     thrust::device_vector<pair_type>& d_pairs,
     thrust::device_vector<key_type>& d_find_keys,
@@ -80,8 +79,6 @@ bench_insert_find_result bench_insert_find(
     std::vector<float>& exist_ratios,
     Function to_value,
     int bucket_size) {
-  assert(keys.size() == 2 * num_keys);
-
   std::cout << "Bench insert/search rates: " << num_keys << " keys, ";
   std::cout << "bucket_size: " << bucket_size << ", ";
   std::cout << "load_factor: " << load_factor << ", ";
@@ -248,8 +245,7 @@ void bench_bcht(std::vector<key_type>& keys,
   // 1
   {
     auto bcht_1_result =
-        bench_insert_find<bght::cht<key_type, value_type>>(keys,
-                                                           d_keys,
+        bench_insert_find<bght::cht<key_type, value_type>>(d_keys,
                                                            d_pairs,
                                                            d_find_keys,
                                                            d_find_results,
@@ -270,8 +266,7 @@ void bench_bcht(std::vector<key_type>& keys,
 
   // 8
   {
-    auto bcht_8_result = bench_insert_find<bcht8<key_type, value_type>>(keys,
-                                                                        d_keys,
+    auto bcht_8_result = bench_insert_find<bcht8<key_type, value_type>>(d_keys,
                                                                         d_pairs,
                                                                         d_find_keys,
                                                                         d_find_results,
@@ -292,8 +287,7 @@ void bench_bcht(std::vector<key_type>& keys,
 
   // 16
   {
-    auto bcht_16_result = bench_insert_find<bcht16<key_type, value_type>>(keys,
-                                                                          d_keys,
+    auto bcht_16_result = bench_insert_find<bcht16<key_type, value_type>>(d_keys,
                                                                           d_pairs,
                                                                           d_find_keys,
                                                                           d_find_results,
@@ -314,8 +308,7 @@ void bench_bcht(std::vector<key_type>& keys,
 
   // 32
   {
-    auto bcht_32_result = bench_insert_find<bcht32<key_type, value_type>>(keys,
-                                                                          d_keys,
+    auto bcht_32_result = bench_insert_find<bcht32<key_type, value_type>>(d_keys,
                                                                           d_pairs,
                                                                           d_find_keys,
                                                                           d_find_results,
@@ -388,8 +381,7 @@ void bench_iht(std::vector<key_type>& keys,
 
   // 16  0.2
   {
-    auto iht_16_result = bench_insert_find<iht16<key_type, value_type, 3>>(keys,
-                                                                           d_keys,
+    auto iht_16_result = bench_insert_find<iht16<key_type, value_type, 3>>(d_keys,
                                                                            d_pairs,
                                                                            d_find_keys,
                                                                            d_find_results,
@@ -410,8 +402,7 @@ void bench_iht(std::vector<key_type>& keys,
 
   // 16  0.4
   {
-    auto iht_16_result = bench_insert_find<iht16<key_type, value_type, 6>>(keys,
-                                                                           d_keys,
+    auto iht_16_result = bench_insert_find<iht16<key_type, value_type, 6>>(d_keys,
                                                                            d_pairs,
                                                                            d_find_keys,
                                                                            d_find_results,
@@ -432,8 +423,7 @@ void bench_iht(std::vector<key_type>& keys,
 
   // 16  0.6
   {
-    auto iht_16_result = bench_insert_find<iht16<key_type, value_type, 9>>(keys,
-                                                                           d_keys,
+    auto iht_16_result = bench_insert_find<iht16<key_type, value_type, 9>>(d_keys,
                                                                            d_pairs,
                                                                            d_find_keys,
                                                                            d_find_results,
@@ -455,8 +445,7 @@ void bench_iht(std::vector<key_type>& keys,
   // 16  0.8
   {
     auto iht_16_result =
-        bench_insert_find<iht16<key_type, value_type, 12>>(keys,
-                                                           d_keys,
+        bench_insert_find<iht16<key_type, value_type, 12>>(d_keys,
                                                            d_pairs,
                                                            d_find_keys,
                                                            d_find_results,
@@ -477,8 +466,7 @@ void bench_iht(std::vector<key_type>& keys,
 
   // 32 0.2
   {
-    auto iht_32_result = bench_insert_find<iht32<key_type, value_type, 6>>(keys,
-                                                                           d_keys,
+    auto iht_32_result = bench_insert_find<iht32<key_type, value_type, 6>>(d_keys,
                                                                            d_pairs,
                                                                            d_find_keys,
                                                                            d_find_results,
@@ -500,8 +488,7 @@ void bench_iht(std::vector<key_type>& keys,
   // 32 0.4
   {
     auto iht_32_result =
-        bench_insert_find<iht32<key_type, value_type, 12>>(keys,
-                                                           d_keys,
+        bench_insert_find<iht32<key_type, value_type, 12>>(d_keys,
                                                            d_pairs,
                                                            d_find_keys,
                                                            d_find_results,
@@ -523,8 +510,7 @@ void bench_iht(std::vector<key_type>& keys,
   // 32 0.6
   {
     auto iht_32_result =
-        bench_insert_find<iht32<key_type, value_type, 19>>(keys,
-                                                           d_keys,
+        bench_insert_find<iht32<key_type, value_type, 19>>(d_keys,
                                                            d_pairs,
                                                            d_find_keys,
                                                            d_find_results,
@@ -546,8 +532,7 @@ void bench_iht(std::vector<key_type>& keys,
   // 32 0.8
   {
     auto iht_32_result =
-        bench_insert_find<iht32<key_type, value_type, 25>>(keys,
-                                                           d_keys,
+        bench_insert_find<iht32<key_type, value_type, 25>>(d_keys,
                                                            d_pairs,
                                                            d_find_keys,
                                                            d_find_results,
@@ -615,8 +600,7 @@ void bench_p2bht(std::vector<key_type>& keys,
   // 16
   {
     auto p2cht_16_result =
-        bench_insert_find<p2bht16<key_type, value_type>>(keys,
-                                                         d_keys,
+        bench_insert_find<p2bht16<key_type, value_type>>(d_keys,
                                                          d_pairs,
                                                          d_find_keys,
                                                          d_find_results,
@@ -638,8 +622,7 @@ void bench_p2bht(std::vector<key_type>& keys,
   // 32
   {
     auto p2cht_32_result =
-        bench_insert_find<p2bht32<key_type, value_type>>(keys,
-                                                         d_keys,
+        bench_insert_find<p2bht32<key_type, value_type>>(d_keys,
                                                          d_pairs,
                                                          d_find_keys,
                                                          d_find_results,

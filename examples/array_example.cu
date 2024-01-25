@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include <bcht.hpp>
+#include <bght/bcht.hpp>
 
 // Testing passing a hashmap to the device
 template <typename HashMap, typename Keys>

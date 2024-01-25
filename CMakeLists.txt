@@ -21,8 +21,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 add_library(bght INTERFACE)
 add_library(bght::bght ALIAS bght)
 
-add_library(bght::bght ALIAS bght)
-
 
 # CUDA and C++ compiler flags
 set(CXX_FLAGS
@@ -46,7 +44,7 @@ set(CUDA_FLAGS
     --forward-unknown-to-host-linker
     --forward-unknown-to-host-compiler
     --expt-relaxed-constexpr
-    $<$<CONFIG:Release>:-Xptxas -warn-spills -res-usage>
+    # $<$<CONFIG:Release>:-Xptxas -warn-spills -res-usage>
     )
 
 

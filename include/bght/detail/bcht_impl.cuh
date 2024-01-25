@@ -19,10 +19,10 @@
 #include <thrust/count.h>
 #include <thrust/execution_policy.h>
 #include <thrust/fill.h>
-#include <detail/benchmark_metrics.cuh>
-#include <detail/bucket.cuh>
-#include <detail/kernels.cuh>
-#include <detail/rng.hpp>
+#include <bght/detail/benchmark_metrics.cuh>
+#include <bght/detail/bucket.cuh>
+#include <bght/detail/kernels.cuh>
+#include <bght/detail/rng.hpp>
 #include <iterator>
 #include <random>
 

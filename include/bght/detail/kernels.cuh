@@ -17,7 +17,7 @@
 #pragma once
 #include <cooperative_groups.h>
 #include <cub/cub.cuh>
-#include <detail/cuda_helpers.cuh>
+#include <bght/detail/cuda_helpers.cuh>
 
 namespace bght {
 namespace detail {

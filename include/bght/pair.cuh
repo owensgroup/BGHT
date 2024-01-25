@@ -15,7 +15,7 @@
  */
 
 #pragma once
-#include <detail/pair_detail.hpp>
+#include <bght/detail/pair_detail.hpp>
 #include <type_traits>
 
 namespace bght {

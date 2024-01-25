@@ -16,7 +16,7 @@
 
 #pragma once
 #include <cuda_runtime.h>
-#include <detail/cuda_helpers.cuh>
+#include <bght/detail/cuda_helpers.cuh>
 namespace bght {
 template <typename T>
 struct cuda_deleter {

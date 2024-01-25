@@ -4,9 +4,9 @@
 #include <thrust/for_each.h>
 #include <thrust/host_vector.h>
 #include <thrust/iterator/counting_iterator.h>
-#include <iht.hpp>
+#include <bght/iht.hpp>
+#include <bght/tile_wide_queue.hpp>
 #include <limits>
-#include <tile_wide_queue.hpp>
 #include <type_traits>
 #include <vector>
 

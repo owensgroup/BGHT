@@ -16,12 +16,15 @@
 
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
-#include <bcht.hpp>
+#include <bght/bcht.hpp>
 #include <memory>
 
 template <typename T1, typename T2>
 void CHECK(T1 t1, T2 t2) {
-  assert(t1 == t2);
+  if (t1 != t2) {
+    std::cerr << t1 << "!=" << t2 << std::endl;
+    std::terminate();
+  }
 }
 
 template <class T>

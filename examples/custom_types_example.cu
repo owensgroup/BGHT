@@ -18,17 +18,17 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 #include <thrust/sequence.h>
-#include <cmd.hpp>
-#include <gpu_timer.hpp>
+#include <bght/cmd.hpp>
+#include <bght/gpu_timer.hpp>
+#include <bght/rkg.hpp>
 #include <limits>
-#include <rkg.hpp>
 #include <type_traits>
 
-#include <cht.hpp>
+#include <bght/cht.hpp>
 
-#include <bcht.hpp>
-#include <iht.hpp>
-#include <p2bht.hpp>
+#include <bght/bcht.hpp>
+#include <bght/iht.hpp>
+#include <bght/p2bht.hpp>
 
 template <class K, class V>
 using iht16_80 = iht16<K, V, 12>;

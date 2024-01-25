@@ -26,16 +26,16 @@
 #include <unordered_set>
 #include <utility>
 
-#include <cht.hpp>
+#include <bght/cht.hpp>
 
 #include <thrust/device_vector.h>
-#include <bcht.hpp>
-#include <cmd.hpp>
-#include <gpu_timer.hpp>
-#include <iht.hpp>
-#include <p2bht.hpp>
+#include <bght/bcht.hpp>
+#include <bght/cmd.hpp>
+#include <bght/gpu_timer.hpp>
+#include <bght/iht.hpp>
+#include <bght/p2bht.hpp>
 
-#include <benchmark_helpers.cuh>
+#include <bght/benchmark_helpers.cuh>
 
 using key_type = uint32_t;
 using value_type = uint32_t;

@@ -73,7 +73,7 @@ bucket_size                     Bucket size for device-side APIs cooperative gro
 #### Example
 ```c++
 // Example using host-side APIs
-#include <bcht.hpp>
+#include <bght/cht.hpp>
 int main(){
   using key_type = uint32_t;
   using value_type = uint32_t;

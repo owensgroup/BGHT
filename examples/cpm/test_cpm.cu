@@ -19,7 +19,7 @@
 #include <thrust/host_vector.h>
 #include <limits>
 #include <vector>
-#include "bcht.hpp"
+#include "bght/bcht.hpp"
 
 int main() {
   using K = unsigned;

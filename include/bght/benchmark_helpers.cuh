@@ -19,7 +19,7 @@
 #include <thrust/device_vector.h>
 #include <thrust/execution_policy.h>
 #include <thrust/fill.h>
-#include <detail/pair.cuh>
+#include <bght/pair.cuh>
 #include <filesystem>
 #include <fstream>
 #include <random>

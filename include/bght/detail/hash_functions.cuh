@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include <detail/MurmurHash3_32.hpp>
-#include <detail/universal_hash.hpp>
+#include <bght/detail/MurmurHash3_32.hpp>
+#include <bght/detail/universal_hash.hpp>
 
 namespace bght {
 
