@@ -204,6 +204,7 @@ __device__ bool bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold
       auto step_size = (hf1_(pair.first) % (capacity_ / bucket_size - 1) + 1);
       while (true) {
         bucket = bucket_type(&d_table_[bucket_id * bucket_size], tile);
+        bucket.load(cuda::memory_order_relaxed);
         load = bucket.compute_load(sentinel_pair);
         INCREMENT_PROBES_IN_TILE
         while (load < bucket_size) {
