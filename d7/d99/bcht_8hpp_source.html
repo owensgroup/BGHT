@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>BGHT: include/bcht.hpp Source File</title>
+<title>BGHT: include/bght/bcht.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="../../dir_eb36ba979fa4a352da78e4c5cc538e84.html">bght</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -87,13 +87,13 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;cuda/atomic&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;cuda/std/utility&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;detail/allocator.hpp&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;detail/cuda_helpers.cuh&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;detail/hash_functions.cuh&gt;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;detail/kernels.cuh&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;detail/pair.cuh&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;bght/detail/allocator.hpp&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;bght/detail/cuda_helpers.cuh&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;bght/detail/hash_functions.cuh&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;bght/detail/kernels.cuh&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;bght/pair.cuh&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;cuda/atomic&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;cuda/std/utility&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span>bght {</div>
@@ -220,7 +220,7 @@ $(function() {
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;                                   bght::cuda_allocator&lt;char&gt;,</div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                                   32&gt;;</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="preprocessor">#include &lt;detail/bcht_impl.cuh&gt;</span></div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="preprocessor">#include &lt;bght/detail/bcht_impl.cuh&gt;</span></div>
 <div class="ttc" id="astructbght_1_1bcht_html"><div class="ttname"><a href="../../d3/d16/structbght_1_1bcht.html">bght::bcht</a></div><div class="ttdoc">BCHT BCHT (bucketed cuckoo hash table) is an associative static GPU hash table that contains key-valu...</div><div class="ttdef"><b>Definition:</b> bcht.hpp:51</div></div>
 <div class="ttc" id="astructbght_1_1bcht_html_a2875dcd7fd19380a51b719792821b397"><div class="ttname"><a href="../../d3/d16/structbght_1_1bcht.html#a2875dcd7fd19380a51b719792821b397">bght::bcht::operator=</a></div><div class="ttdeci">bcht &amp; operator=(bcht &amp;&amp;)=delete</div><div class="ttdoc">The move assignment operator for the BCHT is currently deleted.</div></div>
 <div class="ttc" id="astructbght_1_1bcht_html_a2e8e21183a7978f2908a801f98138d22"><div class="ttname"><a href="../../d3/d16/structbght_1_1bcht.html#a2e8e21183a7978f2908a801f98138d22">bght::bcht::insert</a></div><div class="ttdeci">bool insert(InputIt first, InputIt last, cudaStream_t stream=0)</div><div class="ttdoc">Host-side API for inserting all pairs defined by the input argument iterators. All keys in the range ...</div></div>

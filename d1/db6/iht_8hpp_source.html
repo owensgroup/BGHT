@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>BGHT: include/iht.hpp Source File</title>
+<title>BGHT: include/bght/iht.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="../../dir_eb36ba979fa4a352da78e4c5cc538e84.html">bght</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -87,13 +87,13 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;cuda/atomic&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;detail/allocator.hpp&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;detail/cuda_helpers.cuh&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;detail/hash_functions.cuh&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;detail/kernels.cuh&gt;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;detail/pair.cuh&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;detail/prime.hpp&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;bght/detail/allocator.hpp&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;bght/detail/cuda_helpers.cuh&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;bght/detail/hash_functions.cuh&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;bght/detail/kernels.cuh&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;bght/detail/prime.hpp&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;bght/pair.cuh&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;cuda/atomic&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span>bght {</div>
@@ -239,7 +239,7 @@ $(function() {
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;                                 32,</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;                                 Threshold&gt;;</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="preprocessor">#include &lt;detail/iht_impl.cuh&gt;</span></div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="preprocessor">#include &lt;bght/detail/iht_impl.cuh&gt;</span></div>
 <div class="ttc" id="astructbght_1_1iht_html"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html">bght::iht</a></div><div class="ttdoc">IHT IHT (iceberg hash table) is an associative static GPU hash table that contains key-value pairs wi...</div><div class="ttdef"><b>Definition:</b> iht.hpp:53</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a02e2c454d005b7cf91363feb1477c7b9"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a02e2c454d005b7cf91363feb1477c7b9">bght::iht::iht</a></div><div class="ttdeci">iht(std::size_t capacity, Key sentinel_key, T sentinel_value, Allocator const &amp;allocator=Allocator{})</div><div class="ttdoc">Constructs the hash table with the specified capacity and uses the specified sentinel key and value t...</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a076471ca81f32b45a0d91ac5a004946e"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a076471ca81f32b45a0d91ac5a004946e">bght::iht::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Clears the hash map and resets all slots.</div></div>
