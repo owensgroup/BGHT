@@ -1,5 +1,5 @@
 /*
- *   Copyright 2021 The Regents of the University of California, Davis
+ *   Copyright 2021-2024 The Regents of the University of California, Davis
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -136,7 +136,7 @@ bool iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::insert(
   const auto num_keys = std::distance(first, last);
   const uint32_t block_size = 128;
   const uint32_t num_blocks = (num_keys + block_size - 1) / block_size;
-  detail::kernels::tiled_insert_kernel<<<num_blocks, block_size, 0, stream>>>(
+  detail::kernels::iht_tiled_insert_kernel<<<num_blocks, block_size, 0, stream>>>(
       first, last, *this);
   bool success;
   cuda_try(cudaMemcpyAsync(
@@ -175,7 +175,10 @@ template <class Key,
           int B,
           int Threshold>
 template <typename tile_type>
-__device__ bool bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::insert(
+__device__ cuda::std::pair<
+    typename bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::iterator,
+    bool>
+bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::insert(
     value_type const& pair,
     tile_type const& tile) {
   auto primary_bucket = hfp_(pair.first) % num_buckets_;
@@ -184,7 +187,7 @@ __device__ bool bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold
   value_type sentinel_pair{sentinel_key_, sentinel_value_};
 
   if (key_equal{}(pair.first, sentinel_key_)) {
-    return false;
+    return {end(), false};
   }
 
   using bucket_type = detail::bucket<atomic_pair_type, value_type, tile_type>;
@@ -194,6 +197,11 @@ __device__ bool bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold
   if (threshold_ > 0) {
     bucket.load(cuda::memory_order_relaxed);
     INCREMENT_PROBES_IN_TILE
+    auto key_location = bucket.find_key_location(pair.first, key_equal{});
+    // check if key exists
+    if (key_location != -1) {
+      return {bucket.begin() + key_location, false};
+    }
     load = bucket.compute_load(sentinel_pair);
   }
   do {
@@ -205,20 +213,36 @@ __device__ bool bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold
       while (true) {
         bucket = bucket_type(&d_table_[bucket_id * bucket_size], tile);
         bucket.load(cuda::memory_order_relaxed);
+
+        // check if key exists
+        auto key_location = bucket.find_key_location(pair.first, key_equal{});
+        if (key_location != -1) {
+          return {bucket.begin() + key_location, false};
+        }
+
         load = bucket.compute_load(sentinel_pair);
         INCREMENT_PROBES_IN_TILE
         while (load < bucket_size) {
           bool cas_success = false;
+          bool key_exists = false;
           if (lane_id == elected_lane) {
-            cas_success = bucket.strong_cas_at_location(pair,
-                                                        load,
-                                                        sentinel_pair,
-                                                        cuda::memory_order_relaxed,
-                                                        cuda::memory_order_relaxed);
+            auto found =
+                bucket.strong_cas_at_location_ret_old(pair,
+                                                      load,
+                                                      sentinel_pair,
+                                                      cuda::memory_order_relaxed,
+                                                      cuda::memory_order_relaxed);
+            if (found.first == pair.first) {
+              key_exists = true;
+            }
+            if (found.first == sentinel_pair.first) {
+              cas_success = true;
+            }
           }
           cas_success = tile.shfl(cas_success, elected_lane);
-          if (cas_success) {
-            return true;
+          key_exists = tile.shfl(cas_success, elected_lane);
+          if (cas_success || key_exists) {
+            return {bucket.begin() + load, cas_success};
           }
           load++;
         }
@@ -226,21 +250,29 @@ __device__ bool bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold
       }
     } else {
       bool cas_success = false;
+      bool key_exists = false;
       if (lane_id == elected_lane) {
-        cas_success = bucket.strong_cas_at_location(pair,
-                                                    load,
-                                                    sentinel_pair,
-                                                    cuda::memory_order_relaxed,
-                                                    cuda::memory_order_relaxed);
+        auto found = bucket.strong_cas_at_location_ret_old(pair,
+                                                           load,
+                                                           sentinel_pair,
+                                                           cuda::memory_order_relaxed,
+                                                           cuda::memory_order_relaxed);
+        if (found.first == pair.first) {
+          key_exists = true;
+        }
+        if (found.first == sentinel_pair.first) {
+          cas_success = true;
+        }
       }
+      key_exists = tile.shfl(cas_success, elected_lane);
       cas_success = tile.shfl(cas_success, elected_lane);
-      if (cas_success) {
-        return true;
+      if (cas_success || key_exists) {
+        return {bucket.begin() + load, cas_success};
       }
       load++;
     }
   } while (true);
-  return false;
+  return {end(), false};
 }
 
 template <class Key,
@@ -361,12 +393,39 @@ template <class Key,
           typename Allocator,
           int B,
           int Threshold>
+typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::iterator __device__
+    __host__
+    iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::begin() {
+  return d_table_;
+}
+
+template <class Key,
+          class T,
+          class Hash,
+          class KeyEqual,
+          cuda::thread_scope Scope,
+          typename Allocator,
+          int B,
+          int Threshold>
 typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::const_iterator
     __device__ __host__
     iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::end() const {
   return d_table_ + capacity_;
 }
 
+template <class Key,
+          class T,
+          class Hash,
+          class KeyEqual,
+          cuda::thread_scope Scope,
+          typename Allocator,
+          int B,
+          int Threshold>
+typename iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::iterator __device__
+    __host__
+    iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::end() {
+  return d_table_ + capacity_;
+}
 template <class Key,
           class T,
           class Hash,

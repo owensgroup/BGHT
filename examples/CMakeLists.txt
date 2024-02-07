@@ -11,6 +11,7 @@ set(example_targets
     custom_types_example
     iht_example
     hash_join
+    histogram
     )
 
 foreach(target ${example_targets})

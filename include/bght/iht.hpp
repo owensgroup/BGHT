@@ -1,5 +1,5 @@
 /*
- *   Copyright 2021 The Regents of the University of California, Davis
+ *   Copyright 2021-2024 The Regents of the University of California, Davis
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 #include <bght/hash_functions.hpp>
 #include <bght/pair.cuh>
 #include <cuda/atomic>
+#include <cuda/std/utility>
 #include <memory>
 
 namespace bght {
@@ -144,18 +145,22 @@ struct iht {
 
   /**
    * @brief Device-side cooperative insertion API that inserts a single pair into the
-   * hash map.
+   * hash map if the key does not exist.
    * @tparam tile_type A cooperative group tile with a size that must match the bucket
    * size of the hash map (i.e., `bucket_size`). It must support the tile-wide
    * intrinsics `ballot`, `shfl`
    * @param pair A key-value pair to insert into the hash map. The pair must be the same
    * for all threads in the  cooperative group tile
    * @param tile  The cooperative group tile
-   * @return A boolean indicating success (true) or failure (false) of the insertion
-   * operation.
+   * @return A pair where the second element is a boolean indicating success (true)
+   * or failure (false) of the insertion operation. If insertion succeeded or the key
+   * exists, the first element in the pair contain a pointer to the inserted or old
+   * key-value pair, otherwise, the first pair element contain a pointer to the end of the
+   * map.
    */
   template <typename tile_type>
-  __device__ bool insert(value_type const& pair, tile_type const& tile);
+  __device__ cuda::std::pair<iterator, bool> insert(value_type const& pair,
+                                                    tile_type const& tile);
 
   /**
    * @brief Device-side cooperative find API that finds a single pair into the hash
@@ -204,6 +209,21 @@ struct iht {
   __device__ __host__ const_iterator end() const;
 
   /**
+   * @brief Returns an iterator to the first element of the tables including all invalid
+   * entries.
+   *
+   * @return iterator constant iterator to the first element of the table
+   */
+  __device__ __host__ iterator begin();
+  /**
+   * @brief Returns an iterator to the last element of the tables including all invalid
+   * entries.
+   *
+   * @return iterator constant iterator to the last element of the table
+   */
+  __device__ __host__ iterator end();
+
+  /**
    * @brief Returns the maximum number of elements the container is able to hold
    *
    * @return size_type maximum number of elements including all invalid entries.
@@ -236,6 +256,11 @@ struct iht {
  private:
   template <typename InputIt, typename HashMap>
   friend __global__ void detail::kernels::tiled_insert_kernel(InputIt, InputIt, HashMap);
+
+  template <typename InputIt, typename HashMap>
+  friend __global__ void detail::kernels::iht_tiled_insert_kernel(InputIt,
+                                                                  InputIt,
+                                                                  HashMap);
 
   template <typename InputIt, typename OutputIt, typename HashMap>
   friend __global__ void detail::kernels::tiled_find_kernel(InputIt,
