@@ -145,7 +145,7 @@ struct iht {
 
   /**
    * @brief Device-side cooperative insertion API that inserts a single pair into the
-   * hash map.
+   * hash map if the key does not exist.
    * @tparam tile_type A cooperative group tile with a size that must match the bucket
    * size of the hash map (i.e., `bucket_size`). It must support the tile-wide
    * intrinsics `ballot`, `shfl`
@@ -153,9 +153,10 @@ struct iht {
    * for all threads in the  cooperative group tile
    * @param tile  The cooperative group tile
    * @return A pair where the second element is a boolean indicating success (true)
-   * or failure (false) of the insertion operation. If insertion succeeded, the first
-   * element in the pair contain a pointer to the inserted key-value pair, otherwise, the
-   * first pair element contain a pointer to the end of the map.
+   * or failure (false) of the insertion operation. If insertion succeeded or the key
+   * exists, the first element in the pair contain a pointer to the inserted or old
+   * key-value pair, otherwise, the first pair element contain a pointer to the end of the
+   * map.
    */
   template <typename tile_type>
   __device__ cuda::std::pair<iterator, bool> insert(value_type const& pair,
