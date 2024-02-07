@@ -159,10 +159,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 <tr class="memitem:ac6aa71eb51d1f76879cd0ec3c398fadc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#ac6aa71eb51d1f76879cd0ec3c398fadc">find</a> (InputIt first, InputIt last, OutputIt output_begin, cudaStream_t stream=0)</td></tr>
 <tr class="memdesc:ac6aa71eb51d1f76879cd0ec3c398fadc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host-side API for finding all keys defined by the input argument iterators.  <a href="../../db/d24/structbght_1_1iht.html#ac6aa71eb51d1f76879cd0ec3c398fadc">More...</a><br /></td></tr>
 <tr class="separator:ac6aa71eb51d1f76879cd0ec3c398fadc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abade7d2b541a2718bbae41be40a0ae40"><td class="memTemplParams" colspan="2">template&lt;typename tile_type &gt; </td></tr>
-<tr class="memitem:abade7d2b541a2718bbae41be40a0ae40"><td class="memTemplItemLeft" align="right" valign="top">__device__ bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#abade7d2b541a2718bbae41be40a0ae40">insert</a> (value_type const &amp;pair, tile_type const &amp;tile)</td></tr>
-<tr class="memdesc:abade7d2b541a2718bbae41be40a0ae40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Device-side cooperative insertion API that inserts a single pair into the hash map.  <a href="../../db/d24/structbght_1_1iht.html#abade7d2b541a2718bbae41be40a0ae40">More...</a><br /></td></tr>
-<tr class="separator:abade7d2b541a2718bbae41be40a0ae40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa81f17500ac6aea2bd9d1e157c5cb55"><td class="memTemplParams" colspan="2">template&lt;typename tile_type &gt; </td></tr>
+<tr class="memitem:aaa81f17500ac6aea2bd9d1e157c5cb55"><td class="memTemplItemLeft" align="right" valign="top">__device__ cuda::std::pair&lt; iterator, bool &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#aaa81f17500ac6aea2bd9d1e157c5cb55">insert</a> (value_type const &amp;pair, tile_type const &amp;tile)</td></tr>
+<tr class="memdesc:aaa81f17500ac6aea2bd9d1e157c5cb55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Device-side cooperative insertion API that inserts a single pair into the hash map if the key does not exist.  <a href="../../db/d24/structbght_1_1iht.html#aaa81f17500ac6aea2bd9d1e157c5cb55">More...</a><br /></td></tr>
+<tr class="separator:aaa81f17500ac6aea2bd9d1e157c5cb55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f0c222a207ee2050f6910a33a312b5d"><td class="memTemplParams" colspan="2">template&lt;typename tile_type &gt; </td></tr>
 <tr class="memitem:a5f0c222a207ee2050f6910a33a312b5d"><td class="memTemplItemLeft" align="right" valign="top">__device__ mapped_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#a5f0c222a207ee2050f6910a33a312b5d">find</a> (key_type const &amp;key, tile_type const &amp;tile)</td></tr>
 <tr class="memdesc:a5f0c222a207ee2050f6910a33a312b5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Device-side cooperative find API that finds a single pair into the hash map.  <a href="../../db/d24/structbght_1_1iht.html#a5f0c222a207ee2050f6910a33a312b5d">More...</a><br /></td></tr>
@@ -180,6 +180,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 <tr class="memitem:a80b315235a726440e0e7a27011cdc092"><td class="memItemLeft" align="right" valign="top">__device__ __host__ const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#a80b315235a726440e0e7a27011cdc092">end</a> () const</td></tr>
 <tr class="memdesc:a80b315235a726440e0e7a27011cdc092"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an iterator to the last element of the tables including all invalid entries.  <a href="../../db/d24/structbght_1_1iht.html#a80b315235a726440e0e7a27011cdc092">More...</a><br /></td></tr>
 <tr class="separator:a80b315235a726440e0e7a27011cdc092"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac18f141d068fdb07fd83478ab55bf0c5"><td class="memItemLeft" align="right" valign="top">__device__ __host__ iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#ac18f141d068fdb07fd83478ab55bf0c5">begin</a> ()</td></tr>
+<tr class="memdesc:ac18f141d068fdb07fd83478ab55bf0c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an iterator to the first element of the tables including all invalid entries.  <a href="../../db/d24/structbght_1_1iht.html#ac18f141d068fdb07fd83478ab55bf0c5">More...</a><br /></td></tr>
+<tr class="separator:ac18f141d068fdb07fd83478ab55bf0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf9ca7e2bb37518aabcd1f2f35be7f6e"><td class="memItemLeft" align="right" valign="top">__device__ __host__ iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#aaf9ca7e2bb37518aabcd1f2f35be7f6e">end</a> ()</td></tr>
+<tr class="memdesc:aaf9ca7e2bb37518aabcd1f2f35be7f6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an iterator to the last element of the tables including all invalid entries.  <a href="../../db/d24/structbght_1_1iht.html#aaf9ca7e2bb37518aabcd1f2f35be7f6e">More...</a><br /></td></tr>
+<tr class="separator:aaf9ca7e2bb37518aabcd1f2f35be7f6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f02d2678513bf0c6b3958c01326f98c"><td class="memItemLeft" align="right" valign="top">__device__ __host__ size_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d24/structbght_1_1iht.html#a8f02d2678513bf0c6b3958c01326f98c">max_size</a> () const</td></tr>
 <tr class="memdesc:a8f02d2678513bf0c6b3958c01326f98c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum number of elements the container is able to hold.  <a href="../../db/d24/structbght_1_1iht.html#a8f02d2678513bf0c6b3958c01326f98c">More...</a><br /></td></tr>
 <tr class="separator:a8f02d2678513bf0c6b3958c01326f98c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -271,8 +277,30 @@ template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;,
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac18f141d068fdb07fd83478ab55bf0c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac18f141d068fdb07fd83478ab55bf0c5">&#9670;&nbsp;</a></span>begin() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16, int Threshold = 14&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">__device__ __host__ iterator <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::begin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns an iterator to the first element of the tables including all invalid entries. </p>
+<dl class="section return"><dt>Returns</dt><dd>iterator constant iterator to the first element of the table </dd></dl>
+
+</div>
+</div>
 <a id="ac5e1003359a1d929aaed7a759a9227cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5e1003359a1d929aaed7a759a9227cd">&#9670;&nbsp;</a></span>begin()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5e1003359a1d929aaed7a759a9227cd">&#9670;&nbsp;</a></span>begin() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,8 +321,30 @@ template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;,
 
 </div>
 </div>
+<a id="aaf9ca7e2bb37518aabcd1f2f35be7f6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf9ca7e2bb37518aabcd1f2f35be7f6e">&#9670;&nbsp;</a></span>end() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;, class KeyEqual  = bght::equal_to&lt;Key&gt;, cuda::thread_scope Scope = cuda::thread_scope_device, class Allocator  = bght::cuda_allocator&lt;char&gt;, int B = 16, int Threshold = 14&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">__device__ __host__ iterator <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns an iterator to the last element of the tables including all invalid entries. </p>
+<dl class="section return"><dt>Returns</dt><dd>iterator constant iterator to the last element of the table </dd></dl>
+
+</div>
+</div>
 <a id="a80b315235a726440e0e7a27011cdc092"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80b315235a726440e0e7a27011cdc092">&#9670;&nbsp;</a></span>end()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a80b315235a726440e0e7a27011cdc092">&#9670;&nbsp;</a></span>end() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -570,8 +620,8 @@ template&lt;typename InputIt &gt; </div>
 
 </div>
 </div>
-<a id="abade7d2b541a2718bbae41be40a0ae40"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abade7d2b541a2718bbae41be40a0ae40">&#9670;&nbsp;</a></span>insert() <span class="overload">[2/2]</span></h2>
+<a id="aaa81f17500ac6aea2bd9d1e157c5cb55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa81f17500ac6aea2bd9d1e157c5cb55">&#9670;&nbsp;</a></span>insert() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -581,7 +631,7 @@ template&lt;class Key , class T , class Hash  = bght::MurmurHash3_32&lt;Key&gt;,
 template&lt;typename tile_type &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">__device__ bool <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::insert </td>
+          <td class="memname">__device__ cuda::std::pair&lt;iterator, bool&gt; <a class="el" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt; Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold &gt;::insert </td>
           <td>(</td>
           <td class="paramtype">value_type const &amp;&#160;</td>
           <td class="paramname"><em>pair</em>, </td>
@@ -600,7 +650,7 @@ template&lt;typename tile_type &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Device-side cooperative insertion API that inserts a single pair into the hash map. </p>
+<p>Device-side cooperative insertion API that inserts a single pair into the hash map if the key does not exist. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">tile_type</td><td>A cooperative group tile with a size that must match the bucket size of the hash map (i.e., <code>bucket_size</code>). It must support the tile-wide intrinsics <code>ballot</code>, <code>shfl</code> </td></tr>
@@ -614,7 +664,7 @@ template&lt;typename tile_type &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A boolean indicating success (true) or failure (false) of the insertion operation. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A pair where the second element is a boolean indicating success (true) or failure (false) of the insertion operation. If insertion succeeded or the key exists, the first element in the pair contain a pointer to the inserted or old key-value pair, otherwise, the first pair element contain a pointer to the end of the map. </dd></dl>
 
 </div>
 </div>

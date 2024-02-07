@@ -78,8 +78,8 @@ void \mbox{\hyperlink{structbght_1_1iht_a076471ca81f32b45a0d91ac5a004946e}{clear
 \begin{DoxyCompactList}\small\item\em Host-\/side API for inserting all pairs defined by the input argument iterators. All keys in the range must be unique and must not exist in the hash table. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename Input\+It , typename Output\+It $>$ }\\void \mbox{\hyperlink{structbght_1_1iht_ac6aa71eb51d1f76879cd0ec3c398fadc}{find}} (Input\+It first, Input\+It last, Output\+It output\+\_\+begin, cuda\+Stream\+\_\+t stream=0)
 \begin{DoxyCompactList}\small\item\em Host-\/side API for finding all keys defined by the input argument iterators. \end{DoxyCompactList}\item 
-{\footnotesize template$<$typename tile\+\_\+type $>$ }\\\+\_\+\+\_\+device\+\_\+\+\_\+ bool \mbox{\hyperlink{structbght_1_1iht_abade7d2b541a2718bbae41be40a0ae40}{insert}} (value\+\_\+type const \&pair, tile\+\_\+type const \&tile)
-\begin{DoxyCompactList}\small\item\em Device-\/side cooperative insertion API that inserts a single pair into the hash map. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename tile\+\_\+type $>$ }\\\+\_\+\+\_\+device\+\_\+\+\_\+ cuda\+::std\+::pair$<$ iterator, bool $>$ \mbox{\hyperlink{structbght_1_1iht_aaa81f17500ac6aea2bd9d1e157c5cb55}{insert}} (value\+\_\+type const \&pair, tile\+\_\+type const \&tile)
+\begin{DoxyCompactList}\small\item\em Device-\/side cooperative insertion API that inserts a single pair into the hash map if the key does not exist. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename tile\+\_\+type $>$ }\\\+\_\+\+\_\+device\+\_\+\+\_\+ mapped\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a5f0c222a207ee2050f6910a33a312b5d}{find}} (key\+\_\+type const \&key, tile\+\_\+type const \&tile)
 \begin{DoxyCompactList}\small\item\em Device-\/side cooperative find API that finds a single pair into the hash map. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename RNG $>$ }\\void \mbox{\hyperlink{structbght_1_1iht_acf9f5c49d7306e3567482b5a26b3b88b}{randomize\+\_\+hash\+\_\+functions}} (RNG \&rng)
@@ -89,6 +89,10 @@ size\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a0efa940784530baf1893c7cfbf901
 \+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht_ac5e1003359a1d929aaed7a759a9227cd}{begin}} () const
 \begin{DoxyCompactList}\small\item\em Returns an iterator to the first element of the tables including all invalid entries. \end{DoxyCompactList}\item 
 \+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht_a80b315235a726440e0e7a27011cdc092}{end}} () const
+\begin{DoxyCompactList}\small\item\em Returns an iterator to the last element of the tables including all invalid entries. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ iterator \mbox{\hyperlink{structbght_1_1iht_ac18f141d068fdb07fd83478ab55bf0c5}{begin}} ()
+\begin{DoxyCompactList}\small\item\em Returns an iterator to the first element of the tables including all invalid entries. \end{DoxyCompactList}\item 
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ iterator \mbox{\hyperlink{structbght_1_1iht_aaf9ca7e2bb37518aabcd1f2f35be7f6e}{end}} ()
 \begin{DoxyCompactList}\small\item\em Returns an iterator to the last element of the tables including all invalid entries. \end{DoxyCompactList}\item 
 \+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ size\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a8f02d2678513bf0c6b3958c01326f98c}{max\+\_\+size}} () const
 \begin{DoxyCompactList}\small\item\em Returns the maximum number of elements the container is able to hold. \end{DoxyCompactList}\item 
@@ -157,10 +161,24 @@ Constructs the hash table with the specified capacity and uses the specified sen
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structbght_1_1iht_ac18f141d068fdb07fd83478ab55bf0c5}\label{structbght_1_1iht_ac18f141d068fdb07fd83478ab55bf0c5}} 
+\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!begin@{begin}}
+\index{begin@{begin}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ iterator \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::begin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns an iterator to the first element of the tables including all invalid entries. 
+
+\begin{DoxyReturn}{Returns}
+iterator constant iterator to the first element of the table 
+\end{DoxyReturn}
 \mbox{\Hypertarget{structbght_1_1iht_ac5e1003359a1d929aaed7a759a9227cd}\label{structbght_1_1iht_ac5e1003359a1d929aaed7a759a9227cd}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!begin@{begin}}
 \index{begin@{begin}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
-\doxysubsubsection{\texorpdfstring{begin()}{begin()}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
 \+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::begin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
 
@@ -171,10 +189,24 @@ Returns an iterator to the first element of the tables including all invalid ent
 \begin{DoxyReturn}{Returns}
 const\+\_\+iterator constant iterator to the first element of the table 
 \end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1iht_aaf9ca7e2bb37518aabcd1f2f35be7f6e}\label{structbght_1_1iht_aaf9ca7e2bb37518aabcd1f2f35be7f6e}} 
+\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!end@{end}}
+\index{end@{end}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+\+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ iterator \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns an iterator to the last element of the tables including all invalid entries. 
+
+\begin{DoxyReturn}{Returns}
+iterator constant iterator to the last element of the table 
+\end{DoxyReturn}
 \mbox{\Hypertarget{structbght_1_1iht_a80b315235a726440e0e7a27011cdc092}\label{structbght_1_1iht_a80b315235a726440e0e7a27011cdc092}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!end@{end}}
 \index{end@{end}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
-\doxysubsubsection{\texorpdfstring{end()}{end()}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
 \+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ const\+\_\+iterator \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
 
@@ -313,17 +345,17 @@ Host-\/side API for inserting all pairs defined by the input argument iterators.
 \begin{DoxyReturn}{Returns}
 A boolean indicating success (true) or failure (false) of the insertion operation. 
 \end{DoxyReturn}
-\mbox{\Hypertarget{structbght_1_1iht_abade7d2b541a2718bbae41be40a0ae40}\label{structbght_1_1iht_abade7d2b541a2718bbae41be40a0ae40}} 
+\mbox{\Hypertarget{structbght_1_1iht_aaa81f17500ac6aea2bd9d1e157c5cb55}\label{structbght_1_1iht_aaa81f17500ac6aea2bd9d1e157c5cb55}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!insert@{insert}}
 \index{insert@{insert}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
 \doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
 template$<$typename tile\+\_\+type $>$ \\
-\+\_\+\+\_\+device\+\_\+\+\_\+ bool \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::insert (\begin{DoxyParamCaption}\item[{value\+\_\+type const \&}]{pair,  }\item[{tile\+\_\+type const \&}]{tile }\end{DoxyParamCaption})}
+\+\_\+\+\_\+device\+\_\+\+\_\+ cuda\+::std\+::pair$<$iterator, bool$>$ \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::insert (\begin{DoxyParamCaption}\item[{value\+\_\+type const \&}]{pair,  }\item[{tile\+\_\+type const \&}]{tile }\end{DoxyParamCaption})}
 
 
 
-Device-\/side cooperative insertion API that inserts a single pair into the hash map. 
+Device-\/side cooperative insertion API that inserts a single pair into the hash map if the key does not exist. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -338,7 +370,7 @@ Device-\/side cooperative insertion API that inserts a single pair into the hash
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-A boolean indicating success (true) or failure (false) of the insertion operation. 
+A pair where the second element is a boolean indicating success (true) or failure (false) of the insertion operation. If insertion succeeded or the key exists, the first element in the pair contain a pointer to the inserted or old key-\/value pair, otherwise, the first pair element contain a pointer to the end of the map. 
 \end{DoxyReturn}
 \mbox{\Hypertarget{structbght_1_1iht_a8f02d2678513bf0c6b3958c01326f98c}\label{structbght_1_1iht_a8f02d2678513bf0c6b3958c01326f98c}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!max\_size@{max\_size}}

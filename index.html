@@ -188,8 +188,8 @@ Using Docker</h3>
 <h2><a class="anchor" id="autotoc_md10"></a>
 limitations</h2>
 <ul>
-<li>Currently hash tables based on cuckoo hashing do not support concurrent insertion and queries. IHT and P2BHT support concurrent insertions and queries.</li>
-<li>Keys must be unique</li>
+<li>Currently hash tables based on cuckoo hashing do not support concurrent insertion and queries. IHT and P2BHT support concurrent insertions and queries. For hash tables that use a probing scheme other than IHT:</li>
+<li>Keys must be unique.</li>
 <li>Construction of the data structures offered <em>may</em> fail. In these scenarios, reconstructing the table using a larger capacity or a lower load factor should be considered. Our paper offers recommended hash table load factors (for uniformly distributed unsigned keys) to achieve at least a 99% success rate (<a href="https://arxiv.org/abs/2108.07232">See Fig. 2</a>). For example, BCHT will offer a 100% success rate for up to 0.991 load factor. Please create an issue if you encounter any problems with different key distributions.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md11"></a>

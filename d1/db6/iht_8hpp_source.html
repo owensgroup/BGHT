@@ -71,7 +71,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *   Copyright 2021 The Regents of the University of California, Davis</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *   Copyright 2021-2024 The Regents of the University of California, Davis</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> *   you may not use this file except in compliance with the License.</span></div>
@@ -87,177 +87,189 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;bght/detail/allocator.hpp&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;bght/allocator.hpp&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;bght/detail/cuda_helpers.cuh&gt;</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;bght/detail/kernels.cuh&gt;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;bght/detail/prime.hpp&gt;</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;bght/hash_functions.hpp&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;bght/pair.cuh&gt;</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;cuda/atomic&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span>bght {</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>Key,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;          <span class="keyword">class </span>T,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;          <span class="keyword">class </span>Hash = bght::MurmurHash3_32&lt;Key&gt;,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;          <span class="keyword">class </span>KeyEqual = bght::equal_to&lt;Key&gt;,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;          cuda::thread_scope Scope = cuda::thread_scope_device,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;          <span class="keyword">class </span>Allocator = bght::cuda_allocator&lt;char&gt;,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;          <span class="keywordtype">int</span> B = 16,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;          <span class="keywordtype">int</span> Threshold = 14&gt;</div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html">   53</a></span>&#160;<span class="keyword">struct </span><a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a> {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  static_assert(Threshold &lt; B, <span class="stringliteral">&quot;Threshold must be less than the bucket size&quot;</span>);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keyword">using</span> value_type = pair&lt;Key, T&gt;;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keyword">using</span> key_type = Key;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">using</span> mapped_type = T;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keyword">using</span> atomic_pair_type = cuda::atomic&lt;value_type, Scope&gt;;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keyword">using</span> allocator_type = Allocator;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keyword">using</span> hasher = Hash;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keyword">using</span> size_type = std::size_t;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">using</span> atomic_pair_allocator_type =</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      <span class="keyword">typename</span> std::allocator_traits&lt;Allocator&gt;::rebind_alloc&lt;atomic_pair_type&gt;;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keyword">using</span> pool_allocator_type =</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keyword">typename</span> std::allocator_traits&lt;Allocator&gt;::rebind_alloc&lt;<span class="keywordtype">bool</span>&gt;;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keyword">using</span> size_type_allocator_type =</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      <span class="keyword">typename</span> std::allocator_traits&lt;Allocator&gt;::rebind_alloc&lt;size_type&gt;;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keyword">static</span> constexpr <span class="keyword">auto</span> bucket_size = B;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keyword">using</span> key_equal = KeyEqual;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keyword">using</span> iterator = atomic_pair_type*;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keyword">using</span> const_iterator = iterator;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a02e2c454d005b7cf91363feb1477c7b9">   87</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html#a02e2c454d005b7cf91363feb1477c7b9">iht</a>(std::size_t capacity,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      Key sentinel_key,</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      T sentinel_value,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      Allocator <span class="keyword">const</span>&amp; allocator = Allocator{});</div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a725ba654f985af3bdbb95830f8e26776">   94</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html#a725ba654f985af3bdbb95830f8e26776">iht</a>(<span class="keyword">const</span> <a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp; other);</div>
-<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a46dd032710006cc6cffcdc62a8da6564">   98</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html#a46dd032710006cc6cffcdc62a8da6564">iht</a>(<a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp;&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#ad9075362e24098e9cff0ce9b1b99a2bd">  102</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp; <a class="code" href="../../db/d24/structbght_1_1iht.html#ad9075362e24098e9cff0ce9b1b99a2bd">operator=</a>(<span class="keyword">const</span> <a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#aff9c13292fe3275886aeb494623781cc">  106</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp; <a class="code" href="../../db/d24/structbght_1_1iht.html#aff9c13292fe3275886aeb494623781cc">operator=</a>(<a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp;&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a1eb1c14a9683be082405b20cd4ac0fb5">  111</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html#a1eb1c14a9683be082405b20cd4ac0fb5">~iht</a>();</div>
-<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a076471ca81f32b45a0d91ac5a004946e">  115</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="../../db/d24/structbght_1_1iht.html#a076471ca81f32b45a0d91ac5a004946e">clear</a>();</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> InputIt&gt;</div>
-<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#afcb16a7c2cc72a322d90e0bd8805cb50">  129</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="../../db/d24/structbght_1_1iht.html#afcb16a7c2cc72a322d90e0bd8805cb50">insert</a>(InputIt first, InputIt last, cudaStream_t stream = 0);</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> InputIt, <span class="keyword">typename</span> OutputIt&gt;</div>
-<div class="line"><a name="l00143"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#ac6aa71eb51d1f76879cd0ec3c398fadc">  143</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="../../db/d24/structbght_1_1iht.html#ac6aa71eb51d1f76879cd0ec3c398fadc">find</a>(InputIt first, InputIt last, OutputIt output_begin, cudaStream_t stream = 0);</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> tile_type&gt;</div>
-<div class="line"><a name="l00158"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#abade7d2b541a2718bbae41be40a0ae40">  158</a></span>&#160;  __device__ <span class="keywordtype">bool</span> <a class="code" href="../../db/d24/structbght_1_1iht.html#abade7d2b541a2718bbae41be40a0ae40">insert</a>(value_type <span class="keyword">const</span>&amp; pair, tile_type <span class="keyword">const</span>&amp; tile);</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> tile_type&gt;</div>
-<div class="line"><a name="l00173"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a5f0c222a207ee2050f6910a33a312b5d">  173</a></span>&#160;  __device__ mapped_type <a class="code" href="../../db/d24/structbght_1_1iht.html#a5f0c222a207ee2050f6910a33a312b5d">find</a>(key_type <span class="keyword">const</span>&amp; key, tile_type <span class="keyword">const</span>&amp; tile);</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> RNG&gt;</div>
-<div class="line"><a name="l00183"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#acf9f5c49d7306e3567482b5a26b3b88b">  183</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="../../db/d24/structbght_1_1iht.html#acf9f5c49d7306e3567482b5a26b3b88b">randomize_hash_functions</a>(RNG&amp; rng);</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
-<div class="line"><a name="l00189"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a0efa940784530baf1893c7cfbf901651">  189</a></span>&#160;  size_type <a class="code" href="../../db/d24/structbght_1_1iht.html#a0efa940784530baf1893c7cfbf901651">size</a>(cudaStream_t stream = 0);</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160; </div>
-<div class="line"><a name="l00197"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#ac5e1003359a1d929aaed7a759a9227cd">  197</a></span>&#160;  __device__ __host__ const_iterator <a class="code" href="../../db/d24/structbght_1_1iht.html#ac5e1003359a1d929aaed7a759a9227cd">begin</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00204"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a80b315235a726440e0e7a27011cdc092">  204</a></span>&#160;  __device__ __host__ const_iterator <a class="code" href="../../db/d24/structbght_1_1iht.html#a80b315235a726440e0e7a27011cdc092">end</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
-<div class="line"><a name="l00211"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a8f02d2678513bf0c6b3958c01326f98c">  211</a></span>&#160;  __device__ __host__ size_type <a class="code" href="../../db/d24/structbght_1_1iht.html#a8f02d2678513bf0c6b3958c01326f98c">max_size</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
-<div class="line"><a name="l00218"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#ad551a0a376c42bc7ef584fc57e24fee0">  218</a></span>&#160;  __device__ __host__ key_type <a class="code" href="../../db/d24/structbght_1_1iht.html#ad551a0a376c42bc7ef584fc57e24fee0">get_sentinel_key</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> sentinel_key_; }</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
-<div class="line"><a name="l00225"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#aa0a23c0bca118dd3be0056d85994547b">  225</a></span>&#160;  __device__ __host__ mapped_type <a class="code" href="../../db/d24/structbght_1_1iht.html#aa0a23c0bca118dd3be0056d85994547b">get_sentinel_value</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> sentinel_value_; }</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
-<div class="line"><a name="l00232"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a377b1c548305ae6fbf35976dd2b186c4">  232</a></span>&#160;  __device__ __host__ value_type <a class="code" href="../../db/d24/structbght_1_1iht.html#a377b1c548305ae6fbf35976dd2b186c4">get_sentinel_pair</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keywordflow">return</span> {<a class="code" href="../../db/d24/structbght_1_1iht.html#ad551a0a376c42bc7ef584fc57e24fee0">get_sentinel_key</a>(), <a class="code" href="../../db/d24/structbght_1_1iht.html#aa0a23c0bca118dd3be0056d85994547b">get_sentinel_value</a>()};</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;  }</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> InputIt, <span class="keyword">typename</span> HashMap&gt;</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;  <span class="keyword">friend</span> __global__ <span class="keywordtype">void</span> detail::kernels::tiled_insert_kernel(InputIt, InputIt, HashMap);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;cuda/std/utility&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>bght {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class </span>Key,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;          <span class="keyword">class </span>T,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;          <span class="keyword">class </span>Hash = bght::MurmurHash3_32&lt;Key&gt;,</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;          <span class="keyword">class </span>KeyEqual = bght::equal_to&lt;Key&gt;,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;          cuda::thread_scope Scope = cuda::thread_scope_device,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;          <span class="keyword">class </span>Allocator = bght::cuda_allocator&lt;char&gt;,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;          <span class="keywordtype">int</span> B = 16,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;          <span class="keywordtype">int</span> Threshold = 14&gt;</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html">   54</a></span>&#160;<span class="keyword">struct </span><a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a> {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  static_assert(Threshold &lt; B, <span class="stringliteral">&quot;Threshold must be less than the bucket size&quot;</span>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keyword">using</span> value_type = pair&lt;Key, T&gt;;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">using</span> key_type = Key;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keyword">using</span> mapped_type = T;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keyword">using</span> atomic_pair_type = cuda::atomic&lt;value_type, Scope&gt;;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keyword">using</span> allocator_type = Allocator;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keyword">using</span> hasher = Hash;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keyword">using</span> size_type = std::size_t;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">using</span> atomic_pair_allocator_type =</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keyword">typename</span> std::allocator_traits&lt;Allocator&gt;::rebind_alloc&lt;atomic_pair_type&gt;;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">using</span> pool_allocator_type =</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      <span class="keyword">typename</span> std::allocator_traits&lt;Allocator&gt;::rebind_alloc&lt;<span class="keywordtype">bool</span>&gt;;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keyword">using</span> size_type_allocator_type =</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      <span class="keyword">typename</span> std::allocator_traits&lt;Allocator&gt;::rebind_alloc&lt;size_type&gt;;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keyword">static</span> constexpr <span class="keyword">auto</span> bucket_size = B;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="keyword">using</span> key_equal = KeyEqual;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keyword">using</span> iterator = atomic_pair_type*;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keyword">using</span> const_iterator = iterator;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a02e2c454d005b7cf91363feb1477c7b9">   88</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html#a02e2c454d005b7cf91363feb1477c7b9">iht</a>(std::size_t capacity,</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      Key sentinel_key,</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      T sentinel_value,</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      Allocator <span class="keyword">const</span>&amp; allocator = Allocator{});</div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a725ba654f985af3bdbb95830f8e26776">   95</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html#a725ba654f985af3bdbb95830f8e26776">iht</a>(<span class="keyword">const</span> <a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp; other);</div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a46dd032710006cc6cffcdc62a8da6564">   99</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html#a46dd032710006cc6cffcdc62a8da6564">iht</a>(<a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp;&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#ad9075362e24098e9cff0ce9b1b99a2bd">  103</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp; <a class="code" href="../../db/d24/structbght_1_1iht.html#ad9075362e24098e9cff0ce9b1b99a2bd">operator=</a>(<span class="keyword">const</span> <a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#aff9c13292fe3275886aeb494623781cc">  107</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp; <a class="code" href="../../db/d24/structbght_1_1iht.html#aff9c13292fe3275886aeb494623781cc">operator=</a>(<a class="code" href="../../db/d24/structbght_1_1iht.html">iht</a>&amp;&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a1eb1c14a9683be082405b20cd4ac0fb5">  112</a></span>&#160;  <a class="code" href="../../db/d24/structbght_1_1iht.html#a1eb1c14a9683be082405b20cd4ac0fb5">~iht</a>();</div>
+<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a076471ca81f32b45a0d91ac5a004946e">  116</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="../../db/d24/structbght_1_1iht.html#a076471ca81f32b45a0d91ac5a004946e">clear</a>();</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> InputIt&gt;</div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#afcb16a7c2cc72a322d90e0bd8805cb50">  130</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="../../db/d24/structbght_1_1iht.html#afcb16a7c2cc72a322d90e0bd8805cb50">insert</a>(InputIt first, InputIt last, cudaStream_t stream = 0);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> InputIt, <span class="keyword">typename</span> OutputIt&gt;</div>
+<div class="line"><a name="l00144"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#ac6aa71eb51d1f76879cd0ec3c398fadc">  144</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="../../db/d24/structbght_1_1iht.html#ac6aa71eb51d1f76879cd0ec3c398fadc">find</a>(InputIt first, InputIt last, OutputIt output_begin, cudaStream_t stream = 0);</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> tile_type&gt;</div>
+<div class="line"><a name="l00162"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#aaa81f17500ac6aea2bd9d1e157c5cb55">  162</a></span>&#160;  __device__ cuda::std::pair&lt;iterator, bool&gt; <a class="code" href="../../db/d24/structbght_1_1iht.html#aaa81f17500ac6aea2bd9d1e157c5cb55">insert</a>(value_type <span class="keyword">const</span>&amp; pair,</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                                                    tile_type <span class="keyword">const</span>&amp; tile);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> tile_type&gt;</div>
+<div class="line"><a name="l00178"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a5f0c222a207ee2050f6910a33a312b5d">  178</a></span>&#160;  __device__ mapped_type <a class="code" href="../../db/d24/structbght_1_1iht.html#a5f0c222a207ee2050f6910a33a312b5d">find</a>(key_type <span class="keyword">const</span>&amp; key, tile_type <span class="keyword">const</span>&amp; tile);</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> RNG&gt;</div>
+<div class="line"><a name="l00188"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#acf9f5c49d7306e3567482b5a26b3b88b">  188</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="../../db/d24/structbght_1_1iht.html#acf9f5c49d7306e3567482b5a26b3b88b">randomize_hash_functions</a>(RNG&amp; rng);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
+<div class="line"><a name="l00194"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a0efa940784530baf1893c7cfbf901651">  194</a></span>&#160;  size_type <a class="code" href="../../db/d24/structbght_1_1iht.html#a0efa940784530baf1893c7cfbf901651">size</a>(cudaStream_t stream = 0);</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
+<div class="line"><a name="l00202"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#ac5e1003359a1d929aaed7a759a9227cd">  202</a></span>&#160;  __device__ __host__ const_iterator <a class="code" href="../../db/d24/structbght_1_1iht.html#ac5e1003359a1d929aaed7a759a9227cd">begin</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00209"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a80b315235a726440e0e7a27011cdc092">  209</a></span>&#160;  __device__ __host__ const_iterator <a class="code" href="../../db/d24/structbght_1_1iht.html#a80b315235a726440e0e7a27011cdc092">end</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160; </div>
+<div class="line"><a name="l00217"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#ac18f141d068fdb07fd83478ab55bf0c5">  217</a></span>&#160;  __device__ __host__ iterator <a class="code" href="../../db/d24/structbght_1_1iht.html#ac18f141d068fdb07fd83478ab55bf0c5">begin</a>();</div>
+<div class="line"><a name="l00224"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#aaf9ca7e2bb37518aabcd1f2f35be7f6e">  224</a></span>&#160;  __device__ __host__ iterator <a class="code" href="../../db/d24/structbght_1_1iht.html#aaf9ca7e2bb37518aabcd1f2f35be7f6e">end</a>();</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
+<div class="line"><a name="l00231"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a8f02d2678513bf0c6b3958c01326f98c">  231</a></span>&#160;  __device__ __host__ size_type <a class="code" href="../../db/d24/structbght_1_1iht.html#a8f02d2678513bf0c6b3958c01326f98c">max_size</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160; </div>
+<div class="line"><a name="l00238"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#ad551a0a376c42bc7ef584fc57e24fee0">  238</a></span>&#160;  __device__ __host__ key_type <a class="code" href="../../db/d24/structbght_1_1iht.html#ad551a0a376c42bc7ef584fc57e24fee0">get_sentinel_key</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> sentinel_key_; }</div>
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160; </div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> InputIt, <span class="keyword">typename</span> OutputIt, <span class="keyword">typename</span> HashMap&gt;</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;  <span class="keyword">friend</span> __global__ <span class="keywordtype">void</span> detail::kernels::tiled_find_kernel(InputIt,</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                                                            InputIt,</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                                                            OutputIt,</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                                                            HashMap);</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160; </div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> BlockSize, <span class="keyword">typename</span> InputT, <span class="keyword">typename</span> HashMap&gt;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;  <span class="keyword">friend</span> __global__ <span class="keywordtype">void</span> detail::kernels::count_kernel(<span class="keyword">const</span> InputT,</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                                                       std::size_t*,</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                                                       HashMap);</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;  <span class="keyword">static</span> constexpr <span class="keyword">auto</span> threshold_ = Threshold;</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;  std::size_t capacity_;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;  key_type sentinel_key_{};</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;  mapped_type sentinel_value_{};</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  allocator_type allocator_;</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;  atomic_pair_allocator_type atomic_pairs_allocator_;</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;  pool_allocator_type pool_allocator_;</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  size_type_allocator_type size_type_allocator_;</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;  atomic_pair_type* d_table_{};</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;  std::shared_ptr&lt;atomic_pair_type&gt; table_;</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160; </div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;  <span class="keywordtype">bool</span>* d_build_success_;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  std::shared_ptr&lt;bool&gt; build_success_;</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160; </div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;  Hash hfp_;</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  Hash hf0_;</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;  Hash hf1_;</div>
+<div class="line"><a name="l00245"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#aa0a23c0bca118dd3be0056d85994547b">  245</a></span>&#160;  __device__ __host__ mapped_type <a class="code" href="../../db/d24/structbght_1_1iht.html#aa0a23c0bca118dd3be0056d85994547b">get_sentinel_value</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> sentinel_value_; }</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
+<div class="line"><a name="l00252"></a><span class="lineno"><a class="line" href="../../db/d24/structbght_1_1iht.html#a377b1c548305ae6fbf35976dd2b186c4">  252</a></span>&#160;  __device__ __host__ value_type <a class="code" href="../../db/d24/structbght_1_1iht.html#a377b1c548305ae6fbf35976dd2b186c4">get_sentinel_pair</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <span class="keywordflow">return</span> {<a class="code" href="../../db/d24/structbght_1_1iht.html#ad551a0a376c42bc7ef584fc57e24fee0">get_sentinel_key</a>(), <a class="code" href="../../db/d24/structbght_1_1iht.html#aa0a23c0bca118dd3be0056d85994547b">get_sentinel_value</a>()};</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;  }</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> InputIt, <span class="keyword">typename</span> HashMap&gt;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;  <span class="keyword">friend</span> __global__ <span class="keywordtype">void</span> detail::kernels::tiled_insert_kernel(InputIt, InputIt, HashMap);</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> InputIt, <span class="keyword">typename</span> HashMap&gt;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;  <span class="keyword">friend</span> __global__ <span class="keywordtype">void</span> detail::kernels::iht_tiled_insert_kernel(InputIt,</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                                                                  InputIt,</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                                                                  HashMap);</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> InputIt, <span class="keyword">typename</span> OutputIt, <span class="keyword">typename</span> HashMap&gt;</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  <span class="keyword">friend</span> __global__ <span class="keywordtype">void</span> detail::kernels::tiled_find_kernel(InputIt,</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                                                            InputIt,</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;                                                            OutputIt,</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                                                            HashMap);</div>
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160; </div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;  std::size_t num_buckets_;</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;};</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160; </div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T, <span class="keywordtype">int</span> Threshold = 6&gt;</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="keyword">using</span> iht8 = <span class="keyword">typename</span> <a class="code" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt;Key,</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                                T,</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                                bght::MurmurHash3_32&lt;Key&gt;,</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;                                bght::equal_to&lt;Key&gt;,</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;                                cuda::thread_scope_device,</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                                bght::cuda_allocator&lt;char&gt;,</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;                                8,</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                                Threshold&gt;;</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160; </div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T, <span class="keywordtype">int</span> Threshold = 12&gt;</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="keyword">using</span> iht16 = <span class="keyword">typename</span> <a class="code" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt;Key,</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;                                 T,</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;                                 bght::MurmurHash3_32&lt;Key&gt;,</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;                                 bght::equal_to&lt;Key&gt;,</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;                                 cuda::thread_scope_device,</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;                                 bght::cuda_allocator&lt;char&gt;,</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;                                 16,</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;                                 Threshold&gt;;</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T, <span class="keywordtype">int</span> Threshold = 25&gt;</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="keyword">using</span> iht32 = <span class="keyword">typename</span> <a class="code" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt;Key,</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;                                 T,</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                                 bght::MurmurHash3_32&lt;Key&gt;,</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                                 bght::equal_to&lt;Key&gt;,</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;                                 cuda::thread_scope_device,</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;                                 bght::cuda_allocator&lt;char&gt;,</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                                 32,</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;                                 Threshold&gt;;</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160; </div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;}  <span class="comment">// namespace bght</span></div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="preprocessor">#include &lt;bght/detail/iht_impl.cuh&gt;</span></div>
-<div class="ttc" id="astructbght_1_1iht_html"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html">bght::iht</a></div><div class="ttdoc">IHT IHT (iceberg hash table) is an associative static GPU hash table that contains key-value pairs wi...</div><div class="ttdef"><b>Definition:</b> iht.hpp:53</div></div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> BlockSize, <span class="keyword">typename</span> InputT, <span class="keyword">typename</span> HashMap&gt;</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;  <span class="keyword">friend</span> __global__ <span class="keywordtype">void</span> detail::kernels::count_kernel(<span class="keyword">const</span> InputT,</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;                                                       std::size_t*,</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                                                       HashMap);</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  <span class="keyword">static</span> constexpr <span class="keyword">auto</span> threshold_ = Threshold;</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  std::size_t capacity_;</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;  key_type sentinel_key_{};</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  mapped_type sentinel_value_{};</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;  allocator_type allocator_;</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;  atomic_pair_allocator_type atomic_pairs_allocator_;</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;  pool_allocator_type pool_allocator_;</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  size_type_allocator_type size_type_allocator_;</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  atomic_pair_type* d_table_{};</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;  std::shared_ptr&lt;atomic_pair_type&gt; table_;</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;  <span class="keywordtype">bool</span>* d_build_success_;</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;  std::shared_ptr&lt;bool&gt; build_success_;</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;  Hash hfp_;</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;  Hash hf0_;</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;  Hash hf1_;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;  std::size_t num_buckets_;</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;};</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T, <span class="keywordtype">int</span> Threshold = 6&gt;</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="keyword">using</span> iht8 = <span class="keyword">typename</span> <a class="code" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt;Key,</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;                                T,</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;                                bght::MurmurHash3_32&lt;Key&gt;,</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;                                bght::equal_to&lt;Key&gt;,</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                                cuda::thread_scope_device,</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;                                bght::cuda_allocator&lt;char&gt;,</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;                                8,</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;                                Threshold&gt;;</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T, <span class="keywordtype">int</span> Threshold = 12&gt;</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="keyword">using</span> iht16 = <span class="keyword">typename</span> <a class="code" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt;Key,</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;                                 T,</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;                                 bght::MurmurHash3_32&lt;Key&gt;,</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;                                 bght::equal_to&lt;Key&gt;,</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;                                 cuda::thread_scope_device,</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                                 bght::cuda_allocator&lt;char&gt;,</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                                 16,</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;                                 Threshold&gt;;</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Key, <span class="keyword">typename</span> T, <span class="keywordtype">int</span> Threshold = 25&gt;</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="keyword">using</span> iht32 = <span class="keyword">typename</span> <a class="code" href="../../db/d24/structbght_1_1iht.html">bght::iht</a>&lt;Key,</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;                                 T,</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;                                 bght::MurmurHash3_32&lt;Key&gt;,</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;                                 bght::equal_to&lt;Key&gt;,</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;                                 cuda::thread_scope_device,</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;                                 bght::cuda_allocator&lt;char&gt;,</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;                                 32,</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;                                 Threshold&gt;;</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160; </div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;}  <span class="comment">// namespace bght</span></div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="preprocessor">#include &lt;bght/detail/iht_impl.cuh&gt;</span></div>
+<div class="ttc" id="astructbght_1_1iht_html"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html">bght::iht</a></div><div class="ttdoc">IHT IHT (iceberg hash table) is an associative static GPU hash table that contains key-value pairs wi...</div><div class="ttdef"><b>Definition:</b> iht.hpp:54</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a02e2c454d005b7cf91363feb1477c7b9"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a02e2c454d005b7cf91363feb1477c7b9">bght::iht::iht</a></div><div class="ttdeci">iht(std::size_t capacity, Key sentinel_key, T sentinel_value, Allocator const &amp;allocator=Allocator{})</div><div class="ttdoc">Constructs the hash table with the specified capacity and uses the specified sentinel key and value t...</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a076471ca81f32b45a0d91ac5a004946e"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a076471ca81f32b45a0d91ac5a004946e">bght::iht::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Clears the hash map and resets all slots.</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a0efa940784530baf1893c7cfbf901651"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a0efa940784530baf1893c7cfbf901651">bght::iht::size</a></div><div class="ttdeci">size_type size(cudaStream_t stream=0)</div><div class="ttdoc">Compute the number of elements in the map.</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a1eb1c14a9683be082405b20cd4ac0fb5"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a1eb1c14a9683be082405b20cd4ac0fb5">bght::iht::~iht</a></div><div class="ttdeci">~iht()</div><div class="ttdoc">Destructor that destroys the hash map and deallocate memory if no copies exist.</div></div>
-<div class="ttc" id="astructbght_1_1iht_html_a377b1c548305ae6fbf35976dd2b186c4"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a377b1c548305ae6fbf35976dd2b186c4">bght::iht::get_sentinel_pair</a></div><div class="ttdeci">__device__ __host__ value_type get_sentinel_pair() const</div><div class="ttdoc">Get the sentinel pair object.</div><div class="ttdef"><b>Definition:</b> iht.hpp:232</div></div>
+<div class="ttc" id="astructbght_1_1iht_html_a377b1c548305ae6fbf35976dd2b186c4"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a377b1c548305ae6fbf35976dd2b186c4">bght::iht::get_sentinel_pair</a></div><div class="ttdeci">__device__ __host__ value_type get_sentinel_pair() const</div><div class="ttdoc">Get the sentinel pair object.</div><div class="ttdef"><b>Definition:</b> iht.hpp:252</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a46dd032710006cc6cffcdc62a8da6564"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a46dd032710006cc6cffcdc62a8da6564">bght::iht::iht</a></div><div class="ttdeci">iht(iht &amp;&amp;)=delete</div><div class="ttdoc">Move constructor is currently deleted.</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a5f0c222a207ee2050f6910a33a312b5d"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a5f0c222a207ee2050f6910a33a312b5d">bght::iht::find</a></div><div class="ttdeci">__device__ mapped_type find(key_type const &amp;key, tile_type const &amp;tile)</div><div class="ttdoc">Device-side cooperative find API that finds a single pair into the hash map.</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a725ba654f985af3bdbb95830f8e26776"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a725ba654f985af3bdbb95830f8e26776">bght::iht::iht</a></div><div class="ttdeci">iht(const iht &amp;other)</div><div class="ttdoc">A shallow-copy constructor.</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a80b315235a726440e0e7a27011cdc092"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a80b315235a726440e0e7a27011cdc092">bght::iht::end</a></div><div class="ttdeci">__device__ __host__ const_iterator end() const</div><div class="ttdoc">Returns an iterator to the last element of the tables including all invalid entries.</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_a8f02d2678513bf0c6b3958c01326f98c"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#a8f02d2678513bf0c6b3958c01326f98c">bght::iht::max_size</a></div><div class="ttdeci">__device__ __host__ size_type max_size() const</div><div class="ttdoc">Returns the maximum number of elements the container is able to hold.</div></div>
-<div class="ttc" id="astructbght_1_1iht_html_aa0a23c0bca118dd3be0056d85994547b"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#aa0a23c0bca118dd3be0056d85994547b">bght::iht::get_sentinel_value</a></div><div class="ttdeci">__device__ __host__ mapped_type get_sentinel_value() const</div><div class="ttdoc">Get the sentinel value object.</div><div class="ttdef"><b>Definition:</b> iht.hpp:225</div></div>
-<div class="ttc" id="astructbght_1_1iht_html_abade7d2b541a2718bbae41be40a0ae40"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#abade7d2b541a2718bbae41be40a0ae40">bght::iht::insert</a></div><div class="ttdeci">__device__ bool insert(value_type const &amp;pair, tile_type const &amp;tile)</div><div class="ttdoc">Device-side cooperative insertion API that inserts a single pair into the hash map.</div></div>
+<div class="ttc" id="astructbght_1_1iht_html_aa0a23c0bca118dd3be0056d85994547b"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#aa0a23c0bca118dd3be0056d85994547b">bght::iht::get_sentinel_value</a></div><div class="ttdeci">__device__ __host__ mapped_type get_sentinel_value() const</div><div class="ttdoc">Get the sentinel value object.</div><div class="ttdef"><b>Definition:</b> iht.hpp:245</div></div>
+<div class="ttc" id="astructbght_1_1iht_html_aaa81f17500ac6aea2bd9d1e157c5cb55"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#aaa81f17500ac6aea2bd9d1e157c5cb55">bght::iht::insert</a></div><div class="ttdeci">__device__ cuda::std::pair&lt; iterator, bool &gt; insert(value_type const &amp;pair, tile_type const &amp;tile)</div><div class="ttdoc">Device-side cooperative insertion API that inserts a single pair into the hash map if the key does no...</div></div>
+<div class="ttc" id="astructbght_1_1iht_html_aaf9ca7e2bb37518aabcd1f2f35be7f6e"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#aaf9ca7e2bb37518aabcd1f2f35be7f6e">bght::iht::end</a></div><div class="ttdeci">__device__ __host__ iterator end()</div><div class="ttdoc">Returns an iterator to the last element of the tables including all invalid entries.</div></div>
+<div class="ttc" id="astructbght_1_1iht_html_ac18f141d068fdb07fd83478ab55bf0c5"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#ac18f141d068fdb07fd83478ab55bf0c5">bght::iht::begin</a></div><div class="ttdeci">__device__ __host__ iterator begin()</div><div class="ttdoc">Returns an iterator to the first element of the tables including all invalid entries.</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_ac5e1003359a1d929aaed7a759a9227cd"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#ac5e1003359a1d929aaed7a759a9227cd">bght::iht::begin</a></div><div class="ttdeci">__device__ __host__ const_iterator begin() const</div><div class="ttdoc">Returns an iterator to the first element of the tables including all invalid entries.</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_ac6aa71eb51d1f76879cd0ec3c398fadc"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#ac6aa71eb51d1f76879cd0ec3c398fadc">bght::iht::find</a></div><div class="ttdeci">void find(InputIt first, InputIt last, OutputIt output_begin, cudaStream_t stream=0)</div><div class="ttdoc">Host-side API for finding all keys defined by the input argument iterators.</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_acf9f5c49d7306e3567482b5a26b3b88b"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#acf9f5c49d7306e3567482b5a26b3b88b">bght::iht::randomize_hash_functions</a></div><div class="ttdeci">void randomize_hash_functions(RNG &amp;rng)</div><div class="ttdoc">Host-side API to randomize the hash functions used for the probing scheme. This can be used when the ...</div></div>
-<div class="ttc" id="astructbght_1_1iht_html_ad551a0a376c42bc7ef584fc57e24fee0"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#ad551a0a376c42bc7ef584fc57e24fee0">bght::iht::get_sentinel_key</a></div><div class="ttdeci">__device__ __host__ key_type get_sentinel_key() const</div><div class="ttdoc">Get the sentinel key object.</div><div class="ttdef"><b>Definition:</b> iht.hpp:218</div></div>
+<div class="ttc" id="astructbght_1_1iht_html_ad551a0a376c42bc7ef584fc57e24fee0"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#ad551a0a376c42bc7ef584fc57e24fee0">bght::iht::get_sentinel_key</a></div><div class="ttdeci">__device__ __host__ key_type get_sentinel_key() const</div><div class="ttdoc">Get the sentinel key object.</div><div class="ttdef"><b>Definition:</b> iht.hpp:238</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_ad9075362e24098e9cff0ce9b1b99a2bd"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#ad9075362e24098e9cff0ce9b1b99a2bd">bght::iht::operator=</a></div><div class="ttdeci">iht &amp; operator=(const iht &amp;)=delete</div><div class="ttdoc">The assignment operator is currently deleted.</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_afcb16a7c2cc72a322d90e0bd8805cb50"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#afcb16a7c2cc72a322d90e0bd8805cb50">bght::iht::insert</a></div><div class="ttdeci">bool insert(InputIt first, InputIt last, cudaStream_t stream=0)</div><div class="ttdoc">Host-side API for inserting all pairs defined by the input argument iterators. All keys in the range ...</div></div>
 <div class="ttc" id="astructbght_1_1iht_html_aff9c13292fe3275886aeb494623781cc"><div class="ttname"><a href="../../db/d24/structbght_1_1iht.html#aff9c13292fe3275886aeb494623781cc">bght::iht::operator=</a></div><div class="ttdeci">iht &amp; operator=(iht &amp;&amp;)=delete</div><div class="ttdoc">The move assignment operator is currently deleted.</div></div>
