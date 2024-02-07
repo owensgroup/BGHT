@@ -1,5 +1,5 @@
 ﻿/*
- *   Copyright 2021 The Regents of the University of California, Davis
+ *   Copyright 2021-2024 The Regents of the University of California, Davis
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
     if (expected_pair.second != found_result) {
       std::cout << "Error: expected: " << expected_pair.second;
       std::cout << ", found: " << found_result << '\n';
-      return;
+      return 0;
     }
   }
   std::cout << "Success\n";

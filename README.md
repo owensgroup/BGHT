@@ -137,7 +137,8 @@ After starting the container, you can build and execute BGHT code without any ad
 
 ### limitations
 * Currently hash tables based on cuckoo hashing do not support concurrent insertion and queries. IHT and P2BHT support concurrent insertions and queries.
-* Keys must be unique
+For hash tables that use a probing scheme other than IHT:
+* Keys must be unique.
 * Construction of the data structures offered *may* fail. In these scenarios, reconstructing the table using a larger capacity or a lower load factor should be considered. Our paper offers recommended hash table load factors (for uniformly distributed unsigned keys) to achieve at least a 99% success rate ([See Fig. 2](https://arxiv.org/abs/2108.07232)). For example, BCHT will offer a 100% success rate for up to 0.991 load factor. Please create an issue if you encounter any problems with different key distributions.
 
 ## Reproducing the arXiv paper results

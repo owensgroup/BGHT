@@ -1,5 +1,5 @@
 /*
- *   Copyright 2021 The Regents of the University of California, Davis
+ *   Copyright 2021-2024 The Regents of the University of California, Davis
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -80,12 +80,28 @@ struct bucket {
   }
 
   DEVICE_QUALIFIER
+  pair_type strong_cas_at_location_ret_old(
+      const pair_type& pair,
+      const int location,
+      const pair_type& sentinel,
+      cuda::memory_order success = cuda::memory_order_seq_cst,
+      cuda::memory_order failure = cuda::memory_order_seq_cst) {
+    pair_type expected = sentinel;
+    pair_type desired = pair;
+    ptr_[location].compare_exchange_strong(expected, desired, success, failure);
+    return expected;
+  }
+
+  DEVICE_QUALIFIER
   pair_type exch_at_location(const pair_type& pair,
                              const int location,
                              cuda::memory_order order = cuda::memory_order_seq_cst) {
     auto old = ptr_[location].exchange(pair, order);
     return old;
   }
+
+  DEVICE_QUALIFIER
+  atomic_pair_type* begin() { return ptr_; }
 
  private:
   pair_type lane_pair_;
