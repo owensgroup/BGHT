@@ -253,6 +253,32 @@ struct iht {
     return {get_sentinel_key(), get_sentinel_value()};
   }
 
+  /**
+   * @brief Checks if the hash map is empty
+   *
+   * @param stream A stream to enqueue the kernels on.
+
+   * @return A boolean with value `true` if the container is empty or `false` if the
+   * container is empty.
+   */
+  [[nodiscard]] bool empty(cudaStream_t stream = 0);
+
+  /**
+   * @brief Checks if a key exists in the hash map
+   *
+   * @tparam tile_type A cooperative group tile with a size that must match the bucket
+   * size of the hash map (i.e., `bucket_size`). It must support the tile-wide
+   * intrinsics `ballot`, `shfl`
+   * @param key A key to find in the hash map. The key must be the same
+   * for all threads in the  cooperative group tile
+   * @param tile The cooperative group tile
+   * @return The value of the key if it exists in the map or the `sentinel_value` if the
+   * key does not exist in the hash map
+   * @ return A boolean indicating whether the key exist or not .
+   * */
+  template <typename tile_type>
+  __device__ bool contains(const Key& key, tile_type const& tile);
+
  private:
   template <typename InputIt, typename HashMap>
   friend __global__ void detail::kernels::tiled_insert_kernel(InputIt, InputIt, HashMap);

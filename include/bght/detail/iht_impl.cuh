@@ -332,6 +332,23 @@ template <class Key,
           class Hash,
           class KeyEqual,
           cuda::thread_scope Scope,
+          class Allocator,
+          int B,
+          int Threshold>
+template <typename tile_type>
+__device__ bool
+bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::contains(
+    key_type const& key,
+    tile_type const& tile) {
+  auto find_result = find(key, tile);
+  return find_result != get_sentinel_value();
+}
+
+template <class Key,
+          class T,
+          class Hash,
+          class KeyEqual,
+          cuda::thread_scope Scope,
           typename Allocator,
           int B,
           int Threshold>
@@ -369,6 +386,19 @@ iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::size(cudaStream_t s
 
   cudaFree(d_count);
   return capacity_ - num_invalid_keys;
+}
+
+template <class Key,
+          class T,
+          class Hash,
+          class KeyEqual,
+          cuda::thread_scope Scope,
+          typename Allocator,
+          int B,
+          int Threshold>
+bool iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::empty(
+    cudaStream_t stream) {
+  return size(stream) == 0;
 }
 
 template <class Key,
