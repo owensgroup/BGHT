@@ -23,7 +23,7 @@ __device__ __managed__ uint32_t global_probes_count = 0;
     atomicAdd(&global_probes_count, 1);
 #define INCREMENT_PROBES atomicAdd(&global_probes_count, 1);
 namespace bght {
-uint32_t get_num_probes() {
+inline uint32_t get_num_probes() {
   cudaDeviceSynchronize();
   auto count = global_probes_count;
   global_probes_count = 0;
@@ -34,10 +34,5 @@ uint32_t get_num_probes() {
 #else
 #define INCREMENT_PROBES_IN_TILE
 #define INCREMENT_PROBES
-namespace bght {
-uint32_t get_num_probes() {
-  return 0;
-}
-}  // namespace bght
 
 #endif

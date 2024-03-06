@@ -25,6 +25,8 @@
 #include <limits>
 #include <type_traits>
 
+#include "examples_common.hpp"
+
 int main(int argc, char** argv) {
   using key_type = uint32_t;
   using value_type = uint32_t;
@@ -37,7 +39,7 @@ int main(int argc, char** argv) {
 
   std::cout << "num-keys: " << num_keys << '\n';
   std::cout << "load-factor: " << load_factor << '\n';
-  bght::set_device(device);
+  set_device(device);
 
   std::size_t capacity = static_cast<std::size_t>(double(num_keys) / load_factor);
 

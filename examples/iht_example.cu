@@ -25,6 +25,8 @@
 #include <limits>
 #include <type_traits>
 
+#include "examples_common.hpp"
+
 template <template <typename, typename, int> class hashmap, int threshold>
 void do_test(int argc, char** argv) {
   using key_type = uint32_t;
@@ -41,7 +43,7 @@ void do_test(int argc, char** argv) {
   std::cout << "load-factor: " << load_factor << '\n';
   std::cout << "bucket-size: " << bucket_size << '\n';
   std::cout << "threshold: " << threshold << '\n';
-  bght::set_device(device);
+  set_device(device);
 
   std::size_t capacity = double(num_keys) / load_factor;
 
