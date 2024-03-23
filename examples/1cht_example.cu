@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
   auto arguments = std::vector<std::string>(argv, argv + argc);
   std::size_t num_keys =
       get_arg_value<std::size_t>(arguments, "num-keys").value_or(16ull);
-  double load_factor = get_arg_value<double>(arguments, "load-factor").value_or(0.9);
+  double load_factor = get_arg_value<double>(arguments, "load-factor").value_or(0.7);
   int device = get_arg_value<int>(arguments, "device").value_or(0);
 
   std::cout << "num-keys: " << num_keys << '\n';
