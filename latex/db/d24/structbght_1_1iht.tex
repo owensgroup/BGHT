@@ -101,7 +101,11 @@ size\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a0efa940784530baf1893c7cfbf901
 \+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ mapped\+\_\+type \mbox{\hyperlink{structbght_1_1iht_aa0a23c0bca118dd3be0056d85994547b}{get\+\_\+sentinel\+\_\+value}} () const
 \begin{DoxyCompactList}\small\item\em Get the sentinel value object. \end{DoxyCompactList}\item 
 \+\_\+\+\_\+device\+\_\+\+\_\+ \+\_\+\+\_\+host\+\_\+\+\_\+ value\+\_\+type \mbox{\hyperlink{structbght_1_1iht_a377b1c548305ae6fbf35976dd2b186c4}{get\+\_\+sentinel\+\_\+pair}} () const
-\begin{DoxyCompactList}\small\item\em Get the sentinel pair object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Get the sentinel pair object. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{structbght_1_1iht_aafe339d858782c197517fb13e9ea7700}{empty}} (cuda\+Stream\+\_\+t stream=0)
+\begin{DoxyCompactList}\small\item\em Checks if the hash map is empty. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename tile\+\_\+type $>$ }\\\+\_\+\+\_\+device\+\_\+\+\_\+ bool \mbox{\hyperlink{structbght_1_1iht_ae536dc257527fba0f648ac5fe4893550}{contains}} (const Key \&key, tile\+\_\+type const \&tile)
+\begin{DoxyCompactList}\small\item\em Checks if a key exists in the hash map. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -188,6 +192,52 @@ Returns an iterator to the first element of the tables including all invalid ent
 
 \begin{DoxyReturn}{Returns}
 const\+\_\+iterator constant iterator to the first element of the table 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1iht_ae536dc257527fba0f648ac5fe4893550}\label{structbght_1_1iht_ae536dc257527fba0f648ac5fe4893550}} 
+\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!contains@{contains}}
+\index{contains@{contains}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
+\doxysubsubsection{\texorpdfstring{contains()}{contains()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+template$<$typename tile\+\_\+type $>$ \\
+\+\_\+\+\_\+device\+\_\+\+\_\+ bool \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::contains (\begin{DoxyParamCaption}\item[{const Key \&}]{key,  }\item[{tile\+\_\+type const \&}]{tile }\end{DoxyParamCaption})}
+
+
+
+Checks if a key exists in the hash map. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em tile\+\_\+type} & A cooperative group tile with a size that must match the bucket size of the hash map (i.\+e., {\ttfamily bucket\+\_\+size}). It must support the tile-\/wide intrinsics {\ttfamily ballot}, {\ttfamily shfl} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em key} & A key to find in the hash map. The key must be the same for all threads in the cooperative group tile \\
+\hline
+{\em tile} & The cooperative group tile \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the key if it exists in the map or the {\ttfamily sentinel\+\_\+value} if the key does not exist in the hash map @ return A boolean indicating whether the key exist or not . 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structbght_1_1iht_aafe339d858782c197517fb13e9ea7700}\label{structbght_1_1iht_aafe339d858782c197517fb13e9ea7700}} 
+\index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!empty@{empty}}
+\index{empty@{empty}!bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}}
+\doxysubsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily template$<$class Key , class T , class Hash  = bght\+::\+Murmur\+Hash3\+\_\+32$<$\+Key$>$, class Key\+Equal  = bght\+::equal\+\_\+to$<$\+Key$>$, cuda\+::thread\+\_\+scope Scope = cuda\+::thread\+\_\+scope\+\_\+device, class Allocator  = bght\+::cuda\+\_\+allocator$<$char$>$, int B = 16, int Threshold = 14$>$ \\
+bool \mbox{\hyperlink{structbght_1_1iht}{bght\+::iht}}$<$ Key, T, Hash, Key\+Equal, Scope, Allocator, B, Threshold $>$\+::empty (\begin{DoxyParamCaption}\item[{cuda\+Stream\+\_\+t}]{stream = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Checks if the hash map is empty. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em stream} & A stream to enqueue the kernels on.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean with value {\ttfamily true} if the container is empty or {\ttfamily false} if the container is empty. 
 \end{DoxyReturn}
 \mbox{\Hypertarget{structbght_1_1iht_aaf9ca7e2bb37518aabcd1f2f35be7f6e}\label{structbght_1_1iht_aaf9ca7e2bb37518aabcd1f2f35be7f6e}} 
 \index{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$@{bght::iht$<$ Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold $>$}!end@{end}}
