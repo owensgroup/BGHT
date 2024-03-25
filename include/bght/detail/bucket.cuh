@@ -18,6 +18,8 @@
 #include <cuda/atomic>
 #include <cuda/std/atomic>
 
+#include <bght/detail/tile.hpp>
+
 namespace bght {
 namespace detail {
 template <typename atomic_pair_type, typename pair_type, typename tile_type>
@@ -50,7 +52,7 @@ struct bucket {
   }
   DEVICE_QUALIFIER
   typename pair_type::second_type get_value_from_lane(int location) {
-    return tile_.shfl(lane_pair_.second, location);
+    return detail::shuffle(lane_pair_.second, location, tile_);
   }
 
   DEVICE_QUALIFIER
