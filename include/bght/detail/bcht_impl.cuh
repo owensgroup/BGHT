@@ -53,12 +53,16 @@ bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::bcht(std::size_t capacity,
   num_buckets_ = capacity_ / bucket_size;
   d_table_ = std::allocator_traits<atomic_pair_allocator_type>::allocate(
       atomic_pairs_allocator_, capacity_);
-  table_ =
-      std::shared_ptr<atomic_pair_type>(d_table_, bght::cuda_deleter<atomic_pair_type>());
+  table_ = std::shared_ptr<atomic_pair_type>(d_table_, [this](atomic_pair_type* p) {
+    std::allocator_traits<atomic_pair_allocator_type>::deallocate(
+        atomic_pairs_allocator_, p, capacity_);
+  });
 
   d_build_success_ =
       std::allocator_traits<pool_allocator_type>::allocate(pool_allocator_, 1);
-  build_success_ = std::shared_ptr<bool>(d_build_success_, bght::cuda_deleter<bool>());
+  build_success_ = std::shared_ptr<bool>(d_build_success_, [this](bool* p) {
+    std::allocator_traits<pool_allocator_type>::deallocate(pool_allocator_, p, 1);
+  });
 
   value_type empty_pair{sentinel_key_, sentinel_value_};
 
