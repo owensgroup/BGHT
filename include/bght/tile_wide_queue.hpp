@@ -17,6 +17,9 @@
 #pragma once
 
 #include <cooperative_groups.h>
+
+#include <bght/detail/tile.hpp>
+
 namespace bght {
 template <typename T, typename CG>
 struct tile_wide_queue {
@@ -37,7 +40,7 @@ struct tile_wide_queue {
   }
 
   __device__ value_type front() {
-    auto item = cg_.shfl(element_, cur_);
+    auto item = detail::shuffle(element_, cur_, cg_);
     return item;
   }
   __device__ void pop() {
