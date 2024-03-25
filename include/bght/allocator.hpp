@@ -46,6 +46,6 @@ struct cuda_allocator {
     cuda_try(cudaMalloc(&p, n * sizeof(T)));
     return static_cast<T*>(p);
   }
-  void deallocate(T* p, std::size_t n) noexcept { cuda_try(cudaFree(p)); }
+  void deallocate(T* p, std::size_t) noexcept { cuda_try(cudaFree(p)); }
 };
 }  // namespace bght
