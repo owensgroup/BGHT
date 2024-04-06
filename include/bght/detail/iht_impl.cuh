@@ -52,16 +52,12 @@ iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::iht(
 
   d_table_ = std::allocator_traits<atomic_pair_allocator_type>::allocate(
       atomic_pairs_allocator_, capacity_);
-  table_ = std::shared_ptr<atomic_pair_type>(d_table_, [this](atomic_pair_type* p) {
-    std::allocator_traits<atomic_pair_allocator_type>::deallocate(
-        atomic_pairs_allocator_, p, capacity_);
-  });
+  table_ =
+      std::shared_ptr<atomic_pair_type>(d_table_, bght::cuda_deleter<atomic_pair_type>());
 
   d_build_success_ =
       std::allocator_traits<pool_allocator_type>::allocate(pool_allocator_, 1);
-  build_success_ = std::shared_ptr<bool>(d_build_success_, [this](bool* p) {
-    std::allocator_traits<pool_allocator_type>::deallocate(pool_allocator_, p, 1);
-  });
+  build_success_ = std::shared_ptr<bool>(d_build_success_, bght::cuda_deleter<bool>());
 
   value_type empty_pair{sentinel_key_, sentinel_value_};
 
@@ -244,7 +240,7 @@ bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::insert(
             }
           }
           cas_success = tile.shfl(cas_success, elected_lane);
-          key_exists = tile.shfl(cas_success, elected_lane);
+          key_exists = tile.shfl(key_exists, elected_lane);
           if (cas_success || key_exists) {
             return {bucket.begin() + load, cas_success};
           }
@@ -268,7 +264,7 @@ bght::iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::insert(
           cas_success = true;
         }
       }
-      key_exists = tile.shfl(cas_success, elected_lane);
+      key_exists = tile.shfl(key_exists, elected_lane);
       cas_success = tile.shfl(cas_success, elected_lane);
       if (cas_success || key_exists) {
         return {bucket.begin() + load, cas_success};
