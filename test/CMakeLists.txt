@@ -18,7 +18,7 @@ endfunction()
 
 set(test_targets
     gtest_map
-    # iht_tests
+    iht_tests
     )
 
 foreach(target ${test_targets})
