@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-// MurmurHash3_32 implementation from
+// MurmurHash32 implementation from
 // https://github.com/aappleby/smhasher/blob/master/src/MurmurHash3.cpp
 //-----------------------------------------------------------------------------
 // MurmurHash3 was written by Austin Appleby, and is placed in the public
@@ -28,18 +28,18 @@
 namespace bght {
 
 template <typename Key>
-struct MurmurHash3_32 {
+struct MurmurHash32 {
   using key_type = Key;
   using result_type = uint32_t;
-  __host__ __device__ constexpr MurmurHash3_32() : m_seed(0) {}
+  __host__ __device__ constexpr MurmurHash32() : m_seed(0) {}
 
-  __host__ __device__ constexpr MurmurHash3_32(uint32_t seed) : m_seed(seed) {}
+  __host__ __device__ constexpr MurmurHash32(uint32_t seed) : m_seed(seed) {}
 
-  MurmurHash3_32(const MurmurHash3_32&) = default;
-  MurmurHash3_32(MurmurHash3_32&&) = default;
-  MurmurHash3_32& operator=(MurmurHash3_32 const&) = default;
-  MurmurHash3_32& operator=(MurmurHash3_32&&) = default;
-  ~MurmurHash3_32() = default;
+  MurmurHash32(const MurmurHash32&) = default;
+  MurmurHash32(MurmurHash32&&) = default;
+  MurmurHash32& operator=(MurmurHash32 const&) = default;
+  MurmurHash32& operator=(MurmurHash32&&) = default;
+  ~MurmurHash32() = default;
 
   constexpr uint32_t __host__ __device__ operator()(Key const& key) const noexcept {
     constexpr int len = sizeof(Key);

@@ -123,26 +123,18 @@ void do_test(int argc, char** argv) {
 }
 int main(int argc, char** argv) {
   auto arguments = std::vector<std::string>(argv, argv + argc);
-  int bucket_size = get_arg_value<int>(arguments, "b").value_or(16);
+  int bucket_size = get_arg_value<int>(arguments, "b").value_or(WAVEFRONT_SIZE);
   int threshold = get_arg_value<int>(arguments, "t").value_or(12);
 
   if (threshold == 0) {
-    if (bucket_size == 8) {
-      do_test<bght::iht8, 0>(argc, argv);
-    } else if (bucket_size == 16) {
-      do_test<bght::iht16, 0>(argc, argv);
-    } else if (bucket_size == 32) {
-      do_test<bght::iht32, 0>(argc, argv);
+    if (bucket_size == WAVEFRONT_SIZE) {
+      do_test<bght::ihtWarpSize, 0>(argc, argv);
     } else {
       std::cout << "Not supported bucket size\n";
     }
   } else {
-    if (bucket_size == 8) {
-      do_test<bght::iht8, 6>(argc, argv);
-    } else if (bucket_size == 16) {
-      do_test<bght::iht16, 12>(argc, argv);
-    } else if (bucket_size == 32) {
-      do_test<bght::iht32, 25>(argc, argv);
+    if (bucket_size == WAVEFRONT_SIZE) {
+      do_test<bght::ihtWarpSize, 25>(argc, argv);
     } else {
       std::cout << "Not supported bucket size\n";
     }

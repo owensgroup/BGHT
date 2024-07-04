@@ -34,7 +34,7 @@ template <class K, class V>
 using iht16_80 = bght::iht16<K, V, 12>;
 
 template <class K, class V>
-using iht32_80 = bght::iht32<K, V, 25>;
+using ihtWarpSize_80 = bght::ihtWarpSize<K, V, 25>;
 
 template <typename T1, typename T2>
 void CHECK(T1 t1, T2 t2) {
@@ -445,18 +445,18 @@ int main() {
   test_scheme<bght::bcht8>();
   std::cout << "Testing bght::bcht16\n";
   test_scheme<bght::bcht16>();
-  std::cout << "Testing bght::bcht32\n";
-  test_scheme<bght::bcht32>();
+  std::cout << "Testing bght::bchtWarpSize\n";
+  test_scheme<bght::bchtWarpSize>();
 
   std::cout << "Testing bght::iht16_80\n";
   test_scheme<iht16_80>();
-  std::cout << "Testing bght::iht32_80\n";
-  test_scheme<iht32_80>();
+  std::cout << "Testing bght::ihtWarpSize_80\n";
+  test_scheme<ihtWarpSize_80>();
 
   std::cout << "Testing bght::p2bht16\n";
   test_scheme<bght::p2bht16>();
-  std::cout << "Testing bght::p2bht32\n";
-  test_scheme<bght::p2bht32>();
+  std::cout << "Testing bght::p2bhtWarpSize\n";
+  test_scheme<bght::p2bhtWarpSize>();
 
   std::cout << "Success\n";
 

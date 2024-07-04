@@ -43,7 +43,7 @@ namespace bght {
  */
 template <class Key,
           class T,
-          class Hash = bght::MurmurHash3_32<Key>,
+          class Hash = bght::MurmurHash32<Key>,
           class KeyEqual = bght::equal_to<Key>,
           hip::thread_scope Scope = hip::thread_scope_device,
           class Allocator = bght::hip_allocator<char>>

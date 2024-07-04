@@ -120,9 +120,9 @@ int main(){
 Please create an issue if you face challenges with any of the following limitations and requirements.
 ### Requirements
 * C++17/HIP C++17
-* NVIDIA Volta GPU or later microarchitectures
+* AMD GPU
 * CMake 3.8 or later
-* HIP 11.5 or later
+* ROCm 6.1.2 or later
 
 #### Using Docker
 We provide a docker image that include the software requirements (except for HIP drivers). To build the docker image, run:

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <bght/detail/MurmurHash3_32.hpp>
+#include <bght/detail/MurmurHash32.hpp>
 #include <bght/detail/universal_hash.hpp>
 
 namespace bght {
@@ -32,7 +32,7 @@ Hash initialize_hf(RNG& rng) {
     return Hash(x, y);
   }
 
-  if constexpr (std::is_same_v<Hash, MurmurHash3_32<typename Hash::key_type>>) {
+  if constexpr (std::is_same_v<Hash, MurmurHash32<typename Hash::key_type>>) {
     uint32_t x = rng();
     if (x < 1u) {
       x = 1;

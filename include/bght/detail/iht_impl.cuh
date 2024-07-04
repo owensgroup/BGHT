@@ -387,7 +387,7 @@ iht<Key, T, Hash, KeyEqual, Scope, Allocator, B, Threshold>::size(hipStream_t st
   hip_try(hipMemcpyAsync(
       &num_invalid_keys, d_count, sizeof(std::size_t), hipMemcpyDeviceToHost));
 
-  hipFree(d_count);
+  hip_try(hipFree(d_count));
   return capacity_ - num_invalid_keys;
 }
 

@@ -243,88 +243,22 @@ void bench_bcht(std::vector<key_type>& keys,
   output << num_keys << ",";
   output << load_factor << ",";
 
-  // 1
-  {
-    auto bcht_1_result =
-        bench_insert_find<bght::cht<key_type, value_type>>(d_keys,
-                                                           d_pairs,
-                                                           d_find_keys,
-                                                           d_find_results,
-                                                           find_keys,
-                                                           find_results,
-                                                           cpu_ref_set,
-                                                           validate,
-                                                           num_keys,
-                                                           load_factor,
-                                                           exist_ratios,
-                                                           to_value,
-                                                           1);
-    output << float(num_keys) / 1.0e6 / bcht_1_result.insert_time << ",";
-    for (size_t i = 0; i < bcht_1_result.find_times.size(); i++) {
-      output << float(num_keys) / 1.0e6 / bcht_1_result.find_times[i] << ",";
-    }
-  }
-
-  // 8
-  {
-    auto bcht_8_result =
-        bench_insert_find<bght::bcht8<key_type, value_type>>(d_keys,
-                                                             d_pairs,
-                                                             d_find_keys,
-                                                             d_find_results,
-                                                             find_keys,
-                                                             find_results,
-                                                             cpu_ref_set,
-                                                             validate,
-                                                             num_keys,
-                                                             load_factor,
-                                                             exist_ratios,
-                                                             to_value,
-                                                             8);
-    output << float(num_keys) / 1.0e6 / bcht_8_result.insert_time << ",";
-    for (size_t i = 0; i < bcht_8_result.find_times.size(); i++) {
-      output << float(num_keys) / 1.0e6 / bcht_8_result.find_times[i] << ",";
-    }
-  }
-
-  // 16
-  {
-    auto bcht_16_result =
-        bench_insert_find<bght::bcht16<key_type, value_type>>(d_keys,
-                                                              d_pairs,
-                                                              d_find_keys,
-                                                              d_find_results,
-                                                              find_keys,
-                                                              find_results,
-                                                              cpu_ref_set,
-                                                              validate,
-                                                              num_keys,
-                                                              load_factor,
-                                                              exist_ratios,
-                                                              to_value,
-                                                              16);
-    output << float(num_keys) / 1.0e6 / bcht_16_result.insert_time << ",";
-    for (size_t i = 0; i < bcht_16_result.find_times.size(); i++) {
-      output << float(num_keys) / 1.0e6 / bcht_16_result.find_times[i] << ",";
-    }
-  }
-
   // 32
   {
     auto bcht_32_result =
-        bench_insert_find<bght::bcht32<key_type, value_type>>(d_keys,
-                                                              d_pairs,
-                                                              d_find_keys,
-                                                              d_find_results,
-                                                              find_keys,
-                                                              find_results,
-                                                              cpu_ref_set,
-                                                              validate,
-                                                              num_keys,
-                                                              load_factor,
-                                                              exist_ratios,
-                                                              to_value,
-                                                              32);
+        bench_insert_find<bght::bchtWarpSize<key_type, value_type>>(d_keys,
+                                                                    d_pairs,
+                                                                    d_find_keys,
+                                                                    d_find_results,
+                                                                    find_keys,
+                                                                    find_results,
+                                                                    cpu_ref_set,
+                                                                    validate,
+                                                                    num_keys,
+                                                                    load_factor,
+                                                                    exist_ratios,
+                                                                    to_value,
+                                                                    32);
     output << float(num_keys) / 1.0e6 / bcht_32_result.insert_time << ",";
     for (size_t i = 0; i < bcht_32_result.find_times.size(); i++) {
       output << float(num_keys) / 1.0e6 / bcht_32_result.find_times[i] << ",";
@@ -361,14 +295,7 @@ void bench_iht(std::vector<key_type>& keys,
   if (!output_file_exist) {
     // header
     output << "num_keys,load_factor,";
-    for (const auto& threshold : thresholds) {
-      output << "insert_16_" + std::to_string(int(threshold * 100)) + ",";
-      for (size_t i = 0; i < exist_ratios.size(); i++) {
-        int exist_ratio = exist_ratios[i] * 100.0f;
-        output << "find_16_" + std::to_string(int(threshold * 100)) + "_" +
-                      std::to_string(exist_ratio) + ",";
-      }
-    }
+
     for (const auto& threshold : thresholds) {
       output << "insert_32_" + std::to_string(int(threshold * 100)) + ",";
       for (size_t i = 0; i < exist_ratios.size(); i++) {
@@ -383,110 +310,22 @@ void bench_iht(std::vector<key_type>& keys,
   output << num_keys << ",";
   output << load_factor << ",";
 
-  // 16  0.2
-  {
-    auto iht_16_result =
-        bench_insert_find<bght::iht16<key_type, value_type, 3>>(d_keys,
-                                                                d_pairs,
-                                                                d_find_keys,
-                                                                d_find_results,
-                                                                find_keys,
-                                                                find_results,
-                                                                cpu_ref_set,
-                                                                validate,
-                                                                num_keys,
-                                                                load_factor,
-                                                                exist_ratios,
-                                                                to_value,
-                                                                16);
-    output << float(num_keys) / 1.0e6 / iht_16_result.insert_time << ",";
-    for (size_t i = 0; i < iht_16_result.find_times.size(); i++) {
-      output << float(num_keys) / 1.0e6 / iht_16_result.find_times[i] << ",";
-    }
-  }
-
-  // 16  0.4
-  {
-    auto iht_16_result =
-        bench_insert_find<bght::iht16<key_type, value_type, 6>>(d_keys,
-                                                                d_pairs,
-                                                                d_find_keys,
-                                                                d_find_results,
-                                                                find_keys,
-                                                                find_results,
-                                                                cpu_ref_set,
-                                                                validate,
-                                                                num_keys,
-                                                                load_factor,
-                                                                exist_ratios,
-                                                                to_value,
-                                                                16);
-    output << float(num_keys) / 1.0e6 / iht_16_result.insert_time << ",";
-    for (size_t i = 0; i < iht_16_result.find_times.size(); i++) {
-      output << float(num_keys) / 1.0e6 / iht_16_result.find_times[i] << ",";
-    }
-  }
-
-  // 16  0.6
-  {
-    auto iht_16_result =
-        bench_insert_find<bght::iht16<key_type, value_type, 9>>(d_keys,
-                                                                d_pairs,
-                                                                d_find_keys,
-                                                                d_find_results,
-                                                                find_keys,
-                                                                find_results,
-                                                                cpu_ref_set,
-                                                                validate,
-                                                                num_keys,
-                                                                load_factor,
-                                                                exist_ratios,
-                                                                to_value,
-                                                                16);
-    output << float(num_keys) / 1.0e6 / iht_16_result.insert_time << ",";
-    for (size_t i = 0; i < iht_16_result.find_times.size(); i++) {
-      output << float(num_keys) / 1.0e6 / iht_16_result.find_times[i] << ",";
-    }
-  }
-
-  // 16  0.8
-  {
-    auto iht_16_result =
-        bench_insert_find<bght::iht16<key_type, value_type, 12>>(d_keys,
-                                                                 d_pairs,
-                                                                 d_find_keys,
-                                                                 d_find_results,
-                                                                 find_keys,
-                                                                 find_results,
-                                                                 cpu_ref_set,
-                                                                 validate,
-                                                                 num_keys,
-                                                                 load_factor,
-                                                                 exist_ratios,
-                                                                 to_value,
-                                                                 16);
-    output << float(num_keys) / 1.0e6 / iht_16_result.insert_time << ",";
-    for (size_t i = 0; i < iht_16_result.find_times.size(); i++) {
-      output << float(num_keys) / 1.0e6 / iht_16_result.find_times[i] << ",";
-    }
-  }
-
   // 32 0.2
   {
     auto iht_32_result =
-        bench_insert_find<bght::iht32<key_type, value_type, 6>>(d_keys,
-                                                                d_pairs,
-                                                                d_find_keys,
-                                                                d_find_results,
-                                                                find_keys,
-                                                                find_results,
-                                                                cpu_ref_set,
-                                                                validate,
-                                                                num_keys,
-                                                                load_factor,
-                                                                exist_ratios,
-                                                                to_value,
-                                                                32);
+        bench_insert_find<bght::ihtWarpSize<key_type, value_type, 6>>(d_keys,
+                                                                      d_pairs,
+                                                                      d_find_keys,
+                                                                      d_find_results,
+                                                                      find_keys,
+                                                                      find_results,
+                                                                      cpu_ref_set,
+                                                                      validate,
+                                                                      num_keys,
+                                                                      load_factor,
+                                                                      exist_ratios,
+                                                                      to_value,
+                                                                      32);
     output << float(num_keys) / 1.0e6 / iht_32_result.insert_time << ",";
     for (size_t i = 0; i < iht_32_result.find_times.size(); i++) {
       output << float(num_keys) / 1.0e6 / iht_32_result.find_times[i] << ",";
@@ -496,19 +335,19 @@ void bench_iht(std::vector<key_type>& keys,
   // 32 0.4
   {
     auto iht_32_result =
-        bench_insert_find<bght::iht32<key_type, value_type, 12>>(d_keys,
-                                                                 d_pairs,
-                                                                 d_find_keys,
-                                                                 d_find_results,
-                                                                 find_keys,
-                                                                 find_results,
-                                                                 cpu_ref_set,
-                                                                 validate,
-                                                                 num_keys,
-                                                                 load_factor,
-                                                                 exist_ratios,
-                                                                 to_value,
-                                                                 32);
+        bench_insert_find<bght::ihtWarpSize<key_type, value_type, 12>>(d_keys,
+                                                                       d_pairs,
+                                                                       d_find_keys,
+                                                                       d_find_results,
+                                                                       find_keys,
+                                                                       find_results,
+                                                                       cpu_ref_set,
+                                                                       validate,
+                                                                       num_keys,
+                                                                       load_factor,
+                                                                       exist_ratios,
+                                                                       to_value,
+                                                                       32);
     output << float(num_keys) / 1.0e6 / iht_32_result.insert_time << ",";
     for (size_t i = 0; i < iht_32_result.find_times.size(); i++) {
       output << float(num_keys) / 1.0e6 / iht_32_result.find_times[i] << ",";
@@ -518,19 +357,19 @@ void bench_iht(std::vector<key_type>& keys,
   // 32 0.6
   {
     auto iht_32_result =
-        bench_insert_find<bght::iht32<key_type, value_type, 19>>(d_keys,
-                                                                 d_pairs,
-                                                                 d_find_keys,
-                                                                 d_find_results,
-                                                                 find_keys,
-                                                                 find_results,
-                                                                 cpu_ref_set,
-                                                                 validate,
-                                                                 num_keys,
-                                                                 load_factor,
-                                                                 exist_ratios,
-                                                                 to_value,
-                                                                 32);
+        bench_insert_find<bght::ihtWarpSize<key_type, value_type, 19>>(d_keys,
+                                                                       d_pairs,
+                                                                       d_find_keys,
+                                                                       d_find_results,
+                                                                       find_keys,
+                                                                       find_results,
+                                                                       cpu_ref_set,
+                                                                       validate,
+                                                                       num_keys,
+                                                                       load_factor,
+                                                                       exist_ratios,
+                                                                       to_value,
+                                                                       32);
     output << float(num_keys) / 1.0e6 / iht_32_result.insert_time << ",";
     for (size_t i = 0; i < iht_32_result.find_times.size(); i++) {
       output << float(num_keys) / 1.0e6 / iht_32_result.find_times[i] << ",";
@@ -540,19 +379,19 @@ void bench_iht(std::vector<key_type>& keys,
   // 32 0.8
   {
     auto iht_32_result =
-        bench_insert_find<bght::iht32<key_type, value_type, 25>>(d_keys,
-                                                                 d_pairs,
-                                                                 d_find_keys,
-                                                                 d_find_results,
-                                                                 find_keys,
-                                                                 find_results,
-                                                                 cpu_ref_set,
-                                                                 validate,
-                                                                 num_keys,
-                                                                 load_factor,
-                                                                 exist_ratios,
-                                                                 to_value,
-                                                                 32);
+        bench_insert_find<bght::ihtWarpSize<key_type, value_type, 25>>(d_keys,
+                                                                       d_pairs,
+                                                                       d_find_keys,
+                                                                       d_find_results,
+                                                                       find_keys,
+                                                                       find_results,
+                                                                       cpu_ref_set,
+                                                                       validate,
+                                                                       num_keys,
+                                                                       load_factor,
+                                                                       exist_ratios,
+                                                                       to_value,
+                                                                       32);
     output << float(num_keys) / 1.0e6 / iht_32_result.insert_time << ",";
     for (size_t i = 0; i < iht_32_result.find_times.size(); i++) {
       output << float(num_keys) / 1.0e6 / iht_32_result.find_times[i] << ",";
@@ -589,11 +428,7 @@ void bench_p2bht(std::vector<key_type>& keys,
   if (!output_file_exist) {
     // header
     output << "num_keys,load_factor,";
-    output << "insert_16,";
-    for (size_t i = 0; i < exist_ratios.size(); i++) {
-      int exist_ratio = exist_ratios[i] * 100.0f;
-      output << "find_16_" + std::to_string(exist_ratio) + ",";
-    }
+
     output << "insert_32,";
     for (size_t i = 0; i < exist_ratios.size(); i++) {
       int exist_ratio = exist_ratios[i] * 100.0f;
@@ -605,44 +440,22 @@ void bench_p2bht(std::vector<key_type>& keys,
   output << num_keys << ",";
   output << load_factor << ",";
 
-  // 16
-  {
-    auto p2cht_16_result =
-        bench_insert_find<bght::p2bht16<key_type, value_type>>(d_keys,
-                                                               d_pairs,
-                                                               d_find_keys,
-                                                               d_find_results,
-                                                               find_keys,
-                                                               find_results,
-                                                               cpu_ref_set,
-                                                               validate,
-                                                               num_keys,
-                                                               load_factor,
-                                                               exist_ratios,
-                                                               to_value,
-                                                               16);
-    output << float(num_keys) / 1.0e6 / p2cht_16_result.insert_time << ",";
-    for (size_t i = 0; i < p2cht_16_result.find_times.size(); i++) {
-      output << float(num_keys) / 1.0e6 / p2cht_16_result.find_times[i] << ",";
-    }
-  }
-
   // 32
   {
     auto p2cht_32_result =
-        bench_insert_find<bght::p2bht32<key_type, value_type>>(d_keys,
-                                                               d_pairs,
-                                                               d_find_keys,
-                                                               d_find_results,
-                                                               find_keys,
-                                                               find_results,
-                                                               cpu_ref_set,
-                                                               validate,
-                                                               num_keys,
-                                                               load_factor,
-                                                               exist_ratios,
-                                                               to_value,
-                                                               16);
+        bench_insert_find<bght::p2bhtWarpSize<key_type, value_type>>(d_keys,
+                                                                     d_pairs,
+                                                                     d_find_keys,
+                                                                     d_find_results,
+                                                                     find_keys,
+                                                                     find_results,
+                                                                     cpu_ref_set,
+                                                                     validate,
+                                                                     num_keys,
+                                                                     load_factor,
+                                                                     exist_ratios,
+                                                                     to_value,
+                                                                     16);
     output << float(num_keys) / 1.0e6 / p2cht_32_result.insert_time << ",";
     for (size_t i = 0; i < p2cht_32_result.find_times.size(); i++) {
       output << float(num_keys) / 1.0e6 / p2cht_32_result.find_times[i] << ",";

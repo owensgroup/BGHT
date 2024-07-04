@@ -17,7 +17,7 @@ function(add_bght_test target_name source_file)
 endfunction()
 
 set(test_targets
-    # gtest_map
+    gtest_map
     # iht_tests
     )
 

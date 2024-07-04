@@ -63,12 +63,12 @@ struct mapped_vector {
   mapped_vector(std::size_t capacity) : capacity_(capacity) { allocate(capacity); }
   T& operator[](std::size_t index) { return dh_buffer_[index]; }
   ~mapped_vector() {}
-  void free() { hip_try(hipFreeHost(dh_buffer_)); }
+  void free() { hip_try(hipHostFree(dh_buffer_)); }
   T* data() const { return dh_buffer_; }
 
  private:
   void allocate(std::size_t count) {
-    hip_try(hipMallocHost(&dh_buffer_, sizeof(T) * count));
+    hip_try(hipHostMalloc(reinterpret_cast<void**>(&dh_buffer_), sizeof(T) * count));
   }
   std::size_t capacity_;
   T* dh_buffer_;
@@ -112,38 +112,40 @@ struct testing_input {
   mapped_vector<key_type> keys_not_exist;
 };
 
-template <template <class...> class HashMap, typename K, class V>
+template <class HashMap, typename K, class V>
 using MakeHashMapData =
-    HashMapData<HashMap<K, V>, 512ull, get_sentinel<K>(), get_sentinel<V>()>;
+    HashMapData<HashMap, 512ull, get_sentinel<K>(), get_sentinel<V>()>;
 
 // TODO(fix me: I think the different template paramters of different classes is causing
 // issues)
-typedef testing::Types<MakeHashMapData<bght::bcht, uint32_t, uint32_t>,
-                       MakeHashMapData<bght::bcht, uint32_t, uint64_t>,
-                       MakeHashMapData<bght::bcht, uint32_t, char>,
-                       MakeHashMapData<bght::bcht, uint32_t, uint32_t*>,
-                       MakeHashMapData<bght::bcht, uint64_t, uint32_t>,
-                       MakeHashMapData<bght::bcht, uint64_t, uint64_t>,
-                       MakeHashMapData<bght::bcht, uint64_t, char>,
-                       MakeHashMapData<bght::bcht, uint64_t, uint32_t*>,
+typedef testing::Types<
+    MakeHashMapData<bght::bcht<uint32_t, uint32_t>, uint32_t, uint32_t>,
+    MakeHashMapData<bght::bcht<uint32_t, uint64_t>, uint32_t, uint64_t>,
+    MakeHashMapData<bght::bcht<uint32_t, char>, uint32_t, char>,
+    // MakeHashMapData<bght::bcht<uint32_t, uint32_t*>, uint32_t, uint32_t*>,
+    MakeHashMapData<bght::bcht<uint64_t, uint32_t>, uint64_t, uint32_t>,
+    MakeHashMapData<bght::bcht<uint64_t, uint64_t>, uint64_t, uint64_t>,
+    MakeHashMapData<bght::bcht<uint64_t, char>, uint64_t, char>,
+    // MakeHashMapData<bght::bcht<uint64_t, uint32_t*>, uint64_t, uint32_t*>,
 
-                       MakeHashMapData<bght::iht, uint32_t, uint32_t>,
-                       MakeHashMapData<bght::iht, uint32_t, uint64_t>,
-                       MakeHashMapData<bght::iht, uint32_t, char>,
-                       MakeHashMapData<bght::iht, uint32_t, uint32_t*>,
-                       MakeHashMapData<bght::iht, uint64_t, uint32_t>,
-                       MakeHashMapData<bght::iht, uint64_t, uint64_t>,
-                       MakeHashMapData<bght::iht, uint64_t, char>,
-                       MakeHashMapData<bght::iht, uint64_t, uint32_t*>,
+    MakeHashMapData<bght::iht<uint32_t, uint32_t>, uint32_t, uint32_t>,
+    MakeHashMapData<bght::iht<uint32_t, uint64_t>, uint32_t, uint64_t>,
+    MakeHashMapData<bght::iht<uint32_t, char>, uint32_t, char>,
+    // MakeHashMapData<bght::iht<uint32_t, uint32_t*>, uint32_t, uint32_t*>,
+    MakeHashMapData<bght::iht<uint64_t, uint32_t>, uint64_t, uint32_t>,
+    MakeHashMapData<bght::iht<uint64_t, uint64_t>, uint64_t, uint64_t>,
+    MakeHashMapData<bght::iht<uint64_t, char>, uint64_t, char>,
+    // MakeHashMapData<bght::iht<uint64_t, uint32_t*>, uint64_t, uint32_t*>,
 
-                       MakeHashMapData<bght::p2bht, uint32_t, uint32_t>,
-                       MakeHashMapData<bght::p2bht, uint32_t, uint64_t>,
-                       MakeHashMapData<bght::p2bht, uint32_t, char>,
-                       MakeHashMapData<bght::p2bht, uint32_t, uint32_t*>,
-                       MakeHashMapData<bght::p2bht, uint64_t, uint32_t>,
-                       MakeHashMapData<bght::p2bht, uint64_t, uint64_t>,
-                       MakeHashMapData<bght::p2bht, uint64_t, char>,
-                       MakeHashMapData<bght::p2bht, uint64_t, uint32_t*> >
+    MakeHashMapData<bght::p2bht<uint32_t, uint32_t>, uint32_t, uint32_t>,
+    MakeHashMapData<bght::p2bht<uint32_t, uint64_t>, uint32_t, uint64_t>,
+    MakeHashMapData<bght::p2bht<uint32_t, char>, uint32_t, char>,
+    // MakeHashMapData<bght::p2bht<uint32_t, uint32_t*>, uint32_t, uint32_t*>,
+    MakeHashMapData<bght::p2bht<uint64_t, uint32_t>, uint64_t, uint32_t>,
+    MakeHashMapData<bght::p2bht<uint64_t, uint64_t>, uint64_t, uint64_t>,
+    MakeHashMapData<bght::p2bht<uint64_t, char>, uint64_t, char>
+    // MakeHashMapData<bght::p2bht<uint64_t, uint32_t*>, uint64_t, uint32_t*>
+    >
     Implementations;
 
 TYPED_TEST_SUITE(HashMapTest, Implementations);

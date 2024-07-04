@@ -46,14 +46,15 @@ namespace bght {
  */
 template <class Key,
           class T,
-          class Hash = bght::MurmurHash3_32<Key>,
+          class Hash = bght::MurmurHash32<Key>,
           class KeyEqual = bght::equal_to<Key>,
           hip::thread_scope Scope = hip::thread_scope_device,
           class Allocator = bght::hip_allocator<char>,
-          int B = 16,
-          int Threshold = 14>
+          int B = WAVEFRONT_SIZE,
+          int Threshold = static_cast<int>(WAVEFRONT_SIZE * 0.8f)>
 struct iht {
   static_assert(Threshold < B, "Threshold must be less than the bucket size");
+  static_assert(B == WAVEFRONT_SIZE, "Only Bucket size =  WAVEFRONT_SIZE is supported");
 
   using value_type = pair<Key, T>;
   using key_type = Key;
@@ -323,34 +324,15 @@ struct iht {
   std::size_t num_buckets_;
 };
 
-template <typename Key, typename T, int Threshold = 6>
-using iht8 = typename bght::iht<Key,
-                                T,
-                                bght::MurmurHash3_32<Key>,
-                                bght::equal_to<Key>,
-                                hip::thread_scope_device,
-                                bght::hip_allocator<char>,
-                                8,
-                                Threshold>;
-
-template <typename Key, typename T, int Threshold = 12>
-using iht16 = typename bght::iht<Key,
-                                 T,
-                                 bght::MurmurHash3_32<Key>,
-                                 bght::equal_to<Key>,
-                                 hip::thread_scope_device,
-                                 bght::hip_allocator<char>,
-                                 16,
-                                 Threshold>;
 template <typename Key, typename T, int Threshold = 25>
-using iht32 = typename bght::iht<Key,
-                                 T,
-                                 bght::MurmurHash3_32<Key>,
-                                 bght::equal_to<Key>,
-                                 hip::thread_scope_device,
-                                 bght::hip_allocator<char>,
-                                 32,
-                                 Threshold>;
+using ihtWarpSize = typename bght::iht<Key,
+                                       T,
+                                       bght::MurmurHash32<Key>,
+                                       bght::equal_to<Key>,
+                                       hip::thread_scope_device,
+                                       bght::hip_allocator<char>,
+                                       WAVEFRONT_SIZE,
+                                       Threshold>;
 
 }  // namespace bght
 

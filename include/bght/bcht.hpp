@@ -44,11 +44,11 @@ namespace bght {
  */
 template <class Key,
           class T,
-          class Hash = bght::MurmurHash3_32<Key>,
+          class Hash = bght::MurmurHash32<Key>,
           class KeyEqual = bght::equal_to<Key>,
           hip::thread_scope Scope = hip::thread_scope_device,
           class Allocator = bght::hip_allocator<char>,
-          int B = 16>
+          int B = WAVEFRONT_SIZE>
 struct bcht {
   using value_type = pair<Key, T>;
   using key_type = Key;
@@ -57,6 +57,8 @@ struct bcht {
   using allocator_type = Allocator;
   using hasher = Hash;
   using size_type = std::size_t;
+
+  static_assert(B == WAVEFRONT_SIZE, "Only Bucket size =  WAVEFRONT_SIZE is supported");
 
   using atomic_pair_allocator_type =
       typename std::allocator_traits<Allocator>::template rebind_alloc<atomic_pair_type>;
@@ -220,31 +222,13 @@ struct bcht {
 };
 
 template <typename Key, typename T>
-using bcht8 = typename bght::bcht<Key,
-                                  T,
-                                  bght::MurmurHash3_32<Key>,
-                                  bght::equal_to<Key>,
-                                  hip::thread_scope_device,
-                                  bght::hip_allocator<char>,
-                                  8>;
-
-template <typename Key, typename T>
-using bcht16 = typename bght::bcht<Key,
-                                   T,
-                                   bght::MurmurHash3_32<Key>,
-                                   bght::equal_to<Key>,
-                                   hip::thread_scope_device,
-                                   bght::hip_allocator<char>,
-                                   16>;
-
-template <typename Key, typename T>
-using bcht32 = typename bght::bcht<Key,
-                                   T,
-                                   bght::MurmurHash3_32<Key>,
-                                   bght::equal_to<Key>,
-                                   hip::thread_scope_device,
-                                   bght::hip_allocator<char>,
-                                   32>;
+using bchtWarpSize = typename bght::bcht<Key,
+                                         T,
+                                         bght::MurmurHash32<Key>,
+                                         bght::equal_to<Key>,
+                                         hip::thread_scope_device,
+                                         bght::hip_allocator<char>,
+                                         WAVEFRONT_SIZE>;
 
 }  // namespace bght
 

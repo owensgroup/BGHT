@@ -188,11 +188,7 @@ __global__ void find_kernel(InputIt first,
 template <int BlockSize, typename InputT, typename HashMap>
 __global__ void count_kernel(const InputT count_key, std::size_t* count, HashMap map) {
   auto thread_id = threadIdx.x + blockIdx.x * blockDim.x;
-  using BlockReduce =
-      rocprim::block_reduce<std::size_t,
-                            BlockSize,
-                            rocprim::block_reduce_algorithm::using_warp_reduce,
-                            BlockSize>;
+  using BlockReduce = rocprim::block_reduce<std::size_t, BlockSize>;
 
   __shared__ typename BlockReduce::storage_type temp_storage;
 

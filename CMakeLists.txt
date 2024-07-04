@@ -11,6 +11,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_HIP_FLAGS_RELEASE "-O3")
 
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
+set(CMAKE_HIP_FLAGS_DEBUG "-O0 -ggdb")
+
 # options
 option(build_benchmarks "Build benchmarks" ON)
 option(build_tests "Build tests" ON)
@@ -19,6 +22,10 @@ option(build_examples "Build examples" ON)
 # Direct all output to /bin directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
+set(WAVEFRONT_SIZE 32)
+
+message(STATUS "Wavefront size is set to ${WAVEFRONT_SIZE}.")
+message(STATUS "Some GPUs (e.g., Instinct) use a wavefront size of 64. Use -DWAVEFRONT_SIZE=64 or set the compiler option to use required wavefront size.")
 
 # bght flags
 add_library(bght INTERFACE)
@@ -65,6 +72,7 @@ target_link_libraries(bght
     INTERFACE $<BUILD_INTERFACE:developer_flags>
     INTERFACE $<IF:$<CXX_COMPILER_ID:MSVC>,,-lstdc++fs>)
 
+target_compile_definitions(bght INTERFACE WAVEFRONT_SIZE=${WAVEFRONT_SIZE})
 
 include(${CMAKE_SOURCE_DIR}/cmake/CPM.cmake)
 CPMAddPackage(
