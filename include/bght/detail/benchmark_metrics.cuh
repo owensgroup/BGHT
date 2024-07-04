@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "hip_helpers.hpp"
+
 #ifdef COUNT_PROBES
 __device__ __managed__ uint32_t global_probes_count = 0;
 #define INCREMENT_PROBES_IN_TILE \
@@ -24,10 +26,10 @@ __device__ __managed__ uint32_t global_probes_count = 0;
 #define INCREMENT_PROBES atomicAdd(&global_probes_count, 1);
 namespace bght {
 inline uint32_t get_num_probes() {
-  cudaDeviceSynchronize();
+  hip_try(hipDeviceSynchronize());
   auto count = global_probes_count;
   global_probes_count = 0;
-  cudaDeviceSynchronize();
+  hip_try(hipDeviceSynchronize());
   return count;
 }
 }  // namespace bght

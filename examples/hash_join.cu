@@ -29,7 +29,7 @@ __global__ void join(HashMap read_from, HashMap query_into, HashMap result_table
   const auto sentinel_pair = read_from.get_sentinel_pair();
 
   const auto pair = thread_id < capacity
-                        ? (begin + thread_id)->load(cuda::memory_order_relaxed)
+                        ? (begin + thread_id)->load(hip::memory_order_relaxed)
                         : sentinel_pair;
 
   queue_type work_queue(pair, sentinel_pair, tile);
@@ -63,7 +63,7 @@ __global__ void print(HashMap result_table) {
   auto thread_id = threadIdx.x + blockIdx.x * blockDim.x;
 
   const auto pair = thread_id < capacity
-                        ? (begin + thread_id)->load(cuda::memory_order_relaxed)
+                        ? (begin + thread_id)->load(hip::memory_order_relaxed)
                         : sentinel_pair;
   if (pair.first != sentinel_key) {
     printf("result_map[%u] = %u, exepcted %u\n",
@@ -121,7 +121,7 @@ int main(int, char**) {
   uint32_t num_blocks = (num_read_from_keys + block_size - 1) / block_size;
   join<<<num_blocks, block_size>>>(read_from_map, query_into_map, result_map);
 
-  cuda_try(cudaDeviceSynchronize());
+  hip_try(hipDeviceSynchronize());
 
   std::cout << "Join complete" << std::endl;
 

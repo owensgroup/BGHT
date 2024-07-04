@@ -41,7 +41,7 @@ __global__ void print(HashMap result_table) {
   auto thread_id = threadIdx.x + blockIdx.x * blockDim.x;
 
   const auto pair = thread_id < capacity
-                        ? (begin + thread_id)->load(cuda::memory_order_relaxed)
+                        ? (begin + thread_id)->load(hip::memory_order_relaxed)
                         : sentinel_pair;
   if (pair.first != sentinel_key) {
     printf("result_map[%u] = %u\n", pair.first, pair.second);
@@ -78,11 +78,11 @@ __global__ void histogram(HashMap map, key_type* keys, std::size_t count) {
       // make sure one thread in the tile do the increment
       if (tile.thread_rank() == 0) {
         bool exchange_success{false};
-        auto expected = result.first->load(cuda::memory_order_relaxed);
+        auto expected = result.first->load(hip::memory_order_relaxed);
         while (!exchange_success) {
           pair_type desired{expected.first, expected.second + 1};
-          cuda::memory_order success = cuda::memory_order_relaxed;
-          cuda::memory_order failure = cuda::memory_order_relaxed;
+          hip::memory_order success = hip::memory_order_relaxed;
+          hip::memory_order failure = hip::memory_order_relaxed;
           // `expected` here will be modified with the latest value if the
           // `compare_exchange_strong` fails. On failure, the next iteration will add 1 to
           // the last found value in memory.
@@ -128,14 +128,14 @@ int main(int, char**) {
   uint32_t num_blocks = (num_keys + block_size - 1) / block_size;
   histogram<<<num_blocks, block_size>>>(map, d_keys.data().get(), num_keys);
 
-  cuda_try(cudaDeviceSynchronize());
+  hip_try(hipDeviceSynchronize());
 
   std::cout << "Found results:" << std::endl;
 
   num_blocks = (capacity + block_size - 1) / block_size;
   print<<<num_blocks, block_size>>>(map);
 
-  cuda_try(cudaDeviceSynchronize());
+  hip_try(hipDeviceSynchronize());
 
   std::cout << "Exepcted reults: " << std::endl;
   std::unordered_map<key_type, count_type> histogram;

@@ -63,12 +63,12 @@ struct mapped_vector {
   mapped_vector(std::size_t capacity) : capacity_(capacity) { allocate(capacity); }
   T& operator[](std::size_t index) { return dh_buffer_[index]; }
   ~mapped_vector() {}
-  void free() { cuda_try(cudaFreeHost(dh_buffer_)); }
+  void free() { hip_try(hipFreeHost(dh_buffer_)); }
   T* data() const { return dh_buffer_; }
 
  private:
   void allocate(std::size_t count) {
-    cuda_try(cudaMallocHost(&dh_buffer_, sizeof(T) * count));
+    hip_try(hipMallocHost(&dh_buffer_, sizeof(T) * count));
   }
   std::size_t capacity_;
   T* dh_buffer_;
@@ -116,6 +116,8 @@ template <template <class...> class HashMap, typename K, class V>
 using MakeHashMapData =
     HashMapData<HashMap<K, V>, 512ull, get_sentinel<K>(), get_sentinel<V>()>;
 
+// TODO(fix me: I think the different template paramters of different classes is causing
+// issues)
 typedef testing::Types<MakeHashMapData<bght::bcht, uint32_t, uint32_t>,
                        MakeHashMapData<bght::bcht, uint32_t, uint64_t>,
                        MakeHashMapData<bght::bcht, uint32_t, char>,
@@ -141,14 +143,14 @@ typedef testing::Types<MakeHashMapData<bght::bcht, uint32_t, uint32_t>,
                        MakeHashMapData<bght::p2bht, uint64_t, uint32_t>,
                        MakeHashMapData<bght::p2bht, uint64_t, uint64_t>,
                        MakeHashMapData<bght::p2bht, uint64_t, char>,
-                       MakeHashMapData<bght::p2bht, uint64_t, uint32_t*>>
+                       MakeHashMapData<bght::p2bht, uint64_t, uint32_t*> >
     Implementations;
 
 TYPED_TEST_SUITE(HashMapTest, Implementations);
 
 TYPED_TEST(HashMapTest, Construction) {
-  auto last_error = cudaPeekAtLastError();
-  EXPECT_TRUE(last_error == cudaSuccess);
+  auto last_error = hipPeekAtLastError();
+  EXPECT_TRUE(last_error == hipSuccess);
 }
 
 TYPED_TEST(HashMapTest, InsertSuccess) {
@@ -170,8 +172,8 @@ TYPED_TEST(HashMapTest, EmptySize) {
 
 TYPED_TEST(HashMapTest, Clear) {
   this->hashmap_->clear();
-  auto last_error = cudaPeekAtLastError();
-  EXPECT_TRUE(last_error == cudaSuccess);
+  auto last_error = hipPeekAtLastError();
+  EXPECT_TRUE(last_error == hipSuccess);
 }
 
 TYPED_TEST(HashMapTest, InsertSize) {
@@ -212,7 +214,7 @@ TYPED_TEST(HashMapTest, FindExist) {
   this->hashmap_->insert(input.pairs.data(), input.pairs.data() + num_keys);
   this->hashmap_->find(
       input.keys_exist.data(), input.keys_exist.data() + num_keys, find_results.data());
-  EXPECT_EQ(cudaDeviceSynchronize(), cudaSuccess);
+  EXPECT_EQ(hipDeviceSynchronize(), hipSuccess);
   for (std::size_t i = 0; i < num_keys; i++) {
     auto expected_value = input.pairs[i].second;
     auto found_value = find_results[i];
@@ -233,7 +235,7 @@ TYPED_TEST(HashMapTest, FindNotExist) {
   this->hashmap_->find(input.keys_not_exist.data(),
                        input.keys_not_exist.data() + num_keys,
                        find_results.data());
-  EXPECT_EQ(cudaDeviceSynchronize(), cudaSuccess);
+  EXPECT_EQ(hipDeviceSynchronize(), hipSuccess);
   for (std::size_t i = 0; i < num_keys; i++) {
     auto expected_value = TestFixture::map_data::sentinel_value;
     auto found_value = find_results[i];
@@ -252,7 +254,7 @@ TYPED_TEST(HashMapTest, InsertSentinel) {
   testing_input<key_type, value_type, pair_type> input(num_keys, contain_sentinel);
   bool success =
       this->hashmap_->insert(input.pairs.data(), input.pairs.data() + num_keys);
-  EXPECT_EQ(cudaDeviceSynchronize(), cudaSuccess);
+  EXPECT_EQ(hipDeviceSynchronize(), hipSuccess);
   EXPECT_EQ(success, false);
   input.free();
 }

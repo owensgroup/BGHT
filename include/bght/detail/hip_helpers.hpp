@@ -23,18 +23,18 @@ namespace bght {
 #define _kernel_ __global__
 #define DEVICE_QUALIFIER __device__ inline
 namespace detail {
-#define cuda_try(call)                                                                  \
-  do {                                                                                  \
-    cudaError_t err = call;                                                             \
-    if (err != cudaSuccess) {                                                           \
-      printf("CUDA error at %s %d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err)); \
-      std::terminate();                                                                 \
-    }                                                                                   \
+#define hip_try(call)                                                                 \
+  do {                                                                                \
+    hipError_t err = call;                                                            \
+    if (err != hipSuccess) {                                                          \
+      printf("HIP error at %s %d: %s\n", __FILE__, __LINE__, hipGetErrorString(err)); \
+      std::terminate();                                                               \
+    }                                                                                 \
   } while (0)
 
-_device_ void cuda_assert(bool expression_result, char* message = nullptr) {
+_device_ void hip_assert(bool expression_result, char* message = nullptr) {
   if (!expression_result) {
-    if (message && (threadIdx.x & 0x1f == 0)) {
+    if (message && ((threadIdx.x & 0x1f) == 0)) {
       printf("assert failed: %s", message);
     }
     //__trap();

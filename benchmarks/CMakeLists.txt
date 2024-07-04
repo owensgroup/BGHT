@@ -1,21 +1,20 @@
 project (benchmarks)
 
-add_executable(probes_per_technique probes_per_technique.cu)
-set_target_properties(probes_per_technique PROPERTIES
-								FOLDER "benchmarks")
+function(add_bght_benchmark target_name source_file)
+    add_executable(${target_name} ${source_file})
+	set_target_properties(${target_name} PROPERTIES FOLDER "benchmarks")
+    set_target_properties(${target_name} PROPERTIES LINKER_LANGUAGE HIP)
+    set_source_files_properties(${source_file} PROPERTIES LANGUAGE HIP)
+endfunction()
+
+set(test_targets
+	probes_per_technique
+    rates_per_technique
+	rates_per_technique_fixed_lf)
+
+foreach(target ${test_targets})
+  add_bght_test(${target} ${target}.cu)
+endforeach()
+
+
 target_compile_definitions(probes_per_technique PRIVATE COUNT_PROBES)
-target_link_libraries(probes_per_technique PRIVATE bght
-								  PRIVATE bght)
-
-
-add_executable(rates_per_technique rates_per_technique.cu)
-set_target_properties(rates_per_technique PROPERTIES
-								FOLDER "benchmarks")
-target_link_libraries(rates_per_technique PRIVATE bght
-								  PRIVATE bght)
-
-add_executable(rates_per_technique_fixed_lf rates_per_technique_fixed_lf.cu)
-set_target_properties(rates_per_technique_fixed_lf PROPERTIES
-								FOLDER "benchmarks")
-target_link_libraries(rates_per_technique_fixed_lf PRIVATE bght
-								  PRIVATE bght)

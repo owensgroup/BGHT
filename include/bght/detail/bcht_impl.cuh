@@ -15,7 +15,7 @@
  */
 
 #pragma once
-#include <cooperative_groups.h>
+#include <hip/hip_cooperative_groups.h>
 #include <thrust/count.h>
 #include <thrust/execution_policy.h>
 #include <thrust/fill.h>
@@ -31,7 +31,7 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          hip::thread_scope Scope,
           typename Allocator,
           int B>
 bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::bcht(std::size_t capacity,
@@ -79,14 +79,14 @@ bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::bcht(std::size_t capacity,
   hf2_ = initialize_hf<hasher>(rng);
 
   bool success = true;
-  cuda_try(cudaMemcpy(d_build_success_, &success, sizeof(bool), cudaMemcpyHostToDevice));
+  hip_try(hipMemcpy(d_build_success_, &success, sizeof(bool), hipMemcpyHostToDevice));
 }
 
 template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          hip::thread_scope Scope,
           class Allocator,
           int B>
 bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::bcht(const bcht& other)
@@ -110,7 +110,7 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          hip::thread_scope Scope,
           typename Allocator,
           int B>
 bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::~bcht() {}
@@ -119,27 +119,27 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          hip::thread_scope Scope,
           typename Allocator,
           int B>
 void bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::clear() {
   value_type empty_pair{sentinel_key_, sentinel_value_};
   thrust::fill(thrust::device, d_table_, d_table_ + capacity_, empty_pair);
   bool success = true;
-  cuda_try(cudaMemcpy(d_build_success_, &success, sizeof(bool), cudaMemcpyHostToDevice));
+  hip_try(hipMemcpy(d_build_success_, &success, sizeof(bool), hipMemcpyHostToDevice));
 }
 
 template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          hip::thread_scope Scope,
           typename Allocator,
           int B>
 template <typename InputIt>
 bool bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert(InputIt first,
                                                                InputIt last,
-                                                               cudaStream_t stream) {
+                                                               hipStream_t stream) {
   const auto num_keys = std::distance(first, last);
 
   const uint32_t block_size = 128;
@@ -147,8 +147,8 @@ bool bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert(InputIt first,
   detail::kernels::tiled_insert_kernel<<<num_blocks, block_size, 0, stream>>>(
       first, last, *this);
   bool success;
-  cuda_try(cudaMemcpyAsync(
-      &success, d_build_success_, sizeof(bool), cudaMemcpyDeviceToHost, stream));
+  hip_try(hipMemcpyAsync(
+      &success, d_build_success_, sizeof(bool), hipMemcpyDeviceToHost, stream));
   return success;
 }
 
@@ -156,14 +156,14 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          hip::thread_scope Scope,
           typename Allocator,
           int B>
 template <typename InputIt, typename OutputIt>
 void bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::find(InputIt first,
                                                              InputIt last,
                                                              OutputIt output_begin,
-                                                             cudaStream_t stream) {
+                                                             hipStream_t stream) {
   const auto num_keys = last - first;
   const uint32_t block_size = 128;
   const uint32_t num_blocks = (num_keys + block_size - 1) / block_size;
@@ -176,7 +176,7 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          hip::thread_scope Scope,
           class Allocator,
           int B>
 template <typename tile_type>
@@ -199,7 +199,7 @@ __device__ bool bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert(
   using bucket_type = detail::bucket<atomic_pair_type, value_type, tile_type>;
   do {
     bucket_type cur_bucket(&d_table_[bucket_id * bucket_size], tile);
-    cur_bucket.load(cuda::memory_order_relaxed);
+    cur_bucket.load(hip::memory_order_relaxed);
     INCREMENT_PROBES_IN_TILE
     int load = cur_bucket.compute_load(sentinel_pair);
 
@@ -210,10 +210,10 @@ __device__ bool bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert(
         cas_success = cur_bucket.strong_cas_at_location(insertion_pair,
                                                         load,
                                                         sentinel_pair,
-                                                        cuda::memory_order_relaxed,
-                                                        cuda::memory_order_relaxed);
+                                                        hip::memory_order_relaxed,
+                                                        hip::memory_order_relaxed);
       }
-      cas_success = tile.shfl(cas_success, elected_lane);
+      cas_success = detail::shuffle(cas_success, elected_lane, tile);
       if (cas_success) {
         return true;
       }
@@ -226,7 +226,7 @@ __device__ bool bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert(
       if (lane_id == elected_lane) {
         auto random_location = rng() % bucket_size;
         auto old_pair = cur_bucket.exch_at_location(
-            insertion_pair, random_location, cuda::memory_order_relaxed);
+            insertion_pair, random_location, hip::memory_order_relaxed);
 
         auto bucket0 = hf0_(old_pair.first) % num_buckets_;
         auto bucket1 = hf1_(old_pair.first) % num_buckets_;
@@ -240,7 +240,7 @@ __device__ bool bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::insert(
 
         insertion_pair = old_pair;
       }
-      bucket_id = tile.shfl(bucket_id, elected_lane);
+      bucket_id = detail::shuffle(bucket_id, elected_lane, tile);
       cuckoo_counter++;
     }
   } while (cuckoo_counter < max_cuckoo_chains_);
@@ -251,11 +251,11 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          hip::thread_scope Scope,
           class Allocator,
           int B>
 template <typename tile_type>
-__device__ bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::mapped_type
+__device__ typename bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::mapped_type
 bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::find(key_type const& key,
                                                               tile_type const& tile) {
   const int num_hfs = 3;
@@ -264,7 +264,7 @@ bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::find(key_type const& ke
   using bucket_type = detail::bucket<atomic_pair_type, value_type, tile_type>;
   for (int hf = 0; hf < num_hfs; hf++) {
     bucket_type cur_bucket(&d_table_[bucket_id * bucket_size], tile);
-    cur_bucket.load(cuda::memory_order_relaxed);
+    cur_bucket.load(hip::memory_order_relaxed);
     INCREMENT_PROBES_IN_TILE
     int key_location = cur_bucket.find_key_location(key, key_equal{});
     if (key_location != -1) {
@@ -284,7 +284,7 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          hip::thread_scope Scope,
           class Allocator,
           int B>
 template <typename RNG>
@@ -299,26 +299,26 @@ template <class Key,
           class T,
           class Hash,
           class KeyEqual,
-          cuda::thread_scope Scope,
+          hip::thread_scope Scope,
           class Allocator,
           int B>
 typename bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size_type
-bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size(cudaStream_t stream) {
+bght::bcht<Key, T, Hash, KeyEqual, Scope, Allocator, B>::size(hipStream_t stream) {
   const auto sentinel_key{sentinel_key_};
 
   auto d_count = std::allocator_traits<size_type_allocator_type>::allocate(
       size_type_allocator_, static_cast<size_type>(1));
-  cuda_try(cudaMemsetAsync(d_count, 0, sizeof(std::size_t), stream));
+  hip_try(hipMemsetAsync(d_count, 0, sizeof(std::size_t), stream));
   const uint32_t block_size = 128;
   const uint32_t num_blocks = (capacity_ + block_size - 1) / block_size;
 
   detail::kernels::count_kernel<block_size>
       <<<num_blocks, block_size, 0, stream>>>(sentinel_key, d_count, *this);
   std::size_t num_invalid_keys;
-  cuda_try(cudaMemcpyAsync(
-      &num_invalid_keys, d_count, sizeof(std::size_t), cudaMemcpyDeviceToHost));
+  hip_try(hipMemcpyAsync(
+      &num_invalid_keys, d_count, sizeof(std::size_t), hipMemcpyDeviceToHost));
 
-  cudaFree(d_count);
+  hipFree(d_count);
   return capacity_ - num_invalid_keys;
 }
 }  // namespace bght

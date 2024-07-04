@@ -15,8 +15,8 @@
  */
 
 #pragma once
-#include <cuda/atomic>
-#include <cuda/std/atomic>
+#include <hip/atomic>
+#include <hip/std/atomic>
 
 #include <bght/detail/tile.hpp>
 
@@ -32,13 +32,17 @@ struct bucket {
   bucket(const bucket& other) : lane_pair_(other.lane_pair_), ptr_(other.ptr_) {}
 
   DEVICE_QUALIFIER
-  void load(cuda::memory_order order = cuda::memory_order_seq_cst) {
+  void load(hip::memory_order order = hip::memory_order_seq_cst) {
     lane_pair_ = ptr_[tile_.thread_rank()].load(order);
   }
   DEVICE_QUALIFIER
   int compute_load(const pair_type& sentinel) {
-    auto load_bitmap = tile_.ballot(lane_pair_.first != sentinel.first);
-    int load = __popc(load_bitmap);
+    // auto load_bitmap = tile_.ballot(lane_pair_.first != sentinel.first);
+    // int load = __popc(load_bitmap);
+
+    auto load_bitmap = __ballot(lane_pair_.first != sentinel.first);
+    int load = __popcll(load_bitmap);
+
     return load;
   }
   // returns -1 if not found
@@ -46,8 +50,10 @@ struct bucket {
   DEVICE_QUALIFIER int find_key_location(const typename pair_type::first_type& key,
                                          const KeyEqual key_equal) {
     bool key_exist = key_equal(key, lane_pair_.first);
-    auto key_exist_bmap = tile_.ballot(key_exist);
-    int key_lane = __ffs(key_exist_bmap);
+    // auto key_exist_bmap = tile_.ballot(key_exist);
+    // int key_lane = __ffs(key_exist_bmap);
+    auto key_exist_bmap = __ballot(key_exist);
+    int key_lane = __ffsll(key_exist_bmap);
     return key_lane - 1;
   }
   DEVICE_QUALIFIER
@@ -59,8 +65,8 @@ struct bucket {
   bool weak_cas_at_location(const pair_type& pair,
                             const int location,
                             const pair_type& sentinel,
-                            cuda::memory_order success = cuda::memory_order_seq_cst,
-                            cuda::memory_order failure = cuda::memory_order_seq_cst) {
+                            hip::memory_order success = hip::memory_order_seq_cst,
+                            hip::memory_order failure = hip::memory_order_seq_cst) {
     pair_type expected = sentinel;
     pair_type desired = pair;
     bool cas_success =
@@ -72,8 +78,8 @@ struct bucket {
   bool strong_cas_at_location(const pair_type& pair,
                               const int location,
                               const pair_type& sentinel,
-                              cuda::memory_order success = cuda::memory_order_seq_cst,
-                              cuda::memory_order failure = cuda::memory_order_seq_cst) {
+                              hip::memory_order success = hip::memory_order_seq_cst,
+                              hip::memory_order failure = hip::memory_order_seq_cst) {
     pair_type expected = sentinel;
     pair_type desired = pair;
     bool cas_success =
@@ -86,8 +92,8 @@ struct bucket {
       const pair_type& pair,
       const int location,
       const pair_type& sentinel,
-      cuda::memory_order success = cuda::memory_order_seq_cst,
-      cuda::memory_order failure = cuda::memory_order_seq_cst) {
+      hip::memory_order success = hip::memory_order_seq_cst,
+      hip::memory_order failure = hip::memory_order_seq_cst) {
     pair_type expected = sentinel;
     pair_type desired = pair;
     ptr_[location].compare_exchange_strong(expected, desired, success, failure);
@@ -97,7 +103,7 @@ struct bucket {
   DEVICE_QUALIFIER
   pair_type exch_at_location(const pair_type& pair,
                              const int location,
-                             cuda::memory_order order = cuda::memory_order_seq_cst) {
+                             hip::memory_order order = hip::memory_order_seq_cst) {
     auto old = ptr_[location].exchange(pair, order);
     return old;
   }

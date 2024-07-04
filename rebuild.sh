@@ -1,8 +1,10 @@
 #!/bin/bash
 
-cuda_arch="75" #specify your GPU SM/gencode
+hip_arch="gfx1100" #specify your GPU SM/gencode
 build_dir="build"
 targets=("all")
 
-cmake -B $build_dir -DCMAKE_CUDA_ARCHITECTURES=${cuda_arch}
+# rm -rf $build_dir
+
+cmake -B $build_dir -DCMAKE_HIP_ARCHITECTURES=${hip_arch}
 cmake --build $build_dir --target "${targets[@]}" --parallel $(nproc)

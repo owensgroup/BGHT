@@ -47,10 +47,10 @@ struct managed_allocator {
   constexpr managed_allocator(const managed_allocator<U>&) noexcept {}
   T* allocate(std::size_t n) {
     void* p = nullptr;
-    cuda_try(cudaMallocManaged(&p, n * sizeof(T)));
+    hip_try(hipMallocManaged(&p, n * sizeof(T)));
     return static_cast<T*>(p);
   }
-  void deallocate(T* p, std::size_t) noexcept { cuda_try(cudaFree(p)); }
+  void deallocate(T* p, std::size_t) noexcept { hip_try(hipFree(p)); }
 };
 
 template <typename K, typename V>
@@ -59,16 +59,16 @@ void test() {
 
   using hasher = bght::universal_hash<K>;
   using equal = bght::equal_to<K>;
-  const auto scope = cuda::thread_scope_system;
+  const auto scope = hip::thread_scope_system;
 
   // allocators
   using char_allocator_type = managed_allocator<char>;
-  using pair_allocator_type =
-      typename std::allocator_traits<char_allocator_type>::rebind_alloc<pair_type>;
+  using pair_allocator_type = typename std::allocator_traits<
+      char_allocator_type>::template rebind_alloc<pair_type>;
   using key_allocator_type =
-      typename std::allocator_traits<char_allocator_type>::rebind_alloc<K>;
+      typename std::allocator_traits<char_allocator_type>::template rebind_alloc<K>;
   using value_allocator_type =
-      typename std::allocator_traits<char_allocator_type>::rebind_alloc<V>;
+      typename std::allocator_traits<char_allocator_type>::template rebind_alloc<V>;
 
   char_allocator_type char_allocator;
   pair_allocator_type pair_allocator{char_allocator};
@@ -87,7 +87,7 @@ void test() {
   bool success = table.insert(pairs.data(), pairs.data() + pairs.size());
   assert(success);
 
-  cuda_try(cudaDeviceSynchronize());
+  hip_try(hipDeviceSynchronize());
 
   thrust::device_vector<K, key_allocator_type> queries(6, key_allocator);
   queries[0] = static_cast<K>(1);
@@ -101,7 +101,7 @@ void test() {
 
   table.find(queries.data(), queries.data() + queries.size(), results.begin());
 
-  cuda_try(cudaDeviceSynchronize());
+  hip_try(hipDeviceSynchronize());
 
   CHECK(results[0], static_cast<V>(10));
   CHECK(results[1], static_cast<V>(30));

@@ -15,9 +15,10 @@
  */
 
 #pragma once
-#include <cooperative_groups.h>
-#include <bght/detail/cuda_helpers.cuh>
-#include <cub/cub.cuh>
+#include <hip/hip_cooperative_groups.h>
+#include <bght/detail/hip_helpers.hpp>
+#include <hip/std/atomic>
+#include <rocprim/block/block_reduce.hpp>
 
 namespace bght {
 namespace detail {
@@ -45,20 +46,23 @@ __global__ void tiled_insert_kernel(InputIt first, InputIt last, HashMap map) {
 
   bool success = true;
   // Do the insertion
-  auto work_queue = tile.ballot(do_op);
+  // auto work_queue = tile.ballot(do_op);
+  auto work_queue = __ballot(do_op);
   while (work_queue) {
-    auto cur_rank = __ffs(work_queue) - 1;
-    auto cur_pair = tile.shfl(insertion_pair, cur_rank);
+    // auto cur_rank = __ffs(work_queue) - 1;
+    auto cur_rank = __ffsll(work_queue) - 1;
+    auto cur_pair = detail::shuffle(insertion_pair, cur_rank, tile);
     bool insertion_success = map.insert(cur_pair, tile);
 
     if (tile.thread_rank() == cur_rank) {
       do_op = false;
       success = insertion_success;
     }
-    work_queue = tile.ballot(do_op);
+    // work_queue = tile.ballot(do_op);
+    work_queue = __ballot(do_op);
   }
 
-  if (!tile.all(success)) {
+  if (!detail::all(success, success)) {
     *map.d_build_success_ = false;
   }
 }
@@ -86,20 +90,20 @@ __global__ void iht_tiled_insert_kernel(InputIt first, InputIt last, HashMap map
 
   bool success = true;
   // Do the insertion
-  auto work_queue = tile.ballot(do_op);
+  auto work_queue = detail::ballot(do_op, tile);
   while (work_queue) {
-    auto cur_rank = __ffs(work_queue) - 1;
-    auto cur_pair = tile.shfl(insertion_pair, cur_rank);
+    auto cur_rank = detail::ffs(work_queue) - 1;
+    auto cur_pair = detail::shuffle(insertion_pair, cur_rank, tile);
     bool insertion_success = map.insert(cur_pair, tile).second;
 
     if (tile.thread_rank() == cur_rank) {
       do_op = false;
       success = insertion_success;
     }
-    work_queue = tile.ballot(do_op);
+    work_queue = detail::ballot(do_op, tile);
   }
 
-  if (!tile.all(success)) {
+  if (!detail::all(success, tile)) {
     *map.d_build_success_ = false;
   }
 }
@@ -130,10 +134,12 @@ __global__ void tiled_find_kernel(InputIt first,
   }
 
   // Do the insertion
-  auto work_queue = tile.ballot(do_op);
+  // auto work_queue = tile.ballot(do_op);
+  auto work_queue = __ballot(do_op);
   while (work_queue) {
-    auto cur_rank = __ffs(work_queue) - 1;
-    auto cur_key = tile.shfl(find_key, cur_rank);
+    // auto cur_rank = __ffs(work_queue) - 1;
+    auto cur_rank = __ffsll(work_queue) - 1;
+    auto cur_key = detail::shuffle(find_key, cur_rank, tile);
 
     typename HashMap::mapped_type find_result = map.find(cur_key, tile);
 
@@ -141,7 +147,8 @@ __global__ void tiled_find_kernel(InputIt first,
       result = find_result;
       do_op = false;
     }
-    work_queue = tile.ballot(do_op);
+    // work_queue = tile.ballot(do_op);
+    work_queue = __ballot(do_op);
   }
 
   if (thread_id < count) {
@@ -181,15 +188,23 @@ __global__ void find_kernel(InputIt first,
 template <int BlockSize, typename InputT, typename HashMap>
 __global__ void count_kernel(const InputT count_key, std::size_t* count, HashMap map) {
   auto thread_id = threadIdx.x + blockIdx.x * blockDim.x;
-  typedef cub::BlockReduce<std::size_t, BlockSize> BlockReduce;
-  __shared__ typename BlockReduce::TempStorage temp_storage;
+  using BlockReduce =
+      rocprim::block_reduce<std::size_t,
+                            BlockSize,
+                            rocprim::block_reduce_algorithm::using_warp_reduce,
+                            BlockSize>;
+
+  __shared__ typename BlockReduce::storage_type temp_storage;
 
   std::size_t match = 0;
   if (thread_id < map.capacity_) {
-    const auto key = map.d_table_[thread_id].load(cuda::memory_order_relaxed).first;
+    const auto key = map.d_table_[thread_id].load(hip::memory_order_relaxed).first;
     match = (key == count_key);
   }
-  std::size_t block_num_matches = BlockReduce(temp_storage).Sum(match);
+  std::size_t block_num_matches{0};
+  //  = BlockReduce(temp_storage).Sum(match);
+  BlockReduce().reduce(match, block_num_matches, temp_storage);
+
   if (threadIdx.x == 0) {
     auto sum = atomicAdd((unsigned long long int*)count,
                          (unsigned long long int)block_num_matches);

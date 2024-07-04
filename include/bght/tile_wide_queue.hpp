@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <cooperative_groups.h>
+#include <hip/hip_cooperative_groups.h>
 
 #include <bght/detail/tile.hpp>
 
@@ -51,18 +51,19 @@ struct tile_wide_queue {
       build();
     }
   }
-  __device__ [[nodiscard]] bool empty() const { return mask_ == 0; }
+  [[nodiscard]] __device__ bool empty() const { return mask_ == 0; }
   __device__ size_type size() const { return __popc(mask_); }
 
  private:
   __device__ void build() {
-    mask_ = cg_.ballot(active_lane_);
-    cur_ = __ffs(mask_) - 1;
+    // mask_ = cg_.ballot(active_lane_);
+    mask_ = __ballot(active_lane_);
+    cur_ = __ffsll(mask_) - 1;
   }
   const T& element_;
   const CG cg_;
   bool active_lane_;
-  uint32_t mask_;
+  unsigned long long int mask_;
   uint32_t cur_;
 };
 }  // namespace bght

@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-#include <cooperative_groups.h>
+#include <hip/hip_cooperative_groups.h>
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 #include <thrust/sequence.h>

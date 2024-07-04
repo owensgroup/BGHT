@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
-project(CPMTest LANGUAGES CXX CUDA)
+project(CPMTest LANGUAGES CXX HIP)
 set(CMAKE_CXX_STANDARD 17)
 
 include(${CMAKE_SOURCE_DIR}/../../cmake/CPM.cmake)
@@ -15,10 +15,10 @@ CPMAddPackage(
      "build_examples OFF"
 )
 
-set(CUDA_ARCHS 70)
+set(HIP_ARCHS 70)
 add_executable(test_cpm test_cpm.cu)
 target_link_libraries(test_cpm PRIVATE bght)
-set_target_properties(test_cpm PROPERTIES CUDA_ARCHITECTURES ${CUDA_ARCHS})
+set_target_properties(test_cpm PROPERTIES HIP_ARCHITECTURES ${HIP_ARCHS})
 
 #visual studio project setup
 set(bght_includes "${bght_SOURCE_DIR}/include")

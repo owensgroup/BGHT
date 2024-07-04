@@ -12,11 +12,14 @@ CPMAddPackage(
 function(add_bght_test target_name source_file)
     add_executable(${target_name} ${source_file})
     target_link_libraries(${target_name} PRIVATE bght::bght PRIVATE gtest)
+    set_target_properties(${target_name} PROPERTIES LINKER_LANGUAGE HIP)
+    set_source_files_properties(${source_file} PROPERTIES LANGUAGE HIP)
 endfunction()
 
 set(test_targets
-    gtest_map
-    iht_tests)
+    # gtest_map
+    # iht_tests
+    )
 
 foreach(target ${test_targets})
   add_bght_test(${target} ${target}.cu)

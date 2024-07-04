@@ -1,5 +1,5 @@
 #include <thrust/device_vector.h>
-#include <cuda/std/array>
+#include <hip/std/array>
 
 #include <cstdint>
 
@@ -63,7 +63,7 @@ struct array_hash {
 };
 
 int main() {
-  using Config = cuda::std::array<std::uint8_t, 20>;
+  using Config = hip::std::array<std::uint8_t, 20>;
   using V = int;
 
   const auto sentinel_key = Config{0};
@@ -83,5 +83,5 @@ int main() {
   const auto block_size = bght::bcht<Config, V>::bucket_size;
   test_kernel<<<keys.size(), block_size>>>(table, keys.data().get());
 
-  cuda_try(cudaDeviceSynchronize());
+  hip_try(hipDeviceSynchronize());
 }

@@ -1,12 +1,15 @@
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
-project(bght LANGUAGES CXX CUDA)
+project(bght LANGUAGES CXX HIP)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CUDA_STANDARD 17)
-set(CMAKE_CUDA_STANDARD_REQUIRED TRUE)
+set(CMAKE_HIP_STANDARD 17)
+set(CMAKE_HIP_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
+
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_HIP_FLAGS_RELEASE "-O3")
 
 # options
 option(build_benchmarks "Build benchmarks" ON)
@@ -22,28 +25,28 @@ add_library(bght INTERFACE)
 add_library(bght::bght ALIAS bght)
 
 
-# CUDA and C++ compiler flags
+# HIP and C++ compiler flags
 set(CXX_FLAGS
         $<IF:$<CXX_COMPILER_ID:MSVC>,
         /std:c++17,
         --std=c++17
         >)
-set(CUDA_FLAGS
-    $<IF:$<CXX_COMPILER_ID:MSVC>,
-    -Xcompiler=/std:c++17,
-    -Xcompiler=-std=c++17 -Wextra>
-    $<IF:$<CXX_COMPILER_ID:MSVC>,
-    -Xcompiler=/W4,
-    -Xcompiler=-Wall>
-    $<IF:$<CONFIG:Debug>,
-        -G -src-in-ptx,
-        -lineinfo>
-	--expt-extended-lambda
-    -extended-lambda
-    -Wno-deprecated-gpu-targets #silence deprecated architectures
-    --forward-unknown-to-host-linker
-    --forward-unknown-to-host-compiler
-    --expt-relaxed-constexpr
+set(HIP_FLAGS
+    # $<IF:$<CXX_COMPILER_ID:MSVC>,
+    # -Xcompiler=/std:c++17,
+    # -Xcompiler=-std=c++17 -Wextra>
+    # $<IF:$<CXX_COMPILER_ID:MSVC>,
+    # -Xcompiler=/W4,
+    # -Xcompiler=-Wall>
+    # $<IF:$<CONFIG:Debug>,
+    #     -G -src-in-ptx,
+    #     -lineinfo>
+	# --expt-extended-lambda
+    # -extended-lambda
+    # -Wno-deprecated-gpu-targets #silence deprecated architectures
+    # --forward-unknown-to-host-linker
+    # --forward-unknown-to-host-compiler
+    # --expt-relaxed-constexpr
     # $<$<CONFIG:Release>:-Xptxas -warn-spills -res-usage>
     )
 
@@ -56,13 +59,23 @@ target_include_directories( developer_flags
                             INTERFACE ${external_includes})
 target_compile_options(developer_flags INTERFACE
     $<$<COMPILE_LANGUAGE:CXX>:${CXX_FLAGS}>
-    $<$<COMPILE_LANGUAGE:CUDA>:${CUDA_FLAGS}>)
+    $<$<COMPILE_LANGUAGE:HIP>:${HIP_FLAGS}>)
 
 target_link_libraries(bght
     INTERFACE $<BUILD_INTERFACE:developer_flags>
     INTERFACE $<IF:$<CXX_COMPILER_ID:MSVC>,,-lstdc++fs>)
 
 
+include(${CMAKE_SOURCE_DIR}/cmake/CPM.cmake)
+CPMAddPackage(
+  NAME libhipcxx
+  GITHUB_REPOSITORY maawad/libhipcxx
+  GIT_TAG main
+)
+
+
+target_link_libraries(bght
+    INTERFACE libhipcxx::libhipcxx)
 
 # Visual studio setup
 if(build_tests)

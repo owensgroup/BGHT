@@ -37,6 +37,8 @@
 #include <bght/iht.hpp>
 #include <bght/p2bht.hpp>
 
+#include "benchmark_common.hpp"
+
 using key_type = uint32_t;
 using value_type = uint32_t;
 static constexpr key_type EMPTY_KEY = 0xFFFFFFFF;
@@ -159,15 +161,15 @@ bench_insert_find_result bench_insert_find(
       find_probes[ratio_idx] += bght::get_num_probes();
       if (validate) {
         // get the results back on host
-        cuda_try(cudaMemcpy(find_results.data(),
-                            d_find_results.data().get(),
-                            sizeof(value_type) * find_keys.size(),
-                            cudaMemcpyDeviceToHost));
+        hip_try(hipMemcpy(find_results.data(),
+                          d_find_results.data().get(),
+                          sizeof(value_type) * find_keys.size(),
+                          hipMemcpyDeviceToHost));
 
-        cuda_try(cudaMemcpy(find_keys.data(),
-                            d_find_keys.data().get(),
-                            sizeof(key_type) * find_keys.size(),
-                            cudaMemcpyDeviceToHost));
+        hip_try(hipMemcpy(find_keys.data(),
+                          d_find_keys.data().get(),
+                          sizeof(key_type) * find_keys.size(),
+                          hipMemcpyDeviceToHost));
 
         // Error checking and validation
         //
@@ -694,11 +696,11 @@ int main(int argc, char** argv) {
   std::cout << "validate = " << std::boolalpha << validate << '\n';
   std::cout << "num_keys = " << num_keys << '\n' << '\n';
 
-  cudaGetDeviceCount(&device_count);
-  cudaDeviceProp devProp;
+  hip_try(hipGetDeviceCount(&device_count));
+  hipDeviceProp_t devProp;
   if (device_count) {
-    cudaSetDevice(device_id);
-    cudaGetDeviceProperties(&devProp, device_id);
+    hip_try(hipSetDevice(device_id));
+    hip_try(hipGetDeviceProperties(&devProp, device_id));
   } else {
     return 0;
   }

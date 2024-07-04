@@ -80,8 +80,8 @@ void do_test(int argc, char** argv) {
   auto queries_last = queries_start + num_keys;
   auto output_start = d_results.data().get();
 
-  cudaStream_t stream;
-  cudaStreamCreate(&stream);
+  hipStream_t stream;
+  hip_try(hipStreamCreate(&stream));
 
   gpu_timer insertion_timer(stream);
   insertion_timer.start_timer();
@@ -89,7 +89,7 @@ void do_test(int argc, char** argv) {
   insertion_timer.stop_timer();
   auto insertion_s = insertion_timer.get_elapsed_s();
 
-  cuda_try(cudaStreamSynchronize(stream));
+  hip_try(hipStreamSynchronize(stream));
 
   gpu_timer find_timer(stream);
   find_timer.start_timer();
@@ -97,7 +97,7 @@ void do_test(int argc, char** argv) {
   find_timer.stop_timer();
   auto find_s = find_timer.get_elapsed_s();
 
-  cuda_try(cudaDeviceSynchronize());
+  hip_try(hipDeviceSynchronize());
 
   // Comoute stats
   if (!insertion_success) {

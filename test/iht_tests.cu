@@ -63,12 +63,12 @@ struct mapped_vector {
   mapped_vector(std::size_t capacity) : capacity_(capacity) { allocate(capacity); }
   T& operator[](std::size_t index) { return dh_buffer_[index]; }
   ~mapped_vector() {}
-  void free() { cuda_try(cudaFreeHost(dh_buffer_)); }
+  void free() { hip_try(hipFreeHost(dh_buffer_)); }
   T* data() const { return dh_buffer_; }
 
  private:
   void allocate(std::size_t count) {
-    cuda_try(cudaMallocHost(&dh_buffer_, sizeof(T) * count));
+    hip_try(hipMallocHost(&dh_buffer_, sizeof(T) * count));
   }
   std::size_t capacity_;
   T* dh_buffer_;
@@ -127,8 +127,8 @@ typedef testing::Types<MakeHashMapData<bght::iht, uint32_t, uint32_t>,
 TYPED_TEST_SUITE(HashMapTest, Implementations);
 
 TYPED_TEST(HashMapTest, Construction) {
-  auto last_error = cudaPeekAtLastError();
-  EXPECT_TRUE(last_error == cudaSuccess);
+  auto last_error = hipPeekAtLastError();
+  EXPECT_TRUE(last_error == hipSuccess);
 }
 
 TYPED_TEST(HashMapTest, Empty) {
@@ -138,8 +138,8 @@ TYPED_TEST(HashMapTest, Empty) {
 
 TYPED_TEST(HashMapTest, Clear) {
   this->hashmap_->clear();
-  auto last_error = cudaPeekAtLastError();
-  EXPECT_TRUE(last_error == cudaSuccess);
+  auto last_error = hipPeekAtLastError();
+  EXPECT_TRUE(last_error == hipSuccess);
 
   auto empty = this->hashmap_->empty();
   EXPECT_TRUE(empty == true);
@@ -195,9 +195,9 @@ TYPED_TEST(HashMapTest, Contains) {
   const auto bucket_size = TestFixture::map_data::hash_map::bucket_size;
   contains_kernel<<<1, bucket_size>>>(*this->hashmap_);
 
-  auto sync_success = cudaDeviceSynchronize();
+  auto sync_success = hipDeviceSynchronize();
 
-  EXPECT_EQ(sync_success, cudaSuccess);
+  EXPECT_EQ(sync_success, hipSuccess);
 }
 
 }  // namespace

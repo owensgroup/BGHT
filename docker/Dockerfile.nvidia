@@ -1,5 +1,5 @@
-# Use CUDA 11.5 and Ubuntu 20.04 docker image as base image
-FROM nvidia/cuda:11.5.0-devel-ubuntu20.04
+# Use HIP 11.5 and Ubuntu 20.04 docker image as base image
+FROM nvidia/hip:11.5.0-devel-ubuntu20.04
 LABEL maintainer="Muhammad Awad <mawad@ucdavis.edu>"
 
 # Install required Ubuntu packages

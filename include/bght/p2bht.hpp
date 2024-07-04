@@ -16,12 +16,13 @@
 
 #pragma once
 #include <bght/allocator.hpp>
-#include <bght/detail/cuda_helpers.cuh>
+#include <bght/detail/cooperative_groups.hpp>
+#include <bght/detail/hip_helpers.hpp>
 #include <bght/detail/kernels.cuh>
 #include <bght/hash_functions.hpp>
 #include <bght/pair.cuh>
-#include <cuda/atomic>
-#include <cuda/std/utility>
+#include <hip/atomic>
+#include <hip/std/utility>
 #include <memory>
 
 namespace bght {
@@ -45,24 +46,24 @@ template <class Key,
           class T,
           class Hash = bght::MurmurHash3_32<Key>,
           class KeyEqual = bght::equal_to<Key>,
-          cuda::thread_scope Scope = cuda::thread_scope_device,
-          class Allocator = bght::cuda_allocator<char>,
+          hip::thread_scope Scope = hip::thread_scope_device,
+          class Allocator = bght::hip_allocator<char>,
           int B = 16>
 struct p2bht {
   using value_type = pair<Key, T>;
   using key_type = Key;
   using mapped_type = T;
-  using atomic_pair_type = cuda::atomic<value_type, Scope>;
+  using atomic_pair_type = hip::atomic<value_type, Scope>;
   using allocator_type = Allocator;
   using hasher = Hash;
   using size_type = std::size_t;
 
   using atomic_pair_allocator_type =
-      typename std::allocator_traits<Allocator>::rebind_alloc<atomic_pair_type>;
+      typename std::allocator_traits<Allocator>::template rebind_alloc<atomic_pair_type>;
   using pool_allocator_type =
-      typename std::allocator_traits<Allocator>::rebind_alloc<bool>;
+      typename std::allocator_traits<Allocator>::template rebind_alloc<bool>;
   using size_type_allocator_type =
-      typename std::allocator_traits<Allocator>::rebind_alloc<size_type>;
+      typename std::allocator_traits<Allocator>::template rebind_alloc<size_type>;
 
   static constexpr auto bucket_size = B;
   using key_equal = KeyEqual;
@@ -112,12 +113,12 @@ struct p2bht {
    * @tparam InputIt Device-side iterator that can be converted to `value_type`.
    * @param first An iterator defining the beginning of the input pairs to insert
    * @param last  An iterator defining the end of the input pairs to insert
-   * @param stream  A CUDA stream where the insertion operation will take place
+   * @param stream  A HIP stream where the insertion operation will take place
    * @return A boolean indicating success (true) or failure (false) of the insertion
    * operation.
    */
   template <typename InputIt>
-  bool insert(InputIt first, InputIt last, cudaStream_t stream = 0);
+  bool insert(InputIt first, InputIt last, hipStream_t stream = 0);
 
   /**
    * @brief Host-side API for finding all keys defined by the input argument iterators.
@@ -128,10 +129,10 @@ struct p2bht {
    * @param output_begin An iterator defining the beginning of the output buffer to store
    * the results into. The size of the buffer must match the number of queries defined by
    * the input iterators.
-   * @param stream  A CUDA stream where the insertion operation will take place
+   * @param stream  A HIP stream where the insertion operation will take place
    */
   template <typename InputIt, typename OutputIt>
-  void find(InputIt first, InputIt last, OutputIt output_begin, cudaStream_t stream = 0);
+  void find(InputIt first, InputIt last, OutputIt output_begin, hipStream_t stream = 0);
 
   /**
    * @brief Device-side cooperative insertion API that inserts a single pair into the hash
@@ -177,7 +178,7 @@ struct p2bht {
    * @brief Compute the number of elements in the map
    * @return The number of elements in the map
    */
-  size_type size(cudaStream_t stream = 0);
+  size_type size(hipStream_t stream = 0);
 
  private:
   template <typename InputIt, typename HashMap>
@@ -219,8 +220,8 @@ using p2bht8 = typename bght::p2bht<Key,
                                     T,
                                     bght::MurmurHash3_32<Key>,
                                     bght::equal_to<Key>,
-                                    cuda::thread_scope_device,
-                                    bght::cuda_allocator<char>,
+                                    hip::thread_scope_device,
+                                    bght::hip_allocator<char>,
                                     8>;
 
 template <typename Key, typename T>
@@ -228,8 +229,8 @@ using p2bht16 = typename bght::p2bht<Key,
                                      T,
                                      bght::MurmurHash3_32<Key>,
                                      bght::equal_to<Key>,
-                                     cuda::thread_scope_device,
-                                     bght::cuda_allocator<char>,
+                                     hip::thread_scope_device,
+                                     bght::hip_allocator<char>,
                                      16>;
 
 template <typename Key, typename T>
@@ -237,8 +238,8 @@ using p2bht32 = typename bght::p2bht<Key,
                                      T,
                                      bght::MurmurHash3_32<Key>,
                                      bght::equal_to<Key>,
-                                     cuda::thread_scope_device,
-                                     bght::cuda_allocator<char>,
+                                     hip::thread_scope_device,
+                                     bght::hip_allocator<char>,
                                      32>;
 
 }  // namespace bght

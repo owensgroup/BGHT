@@ -15,16 +15,16 @@
  */
 
 #pragma once
-#include <cuda_runtime.h>
-#include <bght/detail/cuda_helpers.cuh>
+#include <hip/hip_runtime.h>
+#include <bght/detail/hip_helpers.hpp>
 namespace bght {
 template <typename T>
-struct cuda_deleter {
-  void operator()(T* p) { cuda_try(cudaFree(p)); }
+struct hip_deleter {
+  void operator()(T* p) { hip_try(hipFree(p)); }
 };
 
 template <class T>
-struct cuda_allocator {
+struct hip_allocator {
   typedef std::size_t size_type;
   typedef std::ptrdiff_t difference_type;
 
@@ -36,16 +36,16 @@ struct cuda_allocator {
 
   template <class U>
   struct rebind {
-    typedef cuda_allocator<U> other;
+    typedef hip_allocator<U> other;
   };
-  cuda_allocator() = default;
+  hip_allocator() = default;
   template <class U>
-  constexpr cuda_allocator(const cuda_allocator<U>&) noexcept {}
+  constexpr hip_allocator(const hip_allocator<U>&) noexcept {}
   T* allocate(std::size_t n) {
     void* p = nullptr;
-    cuda_try(cudaMalloc(&p, n * sizeof(T)));
+    hip_try(hipMalloc(&p, n * sizeof(T)));
     return static_cast<T*>(p);
   }
-  void deallocate(T* p, std::size_t) noexcept { cuda_try(cudaFree(p)); }
+  void deallocate(T* p, std::size_t) noexcept { hip_try(hipFree(p)); }
 };
 }  // namespace bght

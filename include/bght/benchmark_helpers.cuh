@@ -130,10 +130,10 @@ void prep_experiment_find_with_exist_ratio(float exist_ratio,
   // into find_keys.
   std::fill(find_keys.begin(), find_keys.end(), EMPTY_VALUE);
   std::copy(keys.begin() + start_index, keys.begin() + end_index, find_keys.begin());
-  cuda_try(cudaMemcpy(d_find_keys,
-                      find_keys.data(),
-                      sizeof(key_type) * find_keys.size(),
-                      cudaMemcpyHostToDevice));
+  hip_try(hipMemcpy(d_find_keys,
+                    find_keys.data(),
+                    sizeof(key_type) * find_keys.size(),
+                    hipMemcpyHostToDevice));
 }
 
 template <typename key_type>

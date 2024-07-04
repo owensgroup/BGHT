@@ -16,29 +16,4 @@
 
 #pragma once
 
-#include <cuda/std/utility>
-#include <type_traits>
-
-namespace bght {
-namespace detail {
-
-template <typename T>
-struct is_cuda_std_pair : std::false_type {};
-
-template <typename T1, typename T2>
-struct is_cuda_std_pair<cuda::std::pair<T1, T2>> : std::true_type {};
-
-template <typename T, typename Tile>
-__device__ T shuffle(const T& value, int location, const Tile& tile) {
-  T result{};
-  if constexpr (is_cuda_std_pair<T>::value) {
-    result.first = tile.shfl(value.first, location);
-    result.second = tile.shfl(value.second, location);
-  } else {
-    result = tile.shfl(value, location);
-  }
-
-  return result;
-}
-}  // namespace detail
-}  // namespace bght
+#include "cooperative_groups.hpp"
