@@ -15,6 +15,9 @@ For more information, please check our papers:
 * Support for different types of keys and values
 * Standard-like APIs
 
+> [!NOTE]  
+> An experimental HIP-based version of the library targeting AMD GPUs is available at the [hip](https://github.com/owensgroup/BGHT/tree/hip) branch (See the [Radeon-RX-7900-XT](https://github.com/owensgroup/BGHT/tree/hip/figs/Radeon-RX-7900-XT) results).
+
 ## How to use
 BGHT is a header-only library. To use the library, you can add it as a submodule or use [CMake Package Manager (CPM)](https://github.com/cpm-cmake/CPM.cmake) to fetch the library into your CMake-based project ([complete example](https://github.com/owensgroup/BGHT/tree/main/examples/cpm)).
 ```
