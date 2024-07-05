@@ -9,6 +9,9 @@ For more information, please check our papers:
 [**Better GPU Hash Tables**](https://owensgroup.github.io/BGHT/) [[arXiv]](https://arxiv.org/abs/2108.07232) [[APOCS]](https://escholarship.org/uc/item/6cb1q6rz)<br>
 *[Muhammad A. Awad](https://maawad.github.io/), [Saman Ashkiani](https://scholar.google.com/citations?user=Z4_ZfiEAAAAJ&hl=en), [Serban D. Porumbescu](https://web.cs.ucdavis.edu/~porumbes/), [Martín Farach-Colton](https://people.cs.rutgers.edu/~farach/), and [John D. Owens](https://www.ece.ucdavis.edu/~jowens/)*
 
+> [!NOTE]  
+> The HIP-based implementation is experimental. [File an issue](https://github.com/owensgroup/BGHT/issues/new) to report bugs.
+
 ## Key features
 * State-of-the-art static GPU hash tables
 * Device and host side APIs
@@ -39,7 +42,7 @@ template <class Key,
           class KeyEqual = bght::equal_to<Key>,
           hip::thread_scope Scope = hip::thread_scope_device,
           class Allocator = bght::hip_allocator<char>,
-          int B = 16> class bcht;
+          int B = 32> class bcht;
 ```
 #### Member functions
 ```c++
@@ -73,7 +76,7 @@ bucket_size                     Bucket size for device-side APIs cooperative gro
 #### Example
 ```c++
 // Example using host-side APIs
-#include <bght/cht.hpp>
+#include <bght/iht.hpp>
 int main(){
   using key_type = uint32_t;
   using value_type = uint32_t;
@@ -81,7 +84,7 @@ int main(){
   std::size_t capacity = 128; std::size_t num_keys = 64;
   key_type invalid_key = 0; value_type invalid_value = 0; // sentinel key and value
 
-  bght::bcht<key_type, value_type> table(capacity, invalid_key, invalid_value); //ctor
+  bght::iht<key_type, value_type> table(capacity, invalid_key, invalid_value); //ctor
 
   pair_type* pairs; // input pairs
   // ... allocate pairs
@@ -110,7 +113,7 @@ __global__ void kernel(HashMap table){
 }
 int main(){
   // Call the hash table constructor on the CPU
-  bght::bcht<key_type, value_type> table(...);
+  bght::iht<key_type, value_type> table(...);
   // Pass the hash table to a GPU kernel
   kernel<<<...>>>(table);
 }
@@ -171,4 +174,4 @@ Please create an issue. We will welcome any contributions that improve the usabi
 
 ## Acknowledgments
 
-The structure and organization of the repository were inspired by [NVIDIA's cuCollection](https://github.com/nviDIA/cuCollections/) and [RXMesh](https://github.com/owensgroup/RXMesh).
+The structure and organization of the repository were inspired by [NVIDIA's cuCollection](https://github.com/NVIDIA/cuCollections/) and [RXMesh](https://github.com/owensgroup/RXMesh).

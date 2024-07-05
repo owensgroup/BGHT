@@ -219,7 +219,11 @@ void bench_bcht(std::vector<key_type>& keys,
   if (!output_file_exist) {
     // header
     output << "num_keys,load_factor,";
-
+    output << "insert_1,";
+    for (size_t i = 0; i < exist_ratios.size(); i++) {
+      int exist_ratio = exist_ratios[i] * 100.0f;
+      output << "find_1_" + std::to_string(exist_ratio) + ",";
+    }
     output << "insert_32,";
     for (size_t i = 0; i < exist_ratios.size(); i++) {
       int exist_ratio = exist_ratios[i] * 100.0f;
@@ -231,6 +235,28 @@ void bench_bcht(std::vector<key_type>& keys,
   output << num_keys << ",";
   output << load_factor << ",";
 
+  // 1
+  {
+    auto bcht_1_result =
+        bench_insert_find<bght::cht<key_type, value_type>>(keys,
+                                                           d_keys,
+                                                           d_pairs,
+                                                           d_find_keys,
+                                                           d_find_results,
+                                                           find_keys,
+                                                           find_results,
+                                                           cpu_ref_set,
+                                                           validate,
+                                                           num_keys,
+                                                           load_factor,
+                                                           exist_ratios,
+                                                           to_value,
+                                                           1);
+    output << float(num_keys) / 1.0e6 / bcht_1_result.insert_time << ",";
+    for (size_t i = 0; i < bcht_1_result.find_times.size(); i++) {
+      output << float(num_keys) / 1.0e6 / bcht_1_result.find_times[i] << ",";
+    }
+  }
   // 32
   {
     auto bcht_32_result =
