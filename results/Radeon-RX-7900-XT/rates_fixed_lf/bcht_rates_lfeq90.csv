@@ -1,4 +1,4 @@
-num_keys,load_factor,insert_1,find_1_100,find_1_50,find_1_0,insert_8,find_8_100,find_8_50,find_8_0,insert_16,find_16_100,find_16_50,find_16_0,insert_32,find_32_100,find_32_50,find_32_0,
+num_keys,load_factor,insert_32,find_32_100,find_32_50,find_32_0,
 1000000,0.9,2963.86,5158.91,4355.48,3795.63,
 6000000,0.9,2828.94,4755.97,3912.19,3384.56,
 11000000,0.9,2374.71,4315.52,3557.68,3052.21,
