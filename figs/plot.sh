@@ -1,4 +1,5 @@
-gpu="NVIDIA-GeForce-RTX-2080"
+gpu="Radeon-RX-7900-XT"
+mkdir -p $gpu
 python -W ignore ./plot.py -d  ../results/$gpu/ -od ./$gpu &> $gpu/$gpu.txt
 
 # python -W ignore ./plot.py -d  ../results/NVIDIA-TITAN-V/ -od ./NVIDIA-TITAN-V

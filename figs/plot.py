@@ -32,19 +32,19 @@ def plot_rates_fixed_lf(results_dir, output_dir, min_find, max_find, min_insert,
         fmt = '.csv'
         df = pd.read_csv(results_dir +  subdir + str(load_factor) + fmt)
         svg_name='bcht_rates_lfeq' + str(load_factor)
-        bucket_sizes = [1, 8, 16, 32]
+        bucket_sizes = [32]
     elif probing == 'P2BHT':
         subdir = '/rates_fixed_lf/p2bht_rates_lfeq'
         fmt = '.csv'
         df = pd.read_csv(results_dir + subdir + str(load_factor) + fmt)
         svg_name='p2bht_rates_lfeq' + str(load_factor)
-        bucket_sizes = [16, 32]
+        bucket_sizes = [32]
     elif probing == 'IHT':
         subdir = '/rates_fixed_lf/iht_rates_lfeq'
         fmt = '.csv'
         df = pd.read_csv(results_dir + subdir+ str(load_factor) + fmt)
         svg_name='iht_rates_lfeq' + str(load_factor)
-        bucket_sizes = [16, 32]
+        bucket_sizes = [32]
     else:
         print("Uknown probing scheme")
         sys.exit()
@@ -131,15 +131,15 @@ def plot_rates_fixed_keys(results_dir, output_dir, min_find, max_find, min_inser
     if probing == 'BCHT':
         df = pd.read_csv(results_dir + '/rates_fixed_keys/bcht_rates_fixed_keys.csv')
         svg_name='bcht_rates_fixed_keys'
-        bucket_sizes = [1, 8, 16, 32]
+        bucket_sizes = [32]
     elif probing == 'P2BHT':
         df = pd.read_csv(results_dir + '/rates_fixed_keys/p2bht_rates_fixed_keys.csv')
         svg_name='p2bht_rates_fixed_keys'
-        bucket_sizes = [16, 32]
+        bucket_sizes = [32]
     elif probing == 'IHT':
         df = pd.read_csv(results_dir + '/rates_fixed_keys/iht_rates_fixed_keys.csv')
         svg_name='iht_rates_fixed_keys'
-        bucket_sizes = [16, 32]
+        bucket_sizes = [32]
     else:
         print("Uknown probing scheme")
         sys.exit()
@@ -227,15 +227,15 @@ def plot_avg_probes_fixed_keys(results_dir, output_dir, probing = 'BCHT'):
     if probing == 'BCHT':
         df = pd.read_csv(results_dir + '/avg_probes/bcht_probes.csv')
         svg_name='bcht_probes'
-        bucket_sizes = [1, 8, 16, 32]
+        bucket_sizes = [32]
     elif probing == 'P2BHT':
         df = pd.read_csv(results_dir + '/avg_probes/p2bht_probes.csv')
         svg_name='p2ht_probes'
-        bucket_sizes = [16, 32]
+        bucket_sizes = [32]
     elif probing == 'IHT':
         df = pd.read_csv(results_dir + '/avg_probes/iht_probes.csv')
         svg_name='iht_probes'
-        bucket_sizes = [16, 32]
+        bucket_sizes = [32]
     else:
         print("Uknown probing scheme")
         sys.exit()
@@ -337,8 +337,8 @@ def plot_avg_probes_fixed_keys_best(dfs, xcol, output_dir, svg_name, x_title, y_
     print('Probing scheme   | HMean insertion |         HMean find 100')
     print('                 |                 |   100%   |    50%   | 0%')
 
-    best_prefix = ['CHT' , 'BCHT', 'PB2HT', 'IHT']
-    best_suffix = ['1','16', '32', '16_80']
+    best_prefix = ['BCHT', 'PB2HT', 'IHT']
+    best_suffix = ['32', '32', '32_80']
     for df, s, p, m in zip(dfs, best_suffix, best_prefix, markers):
         insert_c = 'insert_' + s
         find_c = 'find_' + s + '_'
@@ -375,15 +375,15 @@ def plot_best(results_dir, output_dir):
     titles_y = ['Rate (MOperation/s)', 'Rate (MOperation/s)', 'Average number of probes per key']
 
     for s, csv, col, tx, ty in zip(svg_names, csv_names, cols, titles_x, titles_y):
-        dfs = [pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), pd.DataFrame()]
+        dfs = [pd.DataFrame(), pd.DataFrame(), pd.DataFrame()]
         dfs[0] = pd.read_csv(results_dir + s + '/' + 'bcht'  +  csv +'.csv')
-        dfs[1] = pd.read_csv(results_dir + s + '/' + 'bcht'  +  csv +'.csv')
-        dfs[2] = pd.read_csv(results_dir + '/' + s + '/' + 'p2bht' +  csv +'.csv')
-        dfs[3] = pd.read_csv(results_dir + '/' + s + '/' + 'iht'   +  csv +'.csv')
+        # dfs[1] = pd.read_csv(results_dir + s + '/' + 'bcht'  +  csv +'.csv')
+        dfs[1] = pd.read_csv(results_dir + '/' + s + '/' + 'p2bht' +  csv +'.csv')
+        dfs[2] = pd.read_csv(results_dir + '/' + s + '/' + 'iht'   +  csv +'.csv')
         dfs[0] = remove_failed_experiments(dfs[0])
+        # dfs[1] = remove_failed_experiments(dfs[1])
         dfs[1] = remove_failed_experiments(dfs[1])
         dfs[2] = remove_failed_experiments(dfs[2])
-        dfs[3] = remove_failed_experiments(dfs[3])
         plot_avg_probes_fixed_keys_best(dfs, col, output_dir, s, tx, ty)
 
 if __name__ == "__main__":

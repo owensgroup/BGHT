@@ -116,8 +116,6 @@ template <class HashMap, typename K, class V>
 using MakeHashMapData =
     HashMapData<HashMap, 512ull, get_sentinel<K>(), get_sentinel<V>()>;
 
-// TODO(fix me: I think the different template paramters of different classes is causing
-// issues)
 typedef testing::Types<
     MakeHashMapData<bght::bcht<uint32_t, uint32_t>, uint32_t, uint32_t>,
     MakeHashMapData<bght::bcht<uint32_t, uint64_t>, uint32_t, uint64_t>,
