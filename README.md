@@ -20,7 +20,7 @@ For more information, please check our papers:
 
 ## How to use
 BGHT is a header-only library. To use the library, you can add it as a submodule or use [CMake Package Manager (CPM)](https://github.com/cpm-cmake/CPM.cmake) to fetch the library into your CMake-based project ([complete example](https://github.com/owensgroup/BGHT/tree/main/examples/cpm)).
-```
+```cmake
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 CPMAddPackage(
   NAME bght
@@ -35,7 +35,7 @@ target_link_libraries(my_library PRIVATE bght)
 
 ### APIs
 All the data structures follow the C++ standard hash map (`std::unordered_map`) APIs closely. An example APIs for BCHT is shown below:
-```c++
+```cuda
 template <class Key,
           class T,
           class Hash = bght::universal_hash<Key>,
@@ -45,7 +45,7 @@ template <class Key,
           int B = 16> class bcht;
 ```
 #### Member functions
-```c++
+```cuda
 // Constructor
 bcht(std::size_t capacity,
      Key sentinel_key,
@@ -74,7 +74,7 @@ bucket_size                     Bucket size for device-side APIs cooperative gro
 
 
 #### Example
-```c++
+```cuda
 // Example using host-side APIs
 #include <bght/cht.hpp>
 int main(){
@@ -99,7 +99,7 @@ int main(){
 }
 
 ```
-```c++
+```cuda
 // Example using device-side APIs
 template<class HashMap>
 __global__ void kernel(HashMap table){
