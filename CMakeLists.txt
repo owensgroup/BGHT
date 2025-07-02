@@ -25,13 +25,13 @@ add_library(bght::bght ALIAS bght)
 # CUDA and C++ compiler flags
 set(CXX_FLAGS
         $<IF:$<CXX_COMPILER_ID:MSVC>,
-        /std:c++17,
-        --std=c++17
+        /std:c++20,
+        --std=c++20
         >)
 set(CUDA_FLAGS
     $<IF:$<CXX_COMPILER_ID:MSVC>,
-    -Xcompiler=/std:c++17,
-    -Xcompiler=-std=c++17 -Wextra>
+    -Xcompiler=/std:c++20,
+    -Xcompiler=-std=c++20 -Wextra>
     $<IF:$<CXX_COMPILER_ID:MSVC>,
     -Xcompiler=/W4,
     -Xcompiler=-Wall>
